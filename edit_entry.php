@@ -27,8 +27,8 @@
  * along with GRR; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
+//ini_set('display_errors', 'On');
+//error_reporting(E_ALL);
 include "include/admin.inc.php";
 $grr_script_name = "edit_entry.php";
 if (isset($_GET["id"]))

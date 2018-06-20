@@ -8,7 +8,7 @@ include_once "include/functions.inc.php";
 include_once "include/$dbsys.inc.php";
 include_once "include/mincals.inc.php";
 $grr_script_name = "day.php";
-#Paramètres de connection
+#Paramï¿½tres de connection
 require_once("include/settings.class.php");
 
 #Chargement des valeurs de la table settings
@@ -16,7 +16,7 @@ $settings = new Settings();
 if (!$settings)
 	die("Erreur chargement settings");
 
-#Fonction relative à la session
+#Fonction relative ï¿½ la session
 include_once "include/session.inc.php";
 
 // Resume session
@@ -28,7 +28,7 @@ if (!grr_resumeSession()) {
 };
 
 if (isset($_POST['etablissement']) ) {
-	$tabSplit = split("=", $_POST['etablissement']);
+	$tabSplit = explode("=", $_POST['etablissement']);
 	$_SESSION['current_etablisement']= $tabSplit[1];
 
 }

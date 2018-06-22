@@ -31,7 +31,7 @@
 
 // Ajout de la variable $base_path pour prise en compte correcte des include
 $base_path = ".";
- 
+
 if (!@file_exists("/var/www/lcs/includes/headerauth.inc.php"))
 	error_reporting (E_ALL);
 require_once("include/config.inc.php");
@@ -119,15 +119,15 @@ $cook = session_get_cookie_params();
 
 // Cas d'une authentification CAS
 if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statut') == 'cas_utilisateur')){
-	
+
 
 	if (isset($_POST) && array_key_exists('logoutRequest', $_POST)) {
 		deleteCASSession($_POST['logoutRequest'] );
 		die();
 	}
 	session_name(SESSION_NAME);
-	@session_start();  
-	
+	@session_start();
+
 	require_once("./include/cas.inc.php");
 	// A ce stade, l'utilisateur est authentifié par CAS
 	$password = '';
@@ -141,7 +141,7 @@ if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statu
 	if (!isset($user_mail))
 		$user_mail='';
 	$cas_tab_login["user_email"] = $user_mail;
-	if (!isset($user_code_etablissement)) 
+	if (!isset($user_code_etablissement))
 		$user_code_etablissement='';
 	$cas_tab_login["user_code_etablissement"] = $user_code_etablissement;
 	if (!isset($user_code_fonction))
@@ -261,10 +261,10 @@ else if (Settings::get('sso_statut') == 'lcs')
 		// A ce stade, l'utilisateur est authentifié par LCS
 		// Etablir à nouveau la connexion à la base
 		if (empty($db_nopersist))
-			$db_c = mysqli_connect("p:".$dbHost, $dbUser, $dbPass);
+			$db_c = mysqli_connect("p:" .$dbHost, $dbUser, $dbPass);
 		else
 			$db_c = mysqli_connect($dbHost, $dbUser, $dbPass);
-		if (!$db_c || !mysqli_select_db ($db_c, $dbDb))
+		if (!$db_c || !mysqli_select_db ($dbDb))
 		{
 			echo "\n<p>\n" . get_vocab('failed_connect_db') . "\n";
 			exit;

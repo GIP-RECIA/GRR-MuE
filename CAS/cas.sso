@@ -1,5 +1,0 @@
-<?php
-$serveurSSO='cas-domain-example.com';
-$serveurSSOPort=443;
-$serveurSSORacine='cas';
-?>

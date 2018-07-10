@@ -81,6 +81,7 @@ session_set_save_handler(
 
 function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_login = array(), $tab_groups = array()){
 
+	global $base_path;
 	// Initialisation de $auth_ldap
 	$auth_ldap = 'no';
 	// Initialisation de $auth_imap

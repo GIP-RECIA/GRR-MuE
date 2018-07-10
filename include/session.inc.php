@@ -1468,6 +1468,7 @@ class Session{
 	//fermeture
 	public function close(){
 
+		return true;
 		//if ($this->connect){
 		//	mysql_close($this->connect);//on ferme la bdd
 		//}

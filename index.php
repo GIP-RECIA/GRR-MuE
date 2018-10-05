@@ -1,42 +1,42 @@
 <?php
 /**
- * index.php
- * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2010-04-07 15:38:14 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
- * @copyright Copyright 2003-2008 Laurent Delineau
- * @copyright Copyright 2008 Marc-Henri PAMISEUX
- * @link      http://www.gnu.org/licenses/licenses.html
- * @package   admin
- * @version   $Id: index.php,v 1.10 2010-04-07 15:38:14 grr Exp $
- * @filesource
- *
- * This file is part of GRR.
- *
- * GRR is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+* index.php
+* Ce script fait partie de l'application GRR
+* Dernière modification : $Date: 2010-04-07 15:38:14 $
+* @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
+* @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
+* @copyright Copyright 2003-2008 Laurent Delineau
+* @copyright Copyright 2008 Marc-Henri PAMISEUX
+* @link      http://www.gnu.org/licenses/licenses.html
+* @package   admin
+* @version   $Id: index.php,v 1.10 2010-04-07 15:38:14 grr Exp $
+* @filesource
+*
+* This file is part of GRR.
+*
+* GRR is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* GRR is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with GRR; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 
 // Ajout de la variable $base_path pour prise en compte correcte des include
 $base_path = ".";
 
 if (!@file_exists("/var/www/lcs/includes/headerauth.inc.php"))
-	error_reporting (E_ALL);
+error_reporting (E_ALL);
 require_once("include/config.inc.php");
 if (file_exists("include/connect.inc.php"))
-	include "include/connect.inc.php";
+include "include/connect.inc.php";
 require_once("include/misc.inc.php");
 require_once("include/functions.inc.php");
 require_once("include/settings.class.php");
@@ -64,7 +64,7 @@ if ($dbsys == "mysql")
 				{
 					$test = mysqli_query($db, "SELECT count(*) FROM ".$table_prefix.$liste_tables[$j]);
 					if (!$test)
-						$flag = 'yes';
+					$flag = 'yes';
 					$j++;
 				}
 				if ($flag == 'yes')
@@ -104,7 +104,7 @@ if ($dbsys == "mysql")
 	</html>
 	<?php
 	die();
-}
+	}
 }
 require_once("include/$dbsys.inc.php");
 require_once("./include/session.inc.php");
@@ -113,7 +113,7 @@ require_once("./include/settings.class.php");
 
 //Chargement des valeurs de la table settingS
 if (!Settings::load())
-	die("Erreur chargement settings");
+die("Erreur chargement settings");
 
 $cook = session_get_cookie_params();
 
@@ -133,28 +133,28 @@ if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statu
 	$password = '';
 	$user_ext_authentifie = 'cas';
 	if (!isset($user_nom))
-		$user_nom='';
+	$user_nom='';
 	$cas_tab_login["user_nom"] = $user_nom;
 	if (!isset($user_prenom))
-		$user_prenom='';
+	$user_prenom='';
 	$cas_tab_login["user_prenom"] = $user_prenom;
 	if (!isset($user_mail))
-		$user_mail='';
+	$user_mail='';
 	$cas_tab_login["user_email"] = $user_mail;
 	if (!isset($user_code_etablissement))
-		$user_code_etablissement='';
+	$user_code_etablissement='';
 	$cas_tab_login["user_code_etablissement"] = $user_code_etablissement;
 	if (!isset($user_code_fonction))
-		$user_code_fonction='';
+	$user_code_fonction='';
 	$cas_tab_login["user_code_fonction"] = $user_code_fonction;
 	if (!isset($user_libelle_fonction))
-		$user_libelle_fonction='';
+	$user_libelle_fonction='';
 	$cas_tab_login["user_libelle_fonction"] = $user_libelle_fonction;
 	if (!isset($user_language))
-		$user_language='';
+	$user_language='';
 	$cas_tab_login["user_language"] = $user_language;
 	if (!isset($user_default_style))
-		$user_default_style='';
+	$user_default_style='';
 	$cas_tab_login["user_default_style"] = $user_default_style;
 	$result = grr_opensession($login,$password,$user_ext_authentifie,$cas_tab_login);
 	// On écrit les données de session et ferme la session
@@ -189,25 +189,25 @@ if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statu
 		die();
 	}
 	if (grr_resumeSession())
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
-// Cas d'une authentification Lemonldap
+	header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	// Cas d'une authentification Lemonldap
 }
 else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('sso_statut') == 'lemon_utilisateur'))
 {
 	if (isset($_GET['login']))
-		$login = $_GET['login'];
+	$login = $_GET['login'];
 	else
-		$login = "";
+	$login = "";
 	if (isset($_COOKIE['user']))
-		$cookie_user = $_COOKIE['user'];
+	$cookie_user = $_COOKIE['user'];
 	else
-		$cookie_user = "";
+	$cookie_user = "";
 	if (empty($cookie_user) || $cookie_user != $login)
 	{
 		if ((Settings::get("Url_cacher_page_login") != "") && ((!isset($sso_super_admin)) || ($sso_super_admin == false)))
-			header("Location: ".Settings::get("Url_cacher_page_login"));
+		header("Location: ".Settings::get("Url_cacher_page_login"));
 		else
-			header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode(page_accueil())."");
 		//header("Location: ./login.php");
 		// Echec de l'authentification lemonldap
 		die();
@@ -241,8 +241,8 @@ else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('ss
 		die();
 	}
 	if (grr_resumeSession())
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
-// Cas d'une authentification LCS
+	header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	// Cas d'une authentification LCS
 }
 else if (Settings::get('sso_statut') == 'lcs')
 {
@@ -257,22 +257,22 @@ else if (Settings::get('sso_statut') == 'lcs')
 		$long = strlen($user["fullname"]) - strlen($user["nom"]);
 		$lcs_tab_login["fullname"] = substr($user["fullname"], 0, $long) ;
 		foreach ($groups as $value)
-			$lcs_groups[] = $value["cn"];
+		$lcs_groups[] = $value["cn"];
 		// A ce stade, l'utilisateur est authentifié par LCS
 		// Etablir à nouveau la connexion à la base
 		if (empty($db_nopersist))
-			$db_c = mysqli_connect("p:" .$dbHost, $dbUser, $dbPass);
+		$db_c = mysqli_connect("p:" .$dbHost, $dbUser, $dbPass);
 		else
-			$db_c = mysqli_connect($dbHost, $dbUser, $dbPass);
+		$db_c = mysqli_connect($dbHost, $dbUser, $dbPass);
 		if (!$db_c || !mysqli_select_db ($dbDb))
 		{
 			echo "\n<p>\n" . get_vocab('failed_connect_db') . "\n";
 			exit;
 		}
 		if (is_eleve($login))
-			$user_ext_authentifie = 'lcs_eleve';
+		$user_ext_authentifie = 'lcs_eleve';
 		else
-			$user_ext_authentifie = 'lcs_non_eleve';
+		$user_ext_authentifie = 'lcs_non_eleve';
 		$password = '';
 		$result = grr_opensession($login,$password,$user_ext_authentifie,$lcs_tab_login,$lcs_groups) ;
 		// On écrit les données de session et ferme la session
@@ -306,7 +306,7 @@ else if (Settings::get('sso_statut') == 'lcs')
 			die();
 		}
 		if (grr_resumeSession())
-			header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode(page_accueil())."");
 	}
 	else
 	{
@@ -319,7 +319,7 @@ else if (Settings::get('sso_statut') == 'lcs')
 			header("Location:".LCS_PAGE_AUTHENTIF);
 		}
 		else
-			header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode(page_accueil())."");
 		// authentification non obligatoire, l'utilisateur est simple visiteur
 	}
 }
@@ -335,7 +335,7 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 		// lien.
 		$error = lassospkit_error();
 		if (!empty($error))
-			echo "SSO error:<br /><pre>$error</pre><br />";
+		echo "SSO error:<br /><pre>$error</pre><br />";
 		// Pas encore authentifié - on se connecte:
 		$return_url = get_request_uri();
 		lassospkit_redirect_federate($return_url);
@@ -352,14 +352,14 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 		$res = grr_sql_query($sql);
 		$existing_users = array();
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
-			$existing_users[] = $row[0];
+		$existing_users[] = $row[0];
 		$max = 0;
 		foreach ($existing_users as $user)
 		{
 			if (preg_match('/lasso_(\d+)/', $user, $matches))
 			{
 				if ($matches[1] > $max)
-					$max = $matches[1];
+				$max = $matches[1];
 			}
 		}
 		$login = 'lasso_'.($max + 1);
@@ -422,7 +422,7 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 		die();
 	}
 	if (grr_resumeSession())
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ".htmlspecialchars_decode(page_accueil())."");
 	// Cas d'une authentification apache
 }
 else if ((Settings::get('sso_statut') == 'http_visiteur') || (Settings::get('sso_statut') == 'http_utilisateur'))
@@ -480,7 +480,7 @@ else if ((Settings::get('sso_statut') == 'http_visiteur') || (Settings::get('sso
 		// Cas de PHP4 en mode CGI sur IIS
 	}
 	else if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
-		list($login, $pw) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+	list($login, $pw) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 	else
 	{
 		// on demande de s'identifier
@@ -502,7 +502,7 @@ else if ((Settings::get('sso_statut') == 'http_visiteur') || (Settings::get('sso
 	$user_ext_authentifie = 'apache';
 	$password = '';
 	$result = grr_opensession($login,$password,$user_ext_authentifie);
-		// On écrit les données de session et ferme la session
+	// On écrit les données de session et ferme la session
 	session_write_close();
 	$message = '';
 	if ($result=="2")
@@ -539,24 +539,24 @@ else
 		if ($cook["path"] != '')
 		{
 			if (grr_resumeSession())
-				header("Location: ".htmlspecialchars_decode(page_accueil())."");
+			header("Location: ".htmlspecialchars_decode(page_accueil())."");
 			else
 			{
 				if ((Settings::get("Url_cacher_page_login") != "") && ((!isset($sso_super_admin)) || ($sso_super_admin == false)))
-					header("Location: ".Settings::get("Url_cacher_page_login"));
+				header("Location: ".Settings::get("Url_cacher_page_login"));
 				else
-					header("Location: ./login.php");
+				header("Location: ./login.php");
 			}
 		}
 		else
 		{
 			if ((Settings::get("Url_cacher_page_login") != "") && ((!isset($sso_super_admin)) || ($sso_super_admin == false)))
-				header("Location: ".Settings::get("Url_cacher_page_login"));
+			header("Location: ".Settings::get("Url_cacher_page_login"));
 			else
-				header("Location: ./login.php");
+			header("Location: ./login.php");
 		}
 	}
 	else
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ".htmlspecialchars_decode(page_accueil())."");
 }
 ?>

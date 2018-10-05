@@ -120,9 +120,13 @@ $cook = session_get_cookie_params();
 // Cas d'une authentification CAS
 if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statut') == 'cas_utilisateur')){
 
-
+	// gestion spécifique d'une requête de global logout CAS
 	if (isset($_POST) && array_key_exists('logoutRequest', $_POST)) {
+		// suppression de la session en base
 		deleteCASSession($_POST['logoutRequest'] );
+		// suppression de la session gérées par phpCAS
+		require_once("./include/cas.inc.php");
+		// on s'arrête là puisqu'il s'agit d'une requête server to server de CAS
 		die();
 	}
 	session_name(SESSION_NAME);

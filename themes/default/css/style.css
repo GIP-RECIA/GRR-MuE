@@ -372,6 +372,7 @@ css de remplacement :*/
 .containerGrr h3{font-size: 18px;font-weight: 700;}
 .containerGrr h2{font-size: 20px;font-weight: 700;}
 .containerGrr td{vertical-align:middle;padding:1px 0;} /*voir s'il ne faut pas le mettre pour tous les forms et non seulement pour la form "gestion de mon compte"*/
+.containerGrr .contenu_planning td{border-bottom:1px solid #ddd;}
 td.coldroite_admin{vertical-align:top;}   /* à fusionner avec ligne 101 si OK */
 td.colgauche_admin{vertical-align:top;padding:10px 0;}   /* à fusionner avec ligne 101 si OK */
 .week td {padding:0;}

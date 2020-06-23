@@ -80,7 +80,9 @@ $liste_themes = array(
 	"default",
 	"agricole",
 	"netocentre",
-	"touraine"
+	"touraine",
+	"chercan",
+	"colleges41"
 	);
 
 # Liste des noms des styles
@@ -96,7 +98,9 @@ $liste_name_themes = array(
 	"Sans thème",
 	"Agricole",
 	"NetO’Centre",
-	"Touraine E-School"
+	"Touraine E-School",
+	"Cher Cartable Numérique",
+	"Colleges41"
 	);
 
 # Liste des langues

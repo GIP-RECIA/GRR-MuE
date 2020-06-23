@@ -1,0 +1,63 @@
+a{color:#004899;text-decoration:none}
+.text-primary{color:#004899}
+.bg-primary{color:#fff;background-color:#004899}
+.btn-primary{color:#fff;background-color:#004899;border-color:#004899}
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled].focus,
+fieldset[disabled] .btn-primary.focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active{background-color:#004899;border-color:#004899}
+.btn-primary .badge{color:#004899;background-color:#fff}
+.btn-link{color:#004899;font-weight:normal;border-radius:0}
+.panel-primary>.panel-heading .badge{color:#004899;background-color:#fff}
+.panel-primary>.panel-footer+.panel-collapse>.panel-body{border-bottom-color:#004899}
+caption{text-align: center}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #0040ff;
+  background-position: 0 -15px;
+  border-color:#004899
+}
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #0040ff;
+  border-color: #2b669a;
+  border-color:#004899
+}
+.btn-primary:disabled,
+.btn-primary[disabled] {
+  background-color: #0040ff;
+  background-image: none;
+  border-color:#004899
+}
+
+
+.btn-danger {
+	color:#fff !important;
+	background-color:#E085AB !important;
+	border-color:#D17FA1 !important;
+	font-weight: normal !important;
+}
+.btn-danger:hover,.btn-danger:focus,.btn-danger.focus,.btn-danger:active,.btn-danger.active,.open>.dropdown-toggle.btn-danger {
+	color:#fff !important;
+	background-color:#CC789B !important;
+	border-color:#BF7090 !important;
+	font-weight: normal !important;
+}
+.btn-danger:active,.btn-danger.active,.open>.dropdown-toggle.btn-danger {
+	background-image:none
+}
+

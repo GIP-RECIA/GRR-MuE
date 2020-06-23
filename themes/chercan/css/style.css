@@ -1,0 +1,45 @@
+/* Feuille de style du thème Touraine (ROUGE)
+
+- Couleur principale : #004899 (bleu)
+- Couleur secondaire : #0040ff (legerement plus foncé)
+
+*/
+
+
+.accueil a{color:#004899;}
+.accueil a:hover, a:focus {color: #0040FF;}
+
+.cal_current_day{color:#FFF;background-color:#004899;vertical-align:middle;text-align:center;line-height:30px}
+.cellcalendar_current_day{color:#FFF;background-color:#004899 !important;}
+
+.cellcalendar a:hover{background-color:#004899;color:#fff !important;}
+
+a.lienPlanning:hover{display:block ;color:#004899;}
+
+#liste_select{color:#004899;font-weight:700}
+
+.pied_menuGauche{border-top:3px solid #004899}
+th{color:#eee;font-size:10pt;font-family:verdana,sans-serif;background-color:#004899 !important;vertical-align:top;text-align:center !important;border:none !important}
+
+td.calendarHeader2{text-align:center;border:0;font-size:10pt;width:200px;background-color:#004899;color:#FFF;font-weight:bold;font-size:18px;}
+
+#planning{position:relative;background-color:#004899;height:100%;width:auto;-webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);}
+#print_planning{position:relative;background-color:#004899;height:100%;width:auto}
+
+.titre_planning{position:relative;background-color:#004899;height:100%;color:#000;text-align:center;font-size:1.2em}
+.titre_planning_week{background-color:#004899;height:100%;color:#000;text-align:center;font-size:1.2em}
+.contenu_planning{position:relative;background-color:#004899;height:100%;max-width:100%;overflow:auto;}
+.glyphicon-plus{color:#004899}
+.color-glyphicon{color: #004899;}
+.glyphicon-accueil:hover{color:#004899;}
+.titreAdmin{color:#004899;margin-top:20px;font-weight:bold;font-size: 100%;}
+a:hover, a:focus {color: #004899 !important;}
+
+
+/* Nouvelle entete atos */
+.navbar-brand{color: #004899 !important;}
+
+.navbarcollapse.collapse.in {border-bottom:2px solid #004899 !important;}
+
+/* Ajouts CD - 20170314 */
+.week .cellcalendar_current_day a {background-color: #004899;}

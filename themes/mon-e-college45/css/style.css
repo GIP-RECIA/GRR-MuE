@@ -1,0 +1,45 @@
+/* Feuille de style du thème Mon e-college loirétain (BLEU)
+
+- Couleur principale : #014282 (bleu)
+- Couleur secondaire : #0976A8 (legerement différent)
+
+*/
+
+
+.accueil a{color:#014282;}
+.accueil a:hover, a:focus {color: #0976A8;}
+
+.cal_current_day{color:#FFF;background-color:#014282;vertical-align:middle;text-align:center;line-height:30px}
+.cellcalendar_current_day{color:#FFF;background-color:#014282 !important;}
+
+.cellcalendar a:hover{background-color:#014282;color:#fff !important;}
+
+a.lienPlanning:hover{display:block ;color:#014282;}
+
+#liste_select{color:#014282;font-weight:700}
+
+.pied_menuGauche{border-top:3px solid #014282}
+th{color:#eee;font-size:10pt;font-family:verdana,sans-serif;background-color:#014282 !important;vertical-align:top;text-align:center !important;border:none !important}
+
+td.calendarHeader2{text-align:center;border:0;font-size:10pt;width:200px;background-color:#014282;color:#FFF;font-weight:bold;font-size:18px;}
+
+#planning{position:relative;background-color:#014282;height:100%;width:auto;-webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);}
+#print_planning{position:relative;background-color:#014282;height:100%;width:auto}
+
+.titre_planning{position:relative;background-color:#014282;height:100%;color:#000;text-align:center;font-size:1.2em}
+.titre_planning_week{background-color:#014282;height:100%;color:#000;text-align:center;font-size:1.2em}
+.contenu_planning{position:relative;background-color:#014282;height:100%;max-width:100%;overflow:auto;}
+.glyphicon-plus{color:#014282}
+.color-glyphicon{color: #014282;}
+.glyphicon-accueil:hover{color:#014282;}
+.titreAdmin{color:#014282;margin-top:20px;font-weight:bold;font-size: 100%;}
+a:hover, a:focus {color: #014282 !important;}
+
+
+/* Nouvelle entete atos */
+.navbar-brand{color: #014282 !important;}
+
+.navbarcollapse.collapse.in {border-bottom:2px solid #014282 !important;}
+
+/* Ajouts CD - 20170314 */
+.week .cellcalendar_current_day a {background-color: #014282;}

@@ -82,7 +82,9 @@ $liste_themes = array(
 	"netocentre",
 	"touraine",
 	"chercan",
-	"colleges41"
+	"colleges41",
+	"e-colleges36",
+	"mon-e-college45"
 	);
 
 # Liste des noms des styles
@@ -100,7 +102,9 @@ $liste_name_themes = array(
 	"NetO’Centre",
 	"Touraine E-School",
 	"Cher Cartable Numérique",
-	"Colleges41"
+	"Colleges41",
+	"e-colleges Indre",
+	"Mon e-college loirétain"
 	);
 
 # Liste des langues

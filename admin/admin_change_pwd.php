@@ -29,9 +29,7 @@
  */
 include "../include/admin.inc.php";
 $grr_script_name = "admin_change_pwd.php";
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-    $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 check_access(6, $back);
 // Restriction dans le cas d'une démo
 VerifyModeDemo();

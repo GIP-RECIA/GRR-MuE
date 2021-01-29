@@ -62,9 +62,7 @@ if ((Settings::get("authentification_obli") == 0) && (getUserName() == '' ))
 	$type_session = "no_session";
 else
 	$type_session = "with_session";
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 Definition_ressource_domaine_site();
 print_header($day, $month, $year, $type_session);
 if (check_begin_end_bookings($day, $month, $year))

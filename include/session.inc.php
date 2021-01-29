@@ -670,6 +670,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 	$_SESSION['statut'] = $row[4];
 	$_SESSION['start'] = $row[5];
 	$_SESSION['maxLength'] = Settings::get("sessionMaxLength");
+	
+	// Enregistrement de la page courante pour le retour en arriere
+	$_SESSION['back'] = [getRequestUri(), ''];
 
 	if ($row[8] !='')
 		$_SESSION['default_style'] = $row[8];
@@ -949,6 +952,10 @@ function grr_resumeSession(){
 		// Resuming session
 	session_name(SESSION_NAME);
 	@session_start();
+
+	// Enregistrement de la page courante pour le retour en arriere
+	$_SESSION['back'][1] = $_SESSION['back'][0];
+	$_SESSION['back'][0] = getRequestUri();
 
 	if ((Settings::get('sso_statut') == 'lcs') and (!isset($_SESSION['est_authentifie_sso'])) and ($_SESSION['source_login'] == "ext"))
 		return (false);
@@ -1383,6 +1390,48 @@ function grr_getinfo_ldap($_dn, $_login, $_password){
 	}
 	// Return infos
 	return array($l_nom, $l_prenom, $l_email);
+}
+
+/**
+ * Permet de récupérer l'uri demandé
+ */
+function getRequestUri()
+{
+	global $grr_script_name;
+	$RequestUri = "";
+	if (isset($_SERVER['REQUEST_URI']))
+		$RequestUri = $_SERVER['REQUEST_URI'];
+	else if (isset($_ENV['REQUEST_URI']))
+		$RequestUri = $_ENV['REQUEST_URI'];
+	else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
+		$RequestUri = $_SERVER['HTTP_X_REWRITE_URL'];
+	else
+	{
+		if (!isset($_SERVER['QUERY_STRING']))
+			$_SERVER['QUERY_STRING'] = "";
+		if ((Settings::get("use_grr_url") == "y") && (Settings::get("grr_url") != ""))
+		{
+			if (substr(Settings::get("grr_url"), -1) != "/")
+				$ad_signe = "/";
+			else
+				$ad_signe = "";
+			$RequestUri = Settings::get("grr_url").$ad_signe.$grr_script_name.$_SERVER['QUERY_STRING'];
+		}
+		else
+		{
+			if (isset($_SERVER['PHP_SELF']))
+				$RequestUri = $_SERVER['PHP_SELF'].$_SERVER['QUERY_STRING'];
+		}
+	}
+	return $RequestUri;
+}
+
+/**
+ * Permet de récupérer l'uri de la page précédente
+ */
+function getBackUri()
+{
+	return htmlspecialchars($_SESSION['back'][1]);
 }
 
 

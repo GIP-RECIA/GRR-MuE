@@ -33,21 +33,16 @@ $grr_script_name = "admin_type_etablissement.php";
 
 // Initialisation
 $id_etablissement = getIdEtablissementCourant();
+$back = getBackUri();
 
 if(authGetUserLevel(getUserName(),$id_etablissement,'etab') < 6)
 {
-    $back = '';
-    if (isset($_SERVER['HTTP_REFERER'])) $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
     showAccessDenied($day, $month, $year, '',$back);
     exit();
 }
-
-$back = "";
-if (isset($_SERVER['HTTP_REFERER'])) $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
-
 
 if ((isset($_GET['msg'])) and isset($_SESSION['displ_msg'])  and ($_SESSION['displ_msg']=='yes') )  {
    $msg = $_GET['msg'];

@@ -167,9 +167,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 			<?php
 			die();
 		};
-		$back = '';
-		if (isset($_SERVER['HTTP_REFERER']))
-			$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+		$back = getBackUri();
 		if ((isset($sso_restrictions)) && ($sso_restrictions == true))
 		{
 			showAccessDenied($back);

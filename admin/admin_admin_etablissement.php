@@ -3,7 +3,7 @@
  * admin_admin_etablissement.php
  * Interface de gestion des
  * administrateurs des etablissements de l'application GRR
- * Dernière modification : $Date: 2011-06-16 13:10:24 $
+ * Derniï¿½re modification : $Date: 2011-06-16 13:10:24 $
  * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
  * @copyright Copyright 2003-2008 Laurent Delineau
  * @link      http://www.gnu.org/licenses/licenses.html
@@ -36,8 +36,7 @@ if (empty($id)) $id = get_default_etablissement();
 if (!isset($id)) settype($id,"integer");
 
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER'])) $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 if(authGetUserLevel(getUserName(),-1) < 6)
 {
     $day   = date("d");
@@ -104,7 +103,7 @@ affiche_pop_up($msg,"admin");
 
 echo "<table><tr>";
 $this_etab_name = "";
-# liste des établissements
+# liste des ï¿½tablissements
 echo "<td ><p><b>".get_vocab("etablissements").get_vocab("deux_points")."</b></p>\n";
 $out_html = "<form id=\"etablissement\" action=\"admin_admin_etablissement.php\" method=\"post\">\n<div><select name=\"id\" onchange=\"go_to_etablissement()\">\n";
 $out_html .= "<option value=\"admin_admin_etablissement.php?id=-1\">".get_vocab('select')."</option>";
@@ -139,7 +138,7 @@ $this_etab_name = grr_sql_query1("select name from ".TABLE_PREFIX."_etablissemen
 echo "</td>\n";
 echo "</tr></table>\n";
 
-# Ne pas continuer si aucun établissement n'est défini
+# Ne pas continuer si aucun ï¿½tablissement n'est dï¿½fini
 if ($id <= 0)
 {
     echo "<h1>".get_vocab("no_etab")."</h1>";

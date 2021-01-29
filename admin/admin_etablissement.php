@@ -2,8 +2,8 @@
 /**
  * admin_etablissement.php
  * 
- * Interface d'accueil de Gestion des établissements de l'application GRR
- * Dernière modification : $Date: 2010-05-07 21:26:44 $
+ * Interface d'accueil de Gestion des ï¿½tablissements de l'application GRR
+ * Derniï¿½re modification : $Date: 2010-05-07 21:26:44 $
  * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
  * @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
  * @copyright Copyright 2003-2008 Laurent Delineau
@@ -33,7 +33,7 @@
 //include_once "../include/misc.inc.php";
 
 /**
- * Compte le nombre d'établissement définis
+ * Compte le nombre d'ï¿½tablissement dï¿½finis
  *
  * @return integer number of rows
  */
@@ -49,13 +49,13 @@
        return $etablissements[0];
        else
        {
-         echo '      <p>Une erreur est survenue pendant le comptage des établissements.</p>';
+         echo '      <p>Une erreur est survenue pendant le comptage des ï¿½tablissements.</p>';
          // fin de l'affichage de la colonne de droite
          echo "</td></tr></table>\n</body>\n</html>\n";
          die();
        }
    } else {
-     echo '      <p>Une erreur est survenue pendant la préparation de la requète de comptage des établissements.</p>';
+     echo '      <p>Une erreur est survenue pendant la prï¿½paration de la requï¿½te de comptage des ï¿½tablissements.</p>';
      // fin de l'affichage de la colonne de droite
      echo "</td></tr></table>\n</body>\n</html>\n";
      die();
@@ -79,7 +79,7 @@
    if (!isset($adresse)) $adresse = isset($_POST['adresse']) ? $_POST['adresse'] :  NULL;
    
 
-   // On affiche le formulaire de saisie quand l'appel de la fonction ne provient pas de la validation de ce même formulaire
+   // On affiche le formulaire de saisie quand l'appel de la fonction ne provient pas de la validation de ce mï¿½me formulaire
    if ((! (isset($_POST['save']) or isset($_GET['save']))) AND ($id==0))
    {
    // Affichage des titres de la page
@@ -105,7 +105,7 @@
    } else {
      $msg ='';
 
-     // On vérifie que le code et le nom du site ont été renseignés
+     // On vï¿½rifie que le code et le nom du site ont ï¿½tï¿½ renseignï¿½s
      if ($code=='' or $code==NULL or $name=='' or $name==NULL)
      {
        $_POST['save'] = 'no';
@@ -179,7 +179,7 @@
    $res = grr_sql_query($sql);
    if ($res)
    {
-     // Affichage de l'entête du tableau
+     // Affichage de l'entï¿½te du tableau
      echo '		<table class="table table-hover table-bordered">
         <thead><tr>
           <th>'.get_vocab('action').'</th>
@@ -222,7 +222,7 @@
      }
      echo '      </tbody></table>';
    } else {
-     echo '      <p>Une erreur est survenue pendant la préparation de la requète de lecture des établissements.</p>';
+     echo '      <p>Une erreur est survenue pendant la prï¿½paration de la requï¿½te de lecture des ï¿½tablissements.</p>';
      // fin de l'affichage de la colonne de droite
      echo "</td></tr></table>\n</body>\n</html>\n";
      die();
@@ -242,7 +242,7 @@
      read_etablissement();
      exit();
    }
-   // On affiche le formulaire de saisie quand l'appel de la fonction ne provient pas de la validation de ce même formulaire
+   // On affiche le formulaire de saisie quand l'appel de la fonction ne provient pas de la validation de ce mï¿½me formulaire
    if (! (isset($_POST['save']) or isset($_GET['save'])))
    {
      // Initialisation
@@ -293,7 +293,7 @@
    if (!isset($codepostal)) $codepostal = isset($_POST['codepostal']) ? $_POST['codepostal'] :  NULL;
    if (!isset($adresse)) $adresse = isset($_POST['adresse']) ? $_POST['adresse'] :  NULL;
 
-     // On vérifie que le code et le nom du site ont été renseignés
+     // On vï¿½rifie que le code et le nom du site ont ï¿½tï¿½ renseignï¿½s
       if ( (($code=='' or $code==NULL ) AND $desactive_edition_code_etablissement == 0) or $name=='' or $name==NULL)
      {
        $_POST['save'] = 'no';
@@ -323,7 +323,7 @@
            fatal_error(0,'<p>'.grr_sql_error().'</p>');
            $site = grr_sql_insert_id();
      }
-     // On affiche le tableau des établissements
+     // On affiche le tableau des ï¿½tablissements
      read_etablissement();
    }
 
@@ -355,7 +355,7 @@
 
  function check_right($id)
  {
-   echo 'Vous voulez vérifier les droits pour l\'identifiant '.$id;
+   echo 'Vous voulez vï¿½rifier les droits pour l\'identifiant '.$id;
  }
 
 // Debut de l'affichage de la page
@@ -364,26 +364,20 @@
  
  $grr_script_name = 'admin_etablissement.php';
 
- //Varible globale permettant de savoir si l'utilisateur peut modifier les utilisateurs de l'établissement.
+ //Varible globale permettant de savoir si l'utilisateur peut modifier les utilisateurs de l'ï¿½tablissement.
  //Test  : Administrateur GRR && configuration permet la modification.
 
  $canEditUserEtab = (isset($desactive_changement_etablissement_user))  && ($desactive_changement_etablissement_user == 0) && (authGetUserLevel(getUserName(), -1,'etab') >= 7 );
- 
+ $back = getBackUri();
+
  if(authGetUserLevel(getUserName(),-1,'etablissement') < 6)
  {
-   $back = '';
-   if (isset($_SERVER['HTTP_REFERER']))
-     $back=htmlspecialchars($_SERVER['HTTP_REFERER']);
    $day   = date('d');
    $month = date('m');
    $year  = date('Y');
    showAccessDenied($day,$month,$year,'',$back);
    exit();
  }
-
- $back = NULL;
- if (isset($_SERVER['HTTP_REFERER']))
-   $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
 
  // print the page header
  //print_header(NULL,NULL,NULL,NULL,$type='with_session',$page='admin');
@@ -400,7 +394,7 @@
  else
    $msg = '';
 
- // Lecture des paramètres passés à la page
+ // Lecture des paramï¿½tres passï¿½s ï¿½ la page
  $id = isset($_POST['id']) ? $_POST['id'] : (isset($_GET['id']) ? $_GET['id'] : NULL);
  $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : NULL);
 

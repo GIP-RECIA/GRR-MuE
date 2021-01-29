@@ -619,17 +619,12 @@ function update_site($id)
 	include_once('../include/admin.inc.php');
 	
 	$grr_script_name = 'admin_site.php';
+	$back = getBackUri();
 	
 	if (authGetUserLevel(getUserName(), -1, 'site') < 4){
-		$back = '';
-		if (isset($_SERVER['HTTP_REFERER']))
-			$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
 		showAccessDenied($back);
 		exit();
 	}
-	$back = "";
-	if (isset($_SERVER['HTTP_REFERER']))
-		$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
 	
 	// print the page header
 	print_header("", "", "", $type="with_session");

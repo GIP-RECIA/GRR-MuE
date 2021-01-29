@@ -61,9 +61,7 @@ if ((Settings::get("authentification_obli") == 0) && (getUserName() == ''))
 else
 	$type_session = "with_session";
 print_header($day, $month, $year, $type_session);
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 $verif_acces_ressource = verif_acces_ressource(getUserName(), $room);
 $acces_fiche_reservation = verif_acces_fiche_reservation(getUserName(), $room);
 $UserRoomMaxBooking = UserRoomMaxBooking(getUserName(), $room, 1);

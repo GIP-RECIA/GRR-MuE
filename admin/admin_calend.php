@@ -32,9 +32,7 @@
 include "../include/admin.inc.php";
 $grr_script_name = "admin_calend.php";
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 check_access(4, $back);
 

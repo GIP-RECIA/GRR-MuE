@@ -30,9 +30,7 @@
 include "../include/admin.inc.php";
 $grr_script_name = "admin_config_sso.php";
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 if ((isset($sso_restrictions)) && ($sso_restrictions==true)){
 	showAccessDenied($back);
@@ -157,8 +155,7 @@ if (isset($_POST['valid'])){
 		echo "Erreur lors de l'enregistrement de sso_redirection_accueil_grr !<br />";
 }
 
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 if ((authGetUserLevel(getUserName(), -1) < 6) && ($valid != 'yes'))
 {
 	showAccessDenied($back);

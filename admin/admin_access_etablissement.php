@@ -1,9 +1,9 @@
 <?php
 /**
  * admin_access_etablissement.php
- * Interface de gestion des accès aux établissements.
+ * Interface de gestion des accï¿½s aux ï¿½tablissements.
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2011-05-17 15:05:45 $
+ * Derniï¿½re modification : $Date: 2011-05-17 15:05:45 $
  * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
  * @copyright Copyright 2003-2008 Laurent Delineau
  * @link      http://www.gnu.org/licenses/licenses.html
@@ -39,8 +39,7 @@ $test_user =  isset($_POST["reg_multi_user_login"]) ? "multi" : (isset($_POST["r
 $action = isset($_GET["action"]) ? $_GET["action"] : NULL;
 $msg='';
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER'])) $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 $day   = date("d");
 $month = date("m");
 $year  = date("Y");
@@ -57,13 +56,13 @@ print_header('', '', '', $type = 'with_session');
 // Affichage de la colonne de gauche
 include_once "admin_col_gauche.php";
 
-// Si la table j_user_etablissement est vide, il faut modifier la requête
+// Si la table j_user_etablissement est vide, il faut modifier la requï¿½te
 $test_grr_j_user_etablissement = grr_sql_count(grr_sql_query("SELECT * from ".TABLE_PREFIX."_j_user_etablissement"));
 
 if ($test_user == "multi") {
 
   foreach ($reg_multi_user_login as $valeur){
-    // On commence par vérifier que le professeur n'est pas déjà présent dans cette liste.
+    // On commence par vï¿½rifier que le professeur n'est pas dï¿½jï¿½ prï¿½sent dans cette liste.
   	if ($id !=-1) {
   		if(authGetUserLevel(getUserName(),$id,'etablissement') < 6)
   		{
@@ -90,7 +89,7 @@ if ($test_user == "multi") {
 
 
 if ($test_user == "simple") {
-   // On commence par vérifier que le professeur n'est pas déjà présent dans cette liste.
+   // On commence par vï¿½rifier que le professeur n'est pas dï¿½jï¿½ prï¿½sent dans cette liste.
     if ($id !=-1) {
         if(authGetUserLevel(getUserName(),$id,'etablissement') < 6)
         {
@@ -139,7 +138,7 @@ $out_html .= "\n<option value=\"admin_access_etablissement.php?id=-1\">".get_voc
     {
         $selected = ($row[0] == $id) ? "selected = \"selected\"" : "";
         $link = "admin_access_etablissement.php?id=$row[0]";
-        // on affiche que les domaines que l'utilisateur connecté a le droit d'administrer
+        // on affiche que les domaines que l'utilisateur connectï¿½ a le droit d'administrer
         if(authGetUserLevel(getUserName(),$row[0],'etab') >= 6) {
             $out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>";
             $existe_etablissement = 'yes';
@@ -167,7 +166,7 @@ $this_etablissement_name = grr_sql_query1("select shortname from ".TABLE_PREFIX.
 echo "</td>\n";
 echo "</tr></table>\n";
 
-# Show établissement :
+# Show ï¿½tablissement :
 if ($id != -1) {
     echo "<table border=\"1\" cellpadding=\"5\"><tr><td class='paddingLR5'>";
     $sql = "SELECT u.login, u.nom, u.prenom FROM ".TABLE_PREFIX."_utilisateurs u, ".TABLE_PREFIX."_j_user_etablissement j WHERE (j.id_etablissement='$id' and u.login=j.login)  order by u.nom, u.prenom";

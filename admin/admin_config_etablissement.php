@@ -1,9 +1,9 @@
 <?php
 /**
  * admin_config_etablissement.php
- * Interface permettant à l'administrateur la configuration de certains paramètres généraux
+ * Interface permettant ï¿½ l'administrateur la configuration de certains paramï¿½tres gï¿½nï¿½raux
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2010-05-07 21:26:44 $
+ * Derniï¿½re modification : $Date: 2010-05-07 21:26:44 $
  * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
  * @copyright Copyright 2003-2008 Laurent Delineau
  * @link      http://www.gnu.org/licenses/licenses.html
@@ -40,9 +40,7 @@
 
 include_once "../include/admin.inc.php";
 $grr_script_name = "admin_config_etablissement.php";
-
-$back = '';
-if (isset($_SERVER['HTTP_REFERER'])) $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 $_SESSION['chemin_retour'] = "admin_config_etablissement.php";
 

@@ -44,9 +44,7 @@ include "include/resume_session.php";
 include "include/language.inc.php";
 include "include/setdate.php";
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 
 print_header("", "", "", $type="with_session");

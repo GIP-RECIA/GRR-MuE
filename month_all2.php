@@ -69,9 +69,7 @@ else
 if ($type_session == "with_session")
 	$_SESSION['type_month_all'] = "month_all2";
 $type_month_all = 'month_all2';
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 print_header($day, $month, $year, $type_session);
 if (check_begin_end_bookings($day, $month, $year))
 {

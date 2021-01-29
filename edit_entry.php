@@ -101,9 +101,7 @@ $delais_option_reservation  = grr_sql_query1("SELECT delais_option_reservation F
 $this_room_warning = grr_sql_query1("select room_warning from ".TABLE_PREFIX."_room where id=$room");
 $qui_peut_reserver_pour  = grr_sql_query1("SELECT qui_peut_reserver_pour FROM ".TABLE_PREFIX."_room WHERE id='".$room."'");
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars( $_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 $longueur_liste_ressources_max = Settings::get("longueur_liste_ressources_max");
 if ($longueur_liste_ressources_max == '')

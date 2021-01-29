@@ -37,10 +37,7 @@ $id_site = isset($_POST["id_site"]) ? $_POST["id_site"] : (isset($_GET["id_site"
 
 if (!isset($id_site))
 	settype($id_site, "integer");
-$back = '';
-
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 check_access(6, $back);
 

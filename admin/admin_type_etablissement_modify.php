@@ -53,8 +53,7 @@
 include_once "../include/admin.inc.php";
 $grr_script_name = "admin_type_etablissement_modify.php";
 $ok = NULL;
-$back = '';
-if (isset($_SERVER['HTTP_REFERER'])) $back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 if(authGetUserLevel(getUserName(),-1) < 6)
 {
     $day   = date("d");

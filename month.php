@@ -86,9 +86,7 @@ if ((Settings::get("authentification_obli") == 0) && (getUserName() == ''))
 else
 	$type_session = "with_session";
 //Récupération des informations relatives au serveur.
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 //Affiche les informations dans l'header
 print_header($day, $month, $year, $type="with_session");
 //Renseigne les droits de l'utilisateur, si les droits sont insufisants, l'utilisateur est avertit.

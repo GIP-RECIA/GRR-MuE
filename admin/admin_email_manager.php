@@ -37,9 +37,7 @@ if (isset($room))
 if (!isset($id_area))
 	settype($id_area,"integer");
 
-$back = '';
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 check_access(4, $back);
 
 

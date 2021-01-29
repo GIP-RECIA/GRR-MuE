@@ -42,8 +42,7 @@ if (isset($id_area))
 	settype($id_area,"integer");
 if (isset($id_site))
 	settype($id_site,"integer");
-if (isset($_SERVER['HTTP_REFERER']))
-	$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
+$back = getBackUri();
 
 if ($type == "room"){
 	

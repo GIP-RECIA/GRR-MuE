@@ -74,7 +74,12 @@ $back = getBackUri();
 
 if (isset($_GET["action_moderate"])){
 	moderate_entry_do($id,$_GET["moderate"], $_GET["description"]);
-	header("Location:".$_GET['page'].".php");
+	$info = mrbsGetEntryInfo($id);
+	$day   = strftime("%d", $info["start_time"]);
+	$month = strftime("%m", $info["start_time"]);
+	$year  = strftime("%Y", $info["start_time"]);
+	$area  = mrbsGetRoomArea($info["room_id"]);
+	header("Location:".$_GET['page'].".php?day=$day&month=$month&year=$year&area=$area&room=".$info["room_id"]);
 }
 
 $sql = "SELECT ".TABLE_PREFIX."_entry.name,

@@ -3573,7 +3573,7 @@ function authGetUserLevelRoom($user,$id){
 	// On regarde si l'utilisateur est administrateur du domaine auquel la ressource $id appartient
 	$res3 = grr_sql_query("SELECT j.login
                      FROM ".TABLE_PREFIX."_j_useradmin_area j
-                           WHERE (j.login='".protect_data_sql($user)."' and j.id_area='".protect_data_sql($id)."')");
+                           WHERE (j.login='".protect_data_sql($user)."' and j.id_area='".protect_data_sql($id_area)."')");
 
 	if (grr_sql_count($res3) > 0)
 		return 4;

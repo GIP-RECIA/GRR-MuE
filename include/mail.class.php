@@ -53,6 +53,9 @@ class Email{
             $mail->Password = $password;
             $mail->SMTPSecure = $smtpsecure;	// Enable TLS encryption, `ssl` also accepted
             $mail->Port = $port;
+            // Modification pour forcer l'envoie sans TLS/SSL même si il est détecté que le serveur smtp le peut.
+            //  Cela est utile dans notre cas car notre smtp réponds avec un certificat en .fr alors qu'on l'interroge en .net, ce qui bloque l'expédition.
+            $mail->SMTPAutoTLS = false;
 
             if (Settings::get('grr_mail_Username') != "") {
                 $mail->SMTPAuth = true;

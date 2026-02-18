@@ -1491,7 +1491,7 @@ class Session{
 
 		$sql = "SELECT COUNT(sess_id) AS total
 				FROM ".TABLE_PREFIX."_session
-				WHERE sess_id = '$sid' ";
+				WHERE sess_id = '".protect_data_sql($sid)."' ";
 
 		$query = grr_sql_query($sql) or exit(grr_sql_error());
 		$return = mysqli_fetch_array($query);
@@ -1499,15 +1499,15 @@ class Session{
 		//si la session n'existe pas encore
 		if($return['total'] == 0){
 			$sql = "INSERT INTO ".TABLE_PREFIX."_session
-				VALUES('".$sid."','".$data."','".$expire."')";//alors on la crée
+				VALUES('".protect_data_sql($sid)."','".protect_data_sql($data)."','".$expire."')";//alors on la crée
 
 		}
 		else{//sinon
 
 			$sql = "UPDATE ".TABLE_PREFIX."_session
-					SET sess_datas = '$data',
+					SET sess_datas = '".protect_data_sql($data)."',
 						sess_expire = '$expire'
-					WHERE sess_id = '$sid' ";//on la modifie
+					WHERE sess_id = '".protect_data_sql($sid)."' ";//on la modifie
 		}
 		$query = grr_sql_query($sql) or exit(grr_sql_error());
 

@@ -374,7 +374,7 @@ else
 		{
 			echo affiche_heure_creneau($t,$resolution).'</td>'.PHP_EOL;
 		}
-		while (list($key, $room) = each($rooms))
+		foreach ($rooms as $key => $room)
 		{
 			if (verif_acces_ressource(getUserName(), $room))
 			{

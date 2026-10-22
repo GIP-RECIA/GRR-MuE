@@ -3,7 +3,7 @@ GRR
 
 **Requière :**
 
-> PHP 5.4+
+> PHP 7.4 minimum, compatible jusqu'à PHP 8.3
 > Mysql 5.4+
 
 http://grr.devome.com/

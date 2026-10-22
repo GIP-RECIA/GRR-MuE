@@ -6,26 +6,6 @@ Lire attentivement la documentation avant de modifier ce fichier
 */
 
 /*
-On ne peut pas invoquer directement la fonction "phpCAS::getAttribute()"
-car elle n'est pas impl�ment�e dans "CAS/CAS.php"
-Dans cette biblioth�que, il n'y a que "phpCAS::getAttributes()" qui soit d�finie, contrairement � ce qui se passe avec "CAS/CAS/client.php".
-*/
-function getAttribute($key)
-{
-  global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
-  if (!is_object($PHPCAS_CLIENT)) {
-    phpCAS:: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-  }
-  if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
-    phpCAS:: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
-  }
-  if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
-    phpCAS:: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
-  }
-  return $PHPCAS_CLIENT->getAttribute($key);
-}
-
-/*
 R�cup�ration des diff�rents attributs de l'annuaire LDAP envoy�s par le serveur CAS
 Explication de la premi�re ligne :
 phpCAS::getAttribute('user_nom_ldap') est la variable envoy� par CAS

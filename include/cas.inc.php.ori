@@ -30,9 +30,8 @@
 * along with GRR; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-// Le package phpCAS doit etre stocké dans un sous-répertoire « CAS »
-// dans un répertoire correspondant a l'include_path du php.ini (exemple : /var/lib/php)
-include_once('CAS/CAS.php');
+// phpCAS 1.6.2 is shared with the other ENT applications.
+include_once('/var/www/phpCAS/phpCAS-1.6.2/CAS.php');
 
 // cas.sso est le fichier d'informations de connexions au serveur cas
 // Le fichier cas.sso doit etre stocké dans un sous-répertoire « CAS »
@@ -49,7 +48,14 @@ if (isset($serveurSSODebugFile) && ($serveurSSODebugFile != '')) {
 /* declare le script comme un client CAS
 Si le dernier argument est à true, cela donne la possibilité à phpCAS d'ouvrir une session php.
 */
-phpCAS::client(CAS_VERSION_2_0,$serveurSSO,$serveurSSOPort,$serveurSSORacine,true);
+phpCAS::client(
+  CAS_VERSION_2_0,
+  $serveurSSO,
+  $serveurSSOPort,
+  $serveurSSORacine,
+  $cas_service_base_urls,
+  true
+);
 phpCAS::setLang(PHPCAS_LANG_FRENCH);
 
 phpCAS::setCasServerCACert($serveurSSOPathCA);

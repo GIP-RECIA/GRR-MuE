@@ -2,6 +2,20 @@
 $serveurSSO='cas.serveur.grr';
 $serveurSSOPort=443;
 $serveurSSORacine='cas';
+/* Public base URLs accepted by phpCAS when building the service URL. */
+$cas_service_base_urls=array(
+  'https://www.chercan.fr',
+  'https://www.colleges-eureliens.fr',
+  'https://e-college.indre.fr',
+  'https://www.touraine-eschool.fr',
+  'https://ent.colleges41.fr',
+  'https://mon-e-college.loiret.fr',
+  'https://lycees.netocentre.fr',
+  'https://lycees.entkapreunion.re',
+  'https://cfa.netocentre.fr',
+  'https://formations-sociales.netocentre.fr',
+  'https://ent.recia.fr',
+);
 /* Set all proxies that are authorized to send a logout request */
 $serveurSSOProxy=array();
 /* Uncomment this line to enable phpCAS debug log and set the file path to use */

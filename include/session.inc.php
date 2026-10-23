@@ -58,12 +58,12 @@ $session = new Session();
 
 // On précise les méthodes à employer pour les sessions
 session_set_save_handler(
-	array($session, 'open'),
-	array($session, 'close'),
-	array($session, 'read'),
-	array($session, 'write'),
-	array($session, 'destroy'),
-	array($session, 'gc')
+	$session->open(...),
+	$session->close(...),
+	$session->read(...),
+	$session->write(...),
+	$session->destroy(...),
+	$session->gc(...)
 );
 
 /**
@@ -80,7 +80,7 @@ session_set_save_handler(
  * @return string
  */
 
-function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_login = array(), $tab_groups = array()){
+function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_login = [], $tab_groups = []){
 
 	global $base_path;
 	// Initialisation de $auth_ldap
@@ -184,7 +184,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 					$nom_en_base = $res[0];
 					$prenom_en_base = $res[1];
 					$email_en_base = $res[2];
-					if ((strcmp($nom_en_base, $nom_user) != 0) || (strcmp($prenom_en_base, $prenom_user) != 0) || (strcmp($email_en_base, $email_user) != 0)){
+					if ((strcmp((string) $nom_en_base, (string) $nom_user) != 0) || (strcmp((string) $prenom_en_base, (string) $prenom_user) != 0) || (strcmp((string) $email_en_base, (string) $email_user) != 0)){
 
 						// Si l'un des champs est différent, on met à jour les champs
 						$sql = "UPDATE ".TABLE_PREFIX."_utilisateurs SET
@@ -289,7 +289,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 					if (!$ds)
 						$ds = grr_connect_ldap($ldap_adresse,$ldap_port,$_login,$_password,$use_tls);
 					if ($ds)
-						$result = @ldap_read($ds, $user_dn, "objectClass=*", array(Settings::get("ldap_champ_nom"),Settings::get("ldap_champ_prenom"),Settings::get("ldap_champ_email")));
+						$result = @ldap_read($ds, $user_dn, "objectClass=*", [Settings::get("ldap_champ_nom"), Settings::get("ldap_champ_prenom"), Settings::get("ldap_champ_email")]);
 					if ($result){
 						// Recuperer les donnees de l'utilisateur
 						$info = @ldap_get_entries($ds, $result);
@@ -300,11 +300,11 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 
 								if (is_array($val)){
 									if (isset($val[Settings::get("ldap_champ_nom")][0]))
-										$l_nom = ucfirst($val[Settings::get("ldap_champ_nom")][0]);
+										$l_nom = ucfirst((string) $val[Settings::get("ldap_champ_nom")][0]);
 									else
 										$l_nom = iconv("ISO-8859-1","utf-8","Nom à préciser");
 									if (isset($val[Settings::get("ldap_champ_prenom")][0]))
-										$l_prenom = ucfirst($val[Settings::get("ldap_champ_prenom")][0]);
+										$l_prenom = ucfirst((string) $val[Settings::get("ldap_champ_prenom")][0]);
 									else
 										$l_prenom = iconv("ISO-8859-1","utf-8","Prénom à préciser");
 									if (isset($val[Settings::get("ldap_champ_email")][0]))
@@ -317,9 +317,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 						// Convertir depuis UTF-8 (jeu de caracteres par defaut)
 						if ((function_exists("utf8_decode")) && (Settings::get("ConvertLdapUtf8toIso") == "y")){
 
-							$l_email = utf8_decode($l_email);
-							$l_nom = utf8_decode($l_nom);
-							$l_prenom = utf8_decode($l_prenom);
+							$l_email = mb_convert_encoding($l_email, 'ISO-8859-1');
+							$l_nom = mb_convert_encoding($l_nom, 'ISO-8859-1');
+							$l_prenom = mb_convert_encoding($l_prenom, 'ISO-8859-1');
 						}
 					}
 					$nom_user = $l_nom;
@@ -355,7 +355,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 							if ((Settings::get("http_sso_domain")) && (Settings::get("http_sso_domain") != ""))
 							{
 							//explode du mail :
-								$domaine = explode("@",$email_user);
+								$domaine = explode("@",(string) $email_user);
 								if (isset($domaine[1]))
 								{
 									if ($domaine[1] == Settings::get("http_sso_domain"))
@@ -414,7 +414,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 	}
 	else
 	{
-		$passwd_md5 = md5($_password);
+		$passwd_md5 = md5((string) $_password);
 		$sql = "SELECT upper(login) login, password, prenom, nom, statut, now() start, default_area, default_room, default_style, default_list_type, default_language, source, etat, default_site
 		from ".TABLE_PREFIX."_utilisateurs
 		where login = '" . protect_data_sql($_login) . "' and
@@ -427,7 +427,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 			if ((Settings::get("ldap_statut") != '') && (@function_exists("ldap_connect")) && (@file_exists("include/config_ldap.inc.php"))){
 
 				//$login_search = ereg_replace("[^-@._[:space:][:alnum:]]", "", $_login);
-				$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", $_login);
+				$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", (string) $_login);
 				if ($login_search != $_login)
 					return "6";
 				$user_dn = grr_verif_ldap($_login, $_password);
@@ -445,7 +445,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 			elseif ((Settings::get("imap_statut") != '') and (@function_exists("imap_open")) and (@file_exists("include/config_imap.inc.php"))){
 
 				//  $login_search = ereg_replace("[^-@._[:space:][:alnum:]]", "", $_login);
-				$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", $_login);
+				$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", (string) $_login);
 				if ($login_search != $_login)
 					return "6";
 				$user_imap = grr_verif_imap($_login, $_password);
@@ -505,9 +505,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 			// Lire les infos sur l'utilisateur depuis LDAP
 			$user_info = grr_getinfo_ldap($user_dn,$_login,$_password);
 			// Update GRR database
-			$user_info[0] = utf8_encode($user_info[0]);
-			$user_info[1] = utf8_encode($user_info[1]);
-			$user_info[2] = utf8_encode($user_info[2]);
+			$user_info[0] = mb_convert_encoding($user_info[0], 'UTF-8', 'ISO-8859-1');
+			$user_info[1] = mb_convert_encoding($user_info[1], 'UTF-8', 'ISO-8859-1');
+			$user_info[2] = mb_convert_encoding($user_info[2], 'UTF-8', 'ISO-8859-1');
 			$sql2 = "UPDATE ".TABLE_PREFIX."_utilisateurs SET
 			nom='".protect_data_sql($user_info[0])."',
 			prenom='".protect_data_sql($user_info[1])."',
@@ -530,9 +530,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 				return "3";
 			else
 			{
-				$user_info[0] = utf8_encode($user_info[0]);
-				$user_info[1] = utf8_encode($user_info[1]);
-				$user_info[2] = utf8_encode($user_info[2]);
+				$user_info[0] = mb_convert_encoding($user_info[0], 'UTF-8', 'ISO-8859-1');
+				$user_info[1] = mb_convert_encoding($user_info[1], 'UTF-8', 'ISO-8859-1');
+				$user_info[2] = mb_convert_encoding($user_info[2], 'UTF-8', 'ISO-8859-1');
 
 				// On insère le nouvel utilisateur
 				$sql = "INSERT INTO ".TABLE_PREFIX."_utilisateurs SET
@@ -663,11 +663,11 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 	}
 
 	// reset $_SESSION
-	$_SESSION = array();
+	$_SESSION = [];
 	$_SESSION['login'] = $row[0];
 	$_SESSION['password'] = $row[1];
-	$_SESSION['prenom'] = htmlentities($row[2], ENT_DISALLOWED);
-	$_SESSION['nom'] = htmlentities($row[3], ENT_DISALLOWED);
+	$_SESSION['prenom'] = htmlentities((string) $row[2], ENT_DISALLOWED);
+	$_SESSION['nom'] = htmlentities((string) $row[3], ENT_DISALLOWED);
 	$_SESSION['statut'] = $row[4];
 	$_SESSION['start'] = $row[5];
 	$_SESSION['maxLength'] = Settings::get("sessionMaxLength");
@@ -735,48 +735,39 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 
 	// It's a new connection, insert into log
 	if (isset($_SERVER["HTTP_REFERER"]))
-		$httpreferer = substr($_SERVER["HTTP_REFERER"],0,254);
+		$httpreferer = substr((string) $_SERVER["HTTP_REFERER"],0,254);
 	else
 		$httpreferer = '';
 
 	$ua = $_SERVER['HTTP_USER_AGENT'];
-	$ua = explode(' ', $ua);
+	$ua = explode(' ', (string) $ua);
 	$count = count($ua);
 	for ($i = 0; $i < $count; $i++)
 	{
-		if (strncmp($ua[$i], '(Windows', 8) == 0)
+		if (str_starts_with($ua[$i], '(Windows'))
 		{
 			$os = "Windows ";
 			$i += 2;
-			switch ($ua[$i])
-			{
-				case '6.1;':
-					$os .= "7";
-					break;
-				case '6.2;':
-					$os .= "8";
-					break;
-				case '6.3;':
-					$os .= "8.1";
-					break;
-				default:
-					$os .= "";
-					break;
-			}
+			match ($ua[$i]) {
+       '6.1;' => $os .= "7",
+       '6.2;' => $os .= "8",
+       '6.3;' => $os .= "8.1",
+       default => $os .= "",
+   };
 		}
-		if (strncmp($ua[$i], 'Trident', 7) == 0)
+		if (str_starts_with($ua[$i], 'Trident'))
 		{
 			$brow = "Internet Explorer ";
 			$i += 1;
 			$b = explode(':', $ua[$i]);
 			$brow .= trim($b[1], ")");
 		}
-		if (strncmp($ua[$i], 'Firefox', 7) == 0)
+		if (str_starts_with($ua[$i], 'Firefox'))
 		{
 			$b = explode('/', $ua[$i]);
 			$brow = $b[0].' '.$b[1];
 		}
-		if (strncmp($ua[$i], 'Chrome', 6) == 0)
+		if (str_starts_with($ua[$i], 'Chrome'))
 		{
 			$b = explode('/', $ua[$i]);
 			$brow = $b[0].' '.$b[1];
@@ -786,7 +777,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 	if (isset($os) && isset($brow))
 		$useragent = $os.' '.$brow;
 	else
-		$useragent = substr($_SERVER['HTTP_USER_AGENT'],0,254);
+		$useragent = substr((string) $_SERVER['HTTP_USER_AGENT'],0,254);
 
 	$sql = "INSERT INTO ".TABLE_PREFIX."_log (LOGIN, START, SESSION_ID, REMOTE_ADDR, USER_AGENT, REFERER, AUTOCLOSE, END) values (
 		'" . protect_data_sql($_SESSION['login']) . "',
@@ -973,7 +964,7 @@ function grr_resumeSession(){
 	if (isset($_SESSION['login'])){
 		$test_session = grr_sql_query1("SELECT count(LOGIN) from ".TABLE_PREFIX."_log where END > now() and LOGIN = '".protect_data_sql($_SESSION['login'])."'");
 		if ($test_session == 0){
-			$_SESSION = array();
+			$_SESSION = [];
 		}
 	}
 
@@ -1051,10 +1042,10 @@ function grr_closeSession(&$_auto){
 		grr_sql_query($sql);
 	}
 		// Détruit toutes les variables de session
-	$_SESSION = array();
+	$_SESSION = [];
 		// Détruit le cookie sur le navigateur
 	$CookieInfo = session_get_cookie_params();
-	@setcookie(session_name(), '', time()-3600, $CookieInfo['path']);
+	@setcookie(session_name(), '', ['expires' => time()-3600, 'path' => $CookieInfo['path']]);
 
 	// On détruit la session
 	session_destroy();
@@ -1067,8 +1058,8 @@ function grr_closeSession(&$_auto){
 
 function unserializesession( $serialized_string ) {
 
-	$variables = array( );
-	$a = preg_split( "/(\w+)\|/", $serialized_string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+	$variables = [];
+	$a = preg_split( "/(\w+)\|/", (string) $serialized_string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
 	for( $i = 0; $i < count( $a ); $i = $i+2 ) {
 		$variables[$a[$i]] = unserialize( $a[$i+1] );
 	}
@@ -1077,7 +1068,7 @@ function unserializesession( $serialized_string ) {
 
 function deleteCASSession($postLogout){
 
-	preg_match("/<samlp:SessionIndex>(ST-[0-9]+-[^<]+)<\/samlp:SessionIndex>/" ,$postLogout , $regs);
+	preg_match("/<samlp:SessionIndex>(ST-[0-9]+-[^<]+)<\/samlp:SessionIndex>/" ,(string) $postLogout , $regs);
 	$id_ticket_cas_deconnecte = $regs[1];
 	$res = grr_sql_query("SELECT sess_id, sess_datas FROM ".TABLE_PREFIX."_session WHERE sess_expire > UNIX_TIMESTAMP() ");
 	if ($res){
@@ -1109,7 +1100,7 @@ function grr_verif_ldap($_login, $_password){
 		$atts = explode("|",Settings::get("ldap_champ_recherche"));
 				//$atts = array('uid', 'login', 'userid', 'cn', 'sn', 'samaccountname', 'userprincipalname');
 			//$login_search = ereg_replace("[^-@._[:space:][:alnum:]]", "", $_login);
-		$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", $_login);
+		$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", (string) $_login);
 				// Tenter une recherche pour essayer de retrouver le DN
 		foreach ($atts as $att)
 		{
@@ -1147,7 +1138,7 @@ function grr_verif_ldap($_login, $_password){
 
 function grr_connect_ldap($l_adresse,$l_port,$l_login,$l_pwd, $use_tls, $msg_error = "no"){
 
-	$ds = @ldap_connect($l_adresse, $l_port);
+	$ds = @ldap_connect("{$l_adresse}:{$l_port}");
 	if ($ds)
 	{
 			 // On dit qu'on utilise LDAP V3, sinon la V2 par défaut est utilisé et le bind ne passe pas.
@@ -1221,7 +1212,7 @@ function grr_ldap_search_user($ds, $basedn, $login_attr, $login, $filtre_sup = "
 	{
 		$filter = "(& ".$filter.$filtre_sup.")";
 	}
-	$res = @ldap_search($ds, $basedn, $filter, array ("dn", $login_attr),0,0);
+	$res = @ldap_search($ds, $basedn, $filter, ["dn", $login_attr],0,0);
 	if ($res)
 	{
 		$info = @ldap_get_entries($ds, $res);
@@ -1353,7 +1344,7 @@ function grr_getinfo_ldap($_dn, $_login, $_password){
 	}
 	if ($ds)
 	{
-		$result = @ldap_read($ds, $_dn, "objectClass=*", array(Settings::get("ldap_champ_nom"),Settings::get("ldap_champ_prenom"),Settings::get("ldap_champ_email")));
+		$result = @ldap_read($ds, $_dn, "objectClass=*", [Settings::get("ldap_champ_nom"), Settings::get("ldap_champ_prenom"), Settings::get("ldap_champ_email")]);
 	}
 	if (!$result)
 		return "2";
@@ -1367,11 +1358,11 @@ function grr_getinfo_ldap($_dn, $_login, $_password){
 		if (is_array($val))
 		{
 			if (isset($val[Settings::get("ldap_champ_nom")][0]))
-				$l_nom = ucfirst($val[Settings::get("ldap_champ_nom")][0]);
+				$l_nom = ucfirst((string) $val[Settings::get("ldap_champ_nom")][0]);
 			else
 				$l_nom = iconv("ISO-8859-1","utf-8","Nom à préciser");
 			if (isset($val[Settings::get("ldap_champ_prenom")][0]))
-				$l_prenom = ucfirst($val[Settings::get("ldap_champ_prenom")][0]);
+				$l_prenom = ucfirst((string) $val[Settings::get("ldap_champ_prenom")][0]);
 			else
 				$l_prenom = iconv("ISO-8859-1","utf-8","Prénom à préciser");
 			if (isset($val[Settings::get("ldap_champ_email")][0]))
@@ -1383,12 +1374,12 @@ function grr_getinfo_ldap($_dn, $_login, $_password){
 	// Convertir depuis UTF-8 (jeu de caracteres par defaut)
 	if ((function_exists("utf8_decode")) and (Settings::get("ConvertLdapUtf8toIso") == "y"))
 	{
-		$l_email = utf8_decode($l_email);
-		$l_nom = utf8_decode($l_nom);
-		$l_prenom = utf8_decode($l_prenom);
+		$l_email = mb_convert_encoding($l_email, 'ISO-8859-1');
+		$l_nom = mb_convert_encoding($l_nom, 'ISO-8859-1');
+		$l_prenom = mb_convert_encoding($l_prenom, 'ISO-8859-1');
 	}
 	// Return infos
-	return array($l_nom, $l_prenom, $l_email);
+	return [$l_nom, $l_prenom, $l_email];
 }
 
 /**
@@ -1410,7 +1401,7 @@ function getRequestUri()
 			$_SERVER['QUERY_STRING'] = "";
 		if ((Settings::get("use_grr_url") == "y") && (Settings::get("grr_url") != ""))
 		{
-			if (substr(Settings::get("grr_url"), -1) != "/")
+			if (!str_ends_with(Settings::get("grr_url"), "/"))
 				$ad_signe = "/";
 			else
 				$ad_signe = "";
@@ -1430,7 +1421,7 @@ function getRequestUri()
  */
 function getBackUri()
 {
-	return htmlspecialchars($_SESSION['back'][1]);
+	return htmlspecialchars((string) $_SESSION['back'][1]);
 }
 
 

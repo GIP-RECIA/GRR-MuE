@@ -12,7 +12,7 @@ final class Session
 {
 
     public $session_time = 7200;//2 heures
-    public $session = array();
+    public $session = [];
     private $db;
 
     public function __construct()

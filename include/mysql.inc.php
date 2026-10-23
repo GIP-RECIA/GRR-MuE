@@ -221,7 +221,7 @@ function grr_sql_syntax_caseless_contains($fieldname, $s, $type_recherche = 1)
 }
 function grr_sql_syntax_caseless_contains_overload($fieldname, $s, $id_overload, $type_recherche = 1)
 {
-	$s = urlencode($s);
+	$s = urlencode((string) $s);
 	$s = str_replace("%", "\\%", $s);
 	$s = str_replace("_", "\\_", $s);
 	if ($type_recherche == 1)

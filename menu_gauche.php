@@ -12,7 +12,7 @@ if ($_GET['pview'] != 1)
 	echo '<div id="menuGauche">';
 	
 	$pageActuel = str_replace(".php","",basename($_SERVER['PHP_SELF']));
-    $out = demandeModeration($user);
+    $out = demandeModeration(getUserName());
     if(count($out) != 0){
         echo '<td id="ouvrir" style="cursor: inherit;width: 100%;" class="fontcolor4" align="center" >	
 				<a class="btn btn-warning btn-lien btn-block" href="moderation.php">Vous avez des demandes de modération</a>

@@ -52,3 +52,4 @@ images/9ced9a5214edece4192123246c333e26.png
 images/logo.jpg
 .idea
 vendor/
+*.sql.gz

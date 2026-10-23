@@ -935,7 +935,9 @@ function setEtablissementInSession(){
 function grr_resumeSession(){
 
 		// Resuming session
-	session_name(SESSION_NAME);
+	if (session_status() !== PHP_SESSION_ACTIVE) {
+		session_name(SESSION_NAME);
+	}
 	@session_start();
 
 	// Enregistrement de la page courante pour le retour en arriere

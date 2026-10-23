@@ -201,7 +201,8 @@ define('LCS_PAGE_AUTHENTIF',"../../lcs/auth.php");
 define('LCS_PAGE_LDAP_INC_PHP',"/var/www/Annu/includes/ldap.inc.php");
 # Réalise la connexion à la base d'authentification du LCS et include_once des fonctions de lcs/includes/functions.inc.php
 define('LCS_PAGE_AUTH_INC_PHP',"/var/www/lcs/includes/headerauth.inc.php");
-
+# lié à la montée de version
+define('SSO_ISALLOWEDMODIFY', true);
 #############
 # Entry Types
 #############

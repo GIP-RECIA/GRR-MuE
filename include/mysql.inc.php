@@ -73,8 +73,10 @@ function grr_sql_command ($sql)
 function grr_sql_query1 ($sql)
 {
 	$r = mysqli_query($GLOBALS['db_c'], $sql);
-	if (!$r)
+	if (!$r) {
+		error_log('DEBUG grr_sql_query1 failed: ' . $sql);
 		return -1;
+	}
 	if (mysqli_num_rows($r) != 1 || mysqli_field_count($GLOBALS['db_c']) != 1 || ($result_ = mysqli_result($r, 0, 0)) == "")
 		$result_ = -1;
 	mysqli_free_result($r);

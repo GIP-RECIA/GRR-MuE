@@ -1855,7 +1855,7 @@ function get_default_area($id_site = -1)
 function get_default_site($id_etablissement=-1){
 
 	if ((Settings::get("module_multietablissement") == "Oui") && ($id_etablissement != -1 ) ){
-		$res = grr_sql_query1("SELECT min(id) FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_etablissement = $id_etablissement");
+		$res = grr_sql_query1("SELECT min(id_site) FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_etablissement = $id_etablissement");
 	} else {
         $res = grr_sql_query1("SELECT min(id) FROM ".TABLE_PREFIX."_site");
 	}

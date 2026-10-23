@@ -163,7 +163,7 @@ echo "<h3>".get_vocab("title_session_max_length")."</h3>";
 //Longueur minimale du mot de passe exigé
 echo "<hr /><h3>".get_vocab("pwd")."</h3>";
 echo "\n<p>".get_vocab("pass_leng_explain").get_vocab("deux_points")."
-<input class=\"form-control\" type=\"text\" name=\"pass_leng\" value=\"".htmlentities(Settings::getGeneral("pass_leng"))."\" size=\"20\" /></p>";
+<input class=\"form-control\" type=\"text\" name=\"pass_leng\" value=\"".htmlentities((string) Settings::getGeneral("pass_leng"))."\" size=\"20\" /></p>";
 //
 // Url de déconnexion
 //*******************

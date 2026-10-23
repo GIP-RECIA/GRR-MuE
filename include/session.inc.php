@@ -121,11 +121,11 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 			if ($_user_ext_authentifie == "lcs_non_eleve")
 				$_statut = Settings::get("lcs_statut_prof");
 			$temoin_grp_ok = "non";
-			if (trim(Settings::get("lcs_liste_groupes_autorises")) == "")
+			if (trim((string) Settings::get("lcs_liste_groupes_autorises")) == "")
 				$temoin_grp_ok = "oui";
 			else{
 
-				$tab_grp_autorise = explode(";",Settings::get("lcs_liste_groupes_autorises"));
+				$tab_grp_autorise = explode(";",(string) Settings::get("lcs_liste_groupes_autorises"));
 				$tot =  count($tab_grp_autorise);
 				for ($i = 0; $i < $tot; $i++)
 				{
@@ -474,13 +474,13 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 	if ($auth_ldap == 'yes'){
 		// Cas particulier des serveur SE3
 		// se3_liste_groupes_autorises est vide -> pas de restriction
-		if (trim(Settings::get("se3_liste_groupes_autorises")) == ""){
+		if (trim((string) Settings::get("se3_liste_groupes_autorises")) == ""){
 			$temoin_grp_ok = "oui";
 		}
 		else{
 			// se3_liste_groupes_autorises n'est pas vide -> on teste si le $_login appartient à un des groupes
 			$temoin_grp_ok = "non";
-			$tab_grp_autorise = explode(";", Settings::get("se3_liste_groupes_autorises"));
+			$tab_grp_autorise = explode(";", (string) Settings::get("se3_liste_groupes_autorises"));
 			$total =  count($tab_grp_autorise);
 			for ($i = 0; $i < $total; $i++){
 				if (se3_grp_members($tab_grp_autorise[$i],$_login) == "oui"){
@@ -1097,7 +1097,7 @@ function grr_verif_ldap($_login, $_password){
 	if ($ds)
 	{
 				// Attributs testés pour egalite avec le login
-		$atts = explode("|",Settings::get("ldap_champ_recherche"));
+		$atts = explode("|",(string) Settings::get("ldap_champ_recherche"));
 				//$atts = array('uid', 'login', 'userid', 'cn', 'sn', 'samaccountname', 'userprincipalname');
 			//$login_search = ereg_replace("[^-@._[:space:][:alnum:]]", "", $_login);
 		$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", (string) $_login);
@@ -1401,7 +1401,7 @@ function getRequestUri()
 			$_SERVER['QUERY_STRING'] = "";
 		if ((Settings::get("use_grr_url") == "y") && (Settings::get("grr_url") != ""))
 		{
-			if (!str_ends_with(Settings::get("grr_url"), "/"))
+			if (!str_ends_with((string) Settings::get("grr_url"), "/"))
 				$ad_signe = "/";
 			else
 				$ad_signe = "";

@@ -31,8 +31,8 @@ $grr_script_name = "admin_right.php";
 
 $back = getBackUri();
 
-$id_area = isset($_POST["id_area"]) ? $_POST["id_area"] : (isset($_GET["id_area"]) ? $_GET["id_area"] : NULL);
-$id_room = isset($_POST["id_room"]) ? $_POST["id_room"] : (isset($_GET["id_room"]) ? $_GET["id_room"] : NULL);
+$id_area = $_POST["id_area"] ?? $_GET["id_area"] ?? NULL;
+$id_room = $_POST["id_room"] ?? $_GET["id_room"] ?? NULL;
 
 if (isset($id_room))
 	settype($id_room,"integer");
@@ -49,10 +49,10 @@ include "admin_col_gauche.php";
 
 // tableau des ressources auxquelles l'utilisateur n'a pas accès
 $tab_rooms_noaccess = verif_acces_ressource(getUserName(), 'all');
-$reg_admin_login = isset($_POST["reg_admin_login"]) ? $_POST["reg_admin_login"] : NULL;
-$reg_multi_admin_login = isset($_POST["reg_multi_admin_login"]) ? $_POST["reg_multi_admin_login"] : NULL;
+$reg_admin_login = $_POST["reg_admin_login"] ?? NULL;
+$reg_multi_admin_login = $_POST["reg_multi_admin_login"] ?? NULL;
 $test_user =  isset($_POST["reg_multi_admin_login"]) ? "multi" : (isset($_POST["reg_admin_login"]) ? "simple" : NULL);
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$action = $_GET["action"] ?? NULL;
 $msg = '';
 
 if ($test_user == "multi")
@@ -325,7 +325,7 @@ if ($res)
 		$link = "admin_right.php?id_area=$row[0]";
 		// On affiche uniquement les domaines administrés par l'utilisateur
 		if (authGetUserLevel(getUserName(),$row[0],'area') >= 4)
-			$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>\n";
+			$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>\n";
 	}
 }
 $out_html .= "</select></div>\n
@@ -366,7 +366,7 @@ if ($res)
 	for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 	{
 		if ($row[2])
-			$temp = " (".htmlspecialchars($row[2]).")";
+			$temp = " (".htmlspecialchars((string) $row[2]).")";
 		else
 			$temp = "";
 		$selected = ($row[0] == $id_room) ? "selected=\"selected\"" : "";
@@ -419,10 +419,10 @@ if ($id_room != -1)
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 		{
 			$login_admin = $row[0];
-			$nom_admin = htmlspecialchars($row[1]);
-			$prenom_admin = htmlspecialchars($row[2]);
+			$nom_admin = htmlspecialchars((string) $row[1]);
+			$prenom_admin = htmlspecialchars((string) $row[2]);
 			echo "<b>";
-			echo "$nom_admin $prenom_admin</b> | <a href='admin_right.php?action=del_admin&amp;login_admin=".urlencode($login_admin)."&amp;id_room=$id_room&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
+			echo "$nom_admin $prenom_admin</b> | <a href='admin_right.php?action=del_admin&amp;login_admin=".urlencode((string) $login_admin)."&amp;id_room=$id_room&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
 		}
 	}
 	if ($nombre == 0)
@@ -430,7 +430,7 @@ if ($id_room != -1)
 }
 else
 {
-	$adminAllRoom = array();
+	$adminAllRoom = [];
 	
 	$exist_admin='no';
 	
@@ -481,7 +481,7 @@ else
 					$exist_admin = 'yes';
 				}
 				echo "<b>";
-				echo htmlspecialchars($row[1])." ".htmlspecialchars($row[2])."</b> | <a href='admin_right.php?action=del_admin_all&amp;login_admin=".urlencode($row[0])."&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
+				echo htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])."</b> | <a href='admin_right.php?action=del_admin_all&amp;login_admin=".urlencode((string) $row[0])."&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
 				$adminAllRoom[] = $row[0];
 			}
 		}
@@ -558,7 +558,7 @@ if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
 		   $listeUser = array_map("unserialize", array_unique(array_map("serialize", $listeUser)));
 		}
 		if ($listeUser) foreach ($listeUser as $row ) {
-			echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>";
+			echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>";
 		}
 		?>
 	</select>
@@ -579,7 +579,7 @@ if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
 			<div><select name="agent" size="8" style="width:200px;" multiple="multiple" ondblclick="Deplacer(this.form.agent,this.form.elements['reg_multi_admin_login[]'])">
 				<?php
 				 if ($listeUser) foreach ($listeUser as $row ) {
-						echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>";
+						echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>";
 				}
 				?>
 			</select>

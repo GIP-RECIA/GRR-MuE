@@ -49,7 +49,7 @@ if ((Settings::get("authentification_obli") == 0) && (getUserName() == ''))
 	$type_session = "no_session";
 else
 	$type_session = "with_session";
-$id_room = isset($_GET["id_room"]) ? $_GET["id_room"] : NULL;
+$id_room = $_GET["id_room"] ?? NULL;
 if (isset($id_room))
 	settype($id_room,"integer");
 if ((authGetUserLevel(getUserName(),$id_room) < 4) || (!verif_acces_ressource(getUserName(), $id_room)))
@@ -64,7 +64,7 @@ if (!$res)
 $row = grr_sql_row_keyed($res, 0);
 grr_sql_free($res);
 echo '<h3 style="text-align:center;">';
-echo get_vocab("room").get_vocab("deux_points")." ".htmlspecialchars($row["room_name"]);
+echo get_vocab("room").get_vocab("deux_points")." ".htmlspecialchars((string) $row["room_name"]);
 $id_area = mrbsGetRoomArea($id_room);
 $area_name = grr_sql_query1("SELECT area_name FROM ".TABLE_PREFIX."_area WHERE id='".$id_area."'");
 $area_access = grr_sql_query1("SELECT access FROM ".TABLE_PREFIX."_area WHERE id='".$id_area."'");

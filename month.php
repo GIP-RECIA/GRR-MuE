@@ -156,8 +156,8 @@ if ($_GET['pview'] != 1){
 	echo '<div id="planning">'.PHP_EOL;}
 else{
 	echo '<div id="print_planning">'.PHP_EOL;}
-	
-	
+
+
 // AFFICHAGE DU TITRE DU PLANNING 	
 echo '<div class="titre_planning">'.PHP_EOL;
 
@@ -166,7 +166,7 @@ include "include/trailer.inc.php";
 echo '<div class="titre_planningDate">'.PHP_EOL;
 	// Flèche Précédente pour réculer d'un mois
 	echo '<button class="btn btn-link" onclick="charger();javascript: location.href=\'month.php?year='.$yy.'&amp;month='.$ym.'&amp;room='.$room.'\';"><span class="glyphicon glyphicon-chevron-left"></span></button>';
-		
+
 echo '<h4 class="titre">';
 
 	// Affichage du mois
@@ -178,10 +178,10 @@ echo '<h4 class="titre">';
 	// Flèche Suivante pour avancer d'un mois
 	echo '<button class="btn btn-link" onclick="charger();javascript: location.href=\'month.php?year='.$ty.'&amp;month='.$tm.'&amp;room='.$room.'\';"><span class="glyphicon glyphicon-chevron-right"></span></button>';
 	echo '</div>'.PHP_EOL;
-		
+
 	// Affichage du nom du domaine et de la ressource
 	//echo ucfirst($this_area_name).' - '.$this_room_name.' '.$this_room_name_des;
-	echo '<div class="titre_planningRessource">' .ucfirst($this_area_name).' - '.$this_room_name.' '.$this_room_name_des. '</div>'.PHP_EOL;
+	echo '<div class="titre_planningRessource">' .ucfirst((string) $this_area_name).' - '.$this_room_name.' '.$this_room_name_des. '</div>'.PHP_EOL;
 
 //echo '</h4>'.PHP_EOL;
 
@@ -201,7 +201,7 @@ if ($this_moderate_room == "1")
 	echo '<br><span class="texte_ress_moderee">',get_vocab("reservations_moderees"),'</span>';
 
 if (isset($this_room_warning) && $this_room_warning!='' && $this_room_warning!='-1')
-    echo "<br /><span class='avertissement'>".htmlspecialchars($this_room_warning)."</span>";
+    echo "<br /><span class='avertissement'>".htmlspecialchars((string) $this_room_warning)."</span>";
 
 echo '</div>',PHP_EOL;
 
@@ -215,7 +215,7 @@ if (isset($_GET['precedent']))
 if ($this_area_show_comment == "y" && $_GET['pview'] != 1 && ($this_area_comment != "") && ($this_area_comment != -1))
 	echo '<div style="text-align:center;">',$this_area_comment,'</div>',PHP_EOL;
 echo '<div class="contenu_planning">',PHP_EOL;
-$all_day = preg_replace("/ /", " ", get_vocab("all_day2"));
+$all_day = preg_replace("/ /", " ", (string) get_vocab("all_day2"));
 $sql = "SELECT start_time, end_time, id, name, beneficiaire, description, type, moderate, beneficiaire_ext
 FROM ".TABLE_PREFIX."_entry
 WHERE room_id=$room
@@ -250,8 +250,8 @@ else
 			$midnight_tonight = $midnight + 86400;
 			if ($enable_periods == 'y')
 			{
-				$start_str = preg_replace("/ /", " ", period_time_string($row[0]));
-				$end_str   = preg_replace("/ /", " ", period_time_string($row[1], -1));
+				$start_str = preg_replace("/ /", " ", (string) period_time_string($row[0]));
+				$end_str   = preg_replace("/ /", " ", (string) period_time_string($row[1], -1));
 				switch (cmp3($row[0], $midnight) . cmp3($row[1], $midnight_tonight))
 				{
 					case "> < ":
@@ -374,7 +374,7 @@ else
 				if ($ferie_true)
 					$class .= 'ferie ';
 			}
-			echo '<td class="cell_month">',PHP_EOL,'<div class="monthday ',$class,'">',PHP_EOL,'<a title="',htmlspecialchars(get_vocab("see_all_the_rooms_for_the_day")),$title,'" href="day.php?year=',$year,'&amp;month=',$month,'&amp;day=',$cday,'&amp;area=',$area,'">',$name_day;
+			echo '<td class="cell_month">',PHP_EOL,'<div class="monthday ',$class,'">',PHP_EOL,'<a title="',htmlspecialchars((string) get_vocab("see_all_the_rooms_for_the_day")),$title,'" href="day.php?year=',$year,'&amp;month=',$month,'&amp;day=',$cday,'&amp;area=',$area,'">',$name_day;
 			if (Settings::get("jours_cycles_actif") == "Oui" && intval($jour_cycle) >- 1)
 			{
 				if (intval($jour_cycle) > 0)
@@ -410,12 +410,12 @@ else
 							{
 								$currentPage = 'month_all2';
 								$id = $d[$cday]["id"][$i];
-								echo '<a title="'.htmlspecialchars($d[$cday]["who"][$i]).'" class="lienModal" onclick="requestModal('.$id.','.$cday.','.$month.','.$year,',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">';
+								echo '<a title="'.htmlspecialchars((string) $d[$cday]["who"][$i]).'" class="lienModal" onclick="requestModal('.$id.','.$cday.','.$month.','.$year,',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">';
 								//echo '<a title="',htmlspecialchars($d[$cday]["who"][$i]),'" data-width="675" onclick="request(',$id,',',$cday,',',$month,',',$year,',\'',$currentPage,'\',readData);" data-rel="popup_name" class="poplight">';
 							}
 							else
 							{
-								echo '<a class="lienCellule" title="',htmlspecialchars($d[$cday]["who"][$i]),'" href="view_entry.php?id=',$d[$cday]["id"][$i],'&amp;day=',$cday,'&amp;month=',$month,'&amp;year=',$year,'&amp;page=month">';
+								echo '<a class="lienCellule" title="',htmlspecialchars((string) $d[$cday]["who"][$i]),'" href="view_entry.php?id=',$d[$cday]["id"][$i],'&amp;day=',$cday,'&amp;month=',$month,'&amp;year=',$year,'&amp;page=month">';
 							}
 						}
 						echo $d[$cday]["data"][$i],'<br/>';
@@ -434,7 +434,7 @@ else
 				$date_now = time();
 				$hour = date("H",$date_now);
 				$date_booking = mktime(24, 0, 0, $month, $cday, $year);
-				
+
 				if ((($authGetUserLevel > 1) || ($auth_visiteur == 1))
 					&& ($UserRoomMaxBooking != 0)
 					&& verif_booking_date(getUserName(), -1, $room, $date_booking, $date_now, $enable_periods)
@@ -489,7 +489,7 @@ else
 		$("#popup_name").draggable({containment: "#container"});
 		$("#popup_name").resizable();
 	});
-		
+
 </script>
 <?php
 
@@ -514,7 +514,7 @@ echo '
 	</div>
 </div>
 ';
-	
+
 include "footer.php";
 
 ?>

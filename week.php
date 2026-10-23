@@ -168,9 +168,9 @@ $td = date("d", $i);
 
 
 if ((!isset($_GET['pview'])) || ($_GET['pview'] != 1)){
-	
+
 	include "include/trailer.inc.php";
-	
+
 	/*echo '<table class="table-header">',PHP_EOL,'<tr>',PHP_EOL,'<td class="left">',PHP_EOL,
 	'<button class="btn btn-default btn-xs" onclick="charger();javascript: location.href=\'week.php?year=',$yy,'&amp;month=',$ym,'&amp;day=',$yd,'&amp;room=',$room,
 	'\';"><span class="glyphicon glyphicon-backward"></span>',get_vocab("weekbefore"),'</button>',PHP_EOL,'</td>',PHP_EOL,'<td>',PHP_EOL;
@@ -198,7 +198,7 @@ $setting = Settings::get("menu_gauche");
 	echo '</div>'.PHP_EOL;
 
 	// Affichage du domaine et de la ressource
-	echo '<div class="titre_planningRessource">' .ucfirst($this_area_name).' - '.$this_room_name.' '.$this_room_name_des. '</div>'.PHP_EOL;
+	echo '<div class="titre_planningRessource">' .ucfirst((string) $this_area_name).' - '.$this_room_name.' '.$this_room_name_des. '</div>'.PHP_EOL;
 	
 //echo '</h4>';
 
@@ -221,7 +221,7 @@ if ($this_moderate_room == "1" && $_GET['pview'] != 1){
 	echo '<br><span class="texte_ress_moderee">',get_vocab("reservations_moderees"),'</span>',PHP_EOL;
 }
 if (isset($this_room_warning) && $this_room_warning!='' && $this_room_warning!='-1'){
-    echo "<br /><span class='avertissement'>".htmlspecialchars($this_room_warning)."</span>";
+    echo "<br /><span class='avertissement'>".htmlspecialchars((string) $this_room_warning)."</span>";
 }
 
 if ($this_area_show_comment == "y" && $_GET['pview'] != 1 && ($this_area_comment != "") && ($this_area_comment != -1)){
@@ -406,7 +406,7 @@ for ($t = $week_start; $t <= $week_end; $t += 86400)
 			if ($ferie_true)
 				$class .= "ferie ";
 		}
-		echo "<th style=\"width:14%;\"><a onclick=\"charger()\" class=\"lienPlanning ".$class."\" title=\"".$title.htmlspecialchars(get_vocab("see_all_the_rooms_for_the_day"))."\" href=\"day.php?year=$year_actuel&amp;month=$month_actuel&amp;day=$num_day&amp;area=$area\">". utf8_strftime($dformat, $t)."</a>";
+		echo "<th style=\"width:14%;\"><a onclick=\"charger()\" class=\"lienPlanning ".$class."\" title=\"".$title.htmlspecialchars((string) get_vocab("see_all_the_rooms_for_the_day"))."\" href=\"day.php?year=$year_actuel&amp;month=$month_actuel&amp;day=$num_day&amp;area=$area\">". utf8_strftime($dformat, $t)."</a>";
 		if (Settings::get("jours_cycles_actif") == "Oui" && intval($jour_cycle) >- 1)
 			if (intval($jour_cycle) > 0)
 				echo "<br />".get_vocab("rep_type_6")." ".$jour_cycle;
@@ -541,7 +541,7 @@ for ($t = $week_start; $t <= $week_end; $t += 86400)
 								&& (($this_statut_room == "1") || (($this_statut_room == "0") && (authGetUserLevel(getUserName(),$room) > 2) )) 
 								&& ($_GET['pview'] != 1)
 								&& auth_user_reserv_room_etab($room)){
-									
+
 							if ($enable_periods == 'y'){
 								echo "<a href=\"edit_entry.php?room=$room"
 								. "&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth"
@@ -582,11 +582,11 @@ for ($t = $week_start; $t <= $week_end; $t += 86400)
 								{
 									$currentPage = 'week';
 									$id =  $d[$weekday][$slot - $decale_slot * $nb_case]["id"];
-									echo '<a title="'.htmlspecialchars($d[$weekday][$slot - $decale_slot * $nb_case]["who"]).'" class="lienModal" onclick="requestModal('.$id.','.$wday.','.$wmonth.','.$wyear.',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">';
+									echo '<a title="'.htmlspecialchars((string) $d[$weekday][$slot - $decale_slot * $nb_case]["who"]).'" class="lienModal" onclick="requestModal('.$id.','.$wday.','.$wmonth.','.$wyear.',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">';
 									//echo "<a title=\"".htmlspecialchars($d[$weekday][$slot - $decale_slot * $nb_case]["who"])."\"  data-width=\"675\" onclick=\"request($id,$wday,$wmonth,$wyear,'$currentPage',readData);\" data-rel=\"popup_name\" class=\"poplight\">" ;
 								}
 								else
-									echo "<a class=\"lienCellule\" title=\"".htmlspecialchars($d[$weekday][$slot-$decale_slot*$nb_case]["who"])."\"  href=\"view_entry.php?id=" . $d[$weekday][$slot - $decale_slot * $nb_case]["id"]."&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear&amp;page=week\">";
+									echo "<a class=\"lienCellule\" title=\"".htmlspecialchars((string) $d[$weekday][$slot-$decale_slot*$nb_case]["who"])."\"  href=\"view_entry.php?id=" . $d[$weekday][$slot - $decale_slot * $nb_case]["id"]."&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear&amp;page=week\">";
 							}
 							echo $d[$weekday][$slot - $decale_slot * $nb_case]["data"]."";
 							$Son_GenreRepeat = grr_sql_query1("SELECT type_name FROM ".TABLE_PREFIX."_type_area ,".TABLE_PREFIX."_entry  WHERE  ".TABLE_PREFIX."_entry.id= ". $d[$weekday][$slot - $decale_slot * $nb_case]['id']." AND ".TABLE_PREFIX."_entry.type= ".TABLE_PREFIX."_type_area.type_letter");
@@ -616,7 +616,7 @@ for ($t = $week_start; $t <= $week_end; $t += 86400)
 						//if (!isset($d[$weekday][$slot-$decale_slot*$nb_case]["id"])) {
 						//	echo tdcell($empty_color)."";
 						//}
-						
+
 						if ((isset($d[$weekday][$slot - $decale_slot * $nb_case]["statut"])) && ($d[$weekday][$slot - $decale_slot * $nb_case]["statut"] != '-'))
 							echo '<img src="img_grr/buzy.png" alt="'.get_vocab("ressource actuellement empruntee").'" title="'.get_vocab("ressource actuellement empruntee").'" width="20" height="20" class="image" />'.PHP_EOL;
 						if (($this_delais_option_reservation > 0) && (isset($d[$weekday][$slot - $decale_slot * $nb_case]["option_reser"])) && ($d[$weekday][$slot - $decale_slot * $nb_case]["option_reser"] != -1))

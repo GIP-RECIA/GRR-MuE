@@ -148,5 +148,5 @@ $display_type .= '</td></tr></table>'.PHP_EOL;
 if ($nb_type > 1)
 	echo $display_type;
 else
-	echo '<table width="100%"><tr><td class="E"><b>'.get_vocab("type").get_vocab("deux_points").htmlentities($type_nom_unique).'</b>'.PHP_EOL.'<input name="type" type="hidden" value="'.$type_id_unique.'" /></td></tr></table>'.PHP_EOL;
+	echo '<table width="100%"><tr><td class="E"><b>'.get_vocab("type").get_vocab("deux_points").htmlentities((string) $type_nom_unique).'</b>'.PHP_EOL.'<input name="type" type="hidden" value="'.$type_id_unique.'" /></td></tr></table>'.PHP_EOL;
 ?>

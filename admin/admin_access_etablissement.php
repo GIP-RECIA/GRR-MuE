@@ -31,12 +31,12 @@
 include_once "../include/admin.inc.php";
 $grr_script_name = "admin_access_etablissement.php";
 
-$id = isset($_POST["id"]) ? $_POST["id"] : (isset($_GET["id"]) ? $_GET["id"] : NULL);
+$id = $_POST["id"] ?? $_GET["id"] ?? NULL;
 if (!isset($id)) settype($id,"integer");
-$reg_user_login = isset($_POST["reg_user_login"]) ? $_POST["reg_user_login"] : NULL;
-$reg_multi_user_login = isset($_POST["reg_multi_user_login"]) ? $_POST["reg_multi_user_login"] : NULL;
+$reg_user_login = $_POST["reg_user_login"] ?? NULL;
+$reg_multi_user_login = $_POST["reg_multi_user_login"] ?? NULL;
 $test_user =  isset($_POST["reg_multi_user_login"]) ? "multi" : (isset($_POST["reg_user_login"]) ? "simple" : NULL);
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$action = $_GET["action"] ?? NULL;
 $msg='';
 
 $back = getBackUri();
@@ -46,7 +46,7 @@ $year  = date("Y");
 
 if(authGetUserLevel(getUserName(),-1,'area') < 6)
 {
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
 
@@ -66,7 +66,7 @@ if ($test_user == "multi") {
   	if ($id !=-1) {
   		if(authGetUserLevel(getUserName(),$id,'etablissement') < 6)
   		{
-  			showAccessDenied($day, $month, $year, '',$back);
+  			showAccessDenied($day);
   			exit();
   		}
   		$sql = "SELECT * FROM ".TABLE_PREFIX."_j_user_etablissement WHERE (login = '".$valeur."' and id_etablissement = $id)";
@@ -93,7 +93,7 @@ if ($test_user == "simple") {
     if ($id !=-1) {
         if(authGetUserLevel(getUserName(),$id,'etablissement') < 6)
         {
-            showAccessDenied($day, $month, $year, '',$back);
+            showAccessDenied($day);
             exit();
         }
         $sql = "SELECT * FROM ".TABLE_PREFIX."_j_user_etablissement WHERE (login = '$reg_user_login' and id_etablissement = '$id')";
@@ -113,7 +113,7 @@ if ($test_user == "simple") {
 if ($action=='del_user') {
     if(authGetUserLevel(getUserName(),$id,'etablissement') < 6)
     {
-        showAccessDenied($day, $month, $year, '',$back);
+        showAccessDenied($day);
         exit();
     }
     unset($login_user); $login_user = $_GET["login_user"];
@@ -140,7 +140,7 @@ $out_html .= "\n<option value=\"admin_access_etablissement.php?id=-1\">".get_voc
         $link = "admin_access_etablissement.php?id=$row[0]";
         // on affiche que les domaines que l'utilisateur connect� a le droit d'administrer
         if(authGetUserLevel(getUserName(),$row[0],'etab') >= 6) {
-            $out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>";
+            $out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>";
             $existe_etablissement = 'yes';
         }
     }
@@ -176,10 +176,10 @@ if ($id != -1) {
     if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
         {
         $login_user = $row[0];
-        $nom_admin = htmlspecialchars($row[1]);
-        $prenom_admin = htmlspecialchars($row[2]);
+        $nom_admin = htmlspecialchars((string) $row[1]);
+        $prenom_admin = htmlspecialchars((string) $row[2]);
         echo "<b>";
-        echo "$nom_admin $prenom_admin</b> | <a href='admin_access_etablissement.php?action=del_user&amp;login_user=".urlencode($login_user)."&amp;id=$id'>".get_vocab("delete")."</a><br />\n";
+        echo "$nom_admin $prenom_admin</b> | <a href='admin_access_etablissement.php?action=del_user&amp;login_user=".urlencode((string) $login_user)."&amp;id=$id'>".get_vocab("delete")."</a><br />\n";
     }
     if ($nombre == 0) {
         echo "<h3 class='avertissement'>".get_vocab("no_user_etablissement")."</h3>\n";
@@ -199,7 +199,7 @@ if ($id != -1) {
     
     $res = grr_sql_query($sqlListUserToAdd);
     if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
-        echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+        echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
     }
     ?>
     </select>
@@ -222,7 +222,7 @@ if ($id != -1) {
 
     <?php
     if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
-        echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+        echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
     }
     ?>
 

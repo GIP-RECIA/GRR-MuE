@@ -76,15 +76,15 @@ else
 	$type_session = "with_session";
 
 //Champs de création du rapport.
-$From_day = isset($_GET["From_day"]) ? $_GET["From_day"] : NULL;
-$From_month = isset($_GET["From_month"]) ? $_GET["From_month"] : NULL;
-$From_year = isset($_GET["From_year"]) ? $_GET["From_year"] : NULL;
-$To_day = isset($_GET["To_day"]) ? $_GET["To_day"] : NULL;
-$To_month = isset($_GET["To_month"]) ? $_GET["To_month"] : NULL;
-$To_year = isset($_GET["To_year"]) ? $_GET["To_year"] : NULL;
-$champ = array();
-$texte = array();
-$type_recherche = array();
+$From_day = $_GET["From_day"] ?? NULL;
+$From_month = $_GET["From_month"] ?? NULL;
+$From_year = $_GET["From_year"] ?? NULL;
+$To_day = $_GET["To_day"] ?? NULL;
+$To_month = $_GET["To_month"] ?? NULL;
+$To_year = $_GET["To_year"] ?? NULL;
+$champ = [];
+$texte = [];
+$type_recherche = [];
 $k = 0;
 
 if (isset($_GET['champ'][0]))
@@ -101,7 +101,7 @@ if (isset($_GET['champ'][0]))
 	}
 }
 
-$summarize = isset($_GET["summarize"]) ? $_GET["summarize"] : NULL;
+$summarize = $_GET["summarize"] ?? NULL;
 if (!isset($_GET["sumby"]))
 	$_GET["sumby"] = "6";
 else
@@ -116,15 +116,15 @@ function reporton(&$row, $dformat)
 	global $vocab, $enable_periods;
 	echo "<tr>";
 		//Affiche "area"
-	$area_nom = htmlspecialchars($row[8]);
-	$areadescrip = htmlspecialchars($row[10]);
+	$area_nom = htmlspecialchars((string) $row[8]);
+	$areadescrip = htmlspecialchars((string) $row[10]);
 	if ($areadescrip != "")
 		$titre_area_descript = "title=\"".$areadescrip."\"";
 	else
 		$titre_area_descript = "";
 	echo "<td ".$titre_area_descript." >".$area_nom."</td>";
 		//Affiche "room"
-	$room = htmlspecialchars($row[9]);
+	$room = htmlspecialchars((string) $row[9]);
 	echo "<td>".$room."</td>";
 		// Breve description (title), avec un lien
 	$breve_description = affichage_lien_resa_planning($row[3],$row[0]);
@@ -147,7 +147,7 @@ function reporton(&$row, $dformat)
 	}
 		//Description
 	if ($row[4] != "")
-		$description = nl2br(htmlspecialchars($row[4]));
+		$description = nl2br(htmlspecialchars((string) $row[4]));
 	else
 		$description = " ";
 	echo "<td>". $description . "</td>\n";
@@ -161,7 +161,7 @@ function reporton(&$row, $dformat)
 	$res_beneficiaire = grr_sql_query($sql_beneficiaire);
 	if ($res_beneficiaire)
 		$row_user = grr_sql_row($res_beneficiaire, 0);
-	echo "<td>".htmlspecialchars($row_user[0]) ." ". htmlspecialchars($row_user[1])."</td>";
+	echo "<td>".htmlspecialchars((string) $row_user[0]) ." ". htmlspecialchars((string) $row_user[1])."</td>";
 		//Affichage de la date de la dernière mise à jour
 	echo "<td>". date_time_string($row[7],$dformat) . "</td>\n";
 	echo "</tr>\n";
@@ -192,9 +192,9 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end, &$room_
 		// [5]   Type -> e.type
 		// [6]   réservé par (nom ou IP), (HTML) -> e.beneficiaire
 		// [12]  les champs additionnele -> e.overload_desc
-		$breve_description = htmlspecialchars($temp);
+		$breve_description = htmlspecialchars((string) $temp);
 		//$row[8] : Area , $row[9]:Room
-		$room = htmlspecialchars($row[8]) .$vocab["deux_points"]. "<br />" . htmlspecialchars($row[9]);
+		$room = htmlspecialchars((string) $row[8]) .$vocab["deux_points"]. "<br />" . htmlspecialchars((string) $row[9]);
 	}
 	else
 	{
@@ -225,9 +225,9 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start, $report_end,
 		$temp = "(Autres)";
 	if ($csv == "n")
 	{
-		$breve_description = htmlspecialchars($temp);
+		$breve_description = htmlspecialchars((string) $temp);
 		// Area and room separated by break:
-		$room = htmlspecialchars($row[8]) .$vocab["deux_points"]. "<br />" . htmlspecialchars($row[9]);
+		$room = htmlspecialchars((string) $row[8]) .$vocab["deux_points"]. "<br />" . htmlspecialchars((string) $row[9]);
 	}
 	else
 	{
@@ -268,11 +268,11 @@ function do_summary(&$count, &$hours, &$room_hash, &$breve_description_hash, $en
 	// Make a sorted array of area/rooms, and of names, to use for column
 	// and row indexes. Use the rooms and names hashes built by accumulate().
 	// At PHP4 we could use array_keys().
-	$rooms = array();
+	$rooms = [];
 	foreach ($room_hash as $room_key => $_)
 		$rooms[] = $room_key;
 	ksort($rooms);
-	$breve_descriptions = array();
+	$breve_descriptions = [];
 	foreach ($breve_description_hash as $breve_description_key => $_)
 		$breve_descriptions[] = $breve_description_key;
 	ksort($breve_descriptions);
@@ -295,8 +295,8 @@ function do_summary(&$count, &$hours, &$room_hash, &$breve_description_hash, $en
 			echo "<hr /><h1>".get_vocab("summary_header")."</h1><table class=\"table table-bordered table-striped\">\n";
 		echo "<tr><td class=\"BL\" align=\"left\"><b>".$premiere_cellule." \ ".get_vocab("room")."</b></td>\n";
 	}
-	$col_count_total = array();
-	$col_hours_total = array();
+	$col_count_total = [];
+	$col_hours_total = [];
 	for ($c = 0; $c < $n_rooms; $c++)
 	{
 		if ($csv == "n")
@@ -309,7 +309,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$breve_description_hash, $en
 	if ($csv == "n")
 		echo "<td class=\"BR\" align=\"right\"><br /><b>".get_vocab("total")."</b></td></tr>\n";
 	else
-		echo html_entity_decode($vocab['total']).";\r\n";
+		echo html_entity_decode((string) $vocab['total']).";\r\n";
 	$grand_count_total = 0;
 	$grand_hours_total = 0;
 	for ($r = 0; $r < $n_names; $r++)
@@ -353,7 +353,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$breve_description_hash, $en
 	if ($csv == "n")
 		echo "<tr><td class=\"BR\" align=\"right\"><b>".get_vocab("total")."</b></td>\n";
 	else
-		echo html_entity_decode($vocab['total']).";";
+		echo html_entity_decode((string) $vocab['total']).";";
 	for ($c = 0; $c < $n_rooms; $c++)
 		cell($col_count_total[$c], $col_hours_total[$c], $csv,$decompte);
 	cell($grand_count_total, $grand_hours_total, $csv,$decompte);
@@ -381,7 +381,7 @@ if (isset($champ[0]))
 	{
 		$texte[$k] = unslashes($texte[$k]);
 		//Mettre les valeurs par défaut quand le formulaire est réutilisé.
-		$texte_default[$k] = htmlspecialchars($texte[$k]);
+		$texte_default[$k] = htmlspecialchars((string) $texte[$k]);
 		$k++;
 	}
 }
@@ -594,7 +594,7 @@ if (($summarize != 4) && ($summarize != 5))
 						if (( !isset($_GET['pview']) || ($_GET['pview'] != 1)) && (($summarize != 4) && ($summarize != 5)))
 						{
 							echo '<p style="text-align:center;">
-							<a href="' . traite_grr_url("","y")."report.php" . '?' . htmlspecialchars($_SERVER['QUERY_STRING']) . '&amp;pview=1" ';
+							<a href="' . traite_grr_url("","y")."report.php" . '?' . htmlspecialchars((string) $_SERVER['QUERY_STRING']) . '&amp;pview=1" ';
 							if (Settings::get("pview_new_windows") == 1)
 								echo ' target="_blank"';
 							echo '><span class="glyphicon glyphicon-print"></span></a>
@@ -891,13 +891,13 @@ if (($summarize != 4) && ($summarize != 5))
 				$nmatch = grr_sql_count($res);
 				if ($nmatch == 0)
 				{
-					echo html_entity_decode($vocab["nothing_found"]) . "\r\n";
+					echo html_entity_decode((string) $vocab["nothing_found"]) . "\r\n";
 					grr_sql_free($res);
 				}
 				else
 				{
 					// Ligne d'en-tête
-                    echo html_entity_decode($vocab["reservee au nom de"]).";".html_entity_decode($vocab["areas"]).";".html_entity_decode($vocab["room"]).html_entity_decode(preg_replace("/ /", " ",$vocab["deux_points"])).";".html_entity_decode($vocab["description"]).";".html_entity_decode($vocab["time"])." - ".html_entity_decode($vocab["duration"]).";".html_entity_decode($vocab["namebooker"]).html_entity_decode(preg_replace("/ /", " ",$vocab["deux_points"])).";".html_entity_decode($vocab["match_descr"]).";".html_entity_decode($vocab["type"]).";".html_entity_decode($vocab["lastupdate"]).";\n";
+                    echo html_entity_decode((string) $vocab["reservee au nom de"]).";".html_entity_decode((string) $vocab["areas"]).";".html_entity_decode((string) $vocab["room"]).html_entity_decode(preg_replace("/ /", " ",(string) $vocab["deux_points"])).";".html_entity_decode((string) $vocab["description"]).";".html_entity_decode((string) $vocab["time"])." - ".html_entity_decode((string) $vocab["duration"]).";".html_entity_decode((string) $vocab["namebooker"]).html_entity_decode(preg_replace("/ /", " ",(string) $vocab["deux_points"])).";".html_entity_decode((string) $vocab["match_descr"]).";".html_entity_decode((string) $vocab["type"]).";".html_entity_decode((string) $vocab["lastupdate"]).";\n";
 				}
 				for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 				{
@@ -943,21 +943,21 @@ if (($summarize != 4) && ($summarize != 5))
 				$nmatch = grr_sql_count($res);
 				if ($nmatch == 0)
 				{
-					echo html_entity_decode($vocab["nothing_found"]) . "\r\n";
+					echo html_entity_decode((string) $vocab["nothing_found"]) . "\r\n";
 					grr_sql_free($res);
 				}
 				else
 				{
 					if ($_GET["sumby"] == "6")
-						echo html_entity_decode($vocab["summarize_by"])." " .html_entity_decode($vocab["sum_by_creator"])." - $day $month $year;";
+						echo html_entity_decode((string) $vocab["summarize_by"])." " .html_entity_decode((string) $vocab["sum_by_creator"])." - $day $month $year;";
 					else if ($_GET["sumby"] == "3")
-						echo html_entity_decode($vocab["summarize_by"])." " .html_entity_decode($vocab["sum_by_descrip"])." - $day $month $year;";
+						echo html_entity_decode((string) $vocab["summarize_by"])." " .html_entity_decode((string) $vocab["sum_by_descrip"])." - $day $month $year;";
 					else if ($_GET["sumby"] == "5")
-						echo html_entity_decode($vocab["summarize_by"])." " .html_entity_decode($vocab["type"])." - $day $month $year;";
+						echo html_entity_decode((string) $vocab["summarize_by"])." " .html_entity_decode((string) $vocab["type"])." - $day $month $year;";
 					else
 					{
 						$fieldname = grr_sql_query1("SELECT fieldname FROM ".TABLE_PREFIX."_overload WHERE id='".$_GET["sumby"]."'");
-						echo html_entity_decode($vocab["summarize_by"])." " .html_entity_decode($fieldname)." - $day $month $year;";
+						echo html_entity_decode((string) $vocab["summarize_by"])." " .html_entity_decode((string) $fieldname)." - $day $month $year;";
 					}
 					echo "\r\n";
 				}
@@ -983,17 +983,17 @@ if (($summarize != 4) && ($summarize != 5))
 				// Décompte des heures (cas ou $enable_periods != 'y')
 				if (isset($do_sum1))
 				{
-					echo "\r\n".html_entity_decode($vocab["summary_header"])."\r\n";
+					echo "\r\n".html_entity_decode((string) $vocab["summary_header"])."\r\n";
 					do_summary($count1, $hours1, $room_hash1, $breve_description_hash1, "n", "heure", "y");
 				}
 				// Décompte des créneaux (cas ou $enable_periods == 'y')
 				if (isset($do_sum2))
 				{
-					echo "\r\n".html_entity_decode($vocab["summary_header_per"])."\r\n";
+					echo "\r\n".html_entity_decode((string) $vocab["summary_header_per"])."\r\n";
 					do_summary($count2, $hours2, $room_hash2, $breve_description_hash2, "y", "heure", "y" );
 				}
 				// Décompte des réservations
-				echo "\r\n\r\n\r\n".html_entity_decode($vocab["summary_header_resa"])."\r\n";
+				echo "\r\n\r\n\r\n".html_entity_decode((string) $vocab["summary_header_resa"])."\r\n";
 				do_summary($count, $hours, $room_hash, $breve_description_hash, "", "resa", "y");
 			}
 	}

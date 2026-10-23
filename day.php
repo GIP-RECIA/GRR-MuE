@@ -240,7 +240,7 @@ else
 	echo '</div>'.PHP_EOL;
 
 	// Affichage du nom du domaine
-	echo '<div class="titre_planningRessource">' .ucfirst($this_area_name).' - '.get_vocab("all_areas"). '</div>'.PHP_EOL;
+	echo '<div class="titre_planningRessource">' .ucfirst((string) $this_area_name).' - '.get_vocab("all_areas"). '</div>'.PHP_EOL;
 	
 	if ($settings->get("jours_cycles_actif") == "Oui" && intval($jour_cycle) >- 1){
 		if (intval($jour_cycle) > 0)
@@ -277,7 +277,7 @@ else
 	echo  '</th>'.PHP_EOL;
 	$room_column_width = (int)(90 / grr_sql_count($res));
 	$nbcol = 0;
-	$rooms = array();
+	$rooms = [];
 	$a = 0;
 	for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 	{
@@ -307,20 +307,20 @@ else
 				echo 'class="avertissement" ';
 			
 			$a = $a + 1;
-			echo '><a id="afficherBoutonSelection'.$a.'" class="lienPlanning" href="#" onclick="afficherMoisSemaine('.$a.')" style="display:inline;">'.htmlspecialchars($row['0']).'</a>'.PHP_EOL;
-			echo '<a id="cacherBoutonSelection'.$a.'" class="lienPlanning" href="#" onclick="cacherMoisSemaine('.$a.')" style="display:none;">'.htmlspecialchars($row['0']).'</a>'.PHP_EOL;
+			echo '><a id="afficherBoutonSelection'.$a.'" class="lienPlanning" href="#" onclick="afficherMoisSemaine('.$a.')" style="display:inline;">'.htmlspecialchars((string) $row['0']).'</a>'.PHP_EOL;
+			echo '<a id="cacherBoutonSelection'.$a.'" class="lienPlanning" href="#" onclick="cacherMoisSemaine('.$a.')" style="display:none;">'.htmlspecialchars((string) $row['0']).'</a>'.PHP_EOL;
 			
 			if ($room_warning[$id_room[$i]] != ''){
-				echo "<br /><span class='avertissement' ><span class =\"small\">". htmlspecialchars($room_warning[$id_room[$i]])."</span></span>\n";
+				echo "<br /><span class='avertissement' ><span class =\"small\">". htmlspecialchars((string) $room_warning[$id_room[$i]])."</span></span>\n";
 			}
 		
-			if (htmlspecialchars($row['3']).$temp != '')
+			if (htmlspecialchars((string) $row['3']).$temp != '')
 			{
-				if (htmlspecialchars($row['3']) != '')
+				if (htmlspecialchars((string) $row['3']) != '')
 					$saut = '<br />';
 				else
 					$saut = '';
-				echo $saut.htmlspecialchars($row['3']).$temp."\n";
+				echo $saut.htmlspecialchars((string) $row['3']).$temp."\n";
 			}
 			echo '<br />';
 			if (verif_display_fiche_ressource(getUserName(), $id_room[$i]) && $_GET['pview'] != 1)
@@ -330,13 +330,13 @@ else
 				echo '<a href="./admin/admin_edit_room.php?room='.$id_room[$i].'" onclick="jQuery(\'div.loader\').show();"><span class="glyphcolor glyphicon glyphicon-cog"></span></a><br/>'.PHP_EOL;
 			affiche_ressource_empruntee($id_room[$i]);
 			echo '<span id="boutonSelection'.$a.'" style="display:none;">'.PHP_EOL;
-			echo '<input type="button" class="btn btn-default btn-xs" title="'.htmlspecialchars(get_vocab("see_week_for_this_room")).'" onclick="charger();javascript: location.href=\'week.php?year='.$year.'&amp;month='.$month.'&amp;cher='.$day.'&amp;room='.$id_room[$i].'\';" value="'.get_vocab('week').'"/>'.PHP_EOL;
-			echo '<input type="button" class="btn btn-default btn-xs" title="'.htmlspecialchars(get_vocab("see_month_for_this_room")).'" onclick="charger();javascript: location.href=\'month.php?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;room='.$id_room[$i].'\';" value="'.get_vocab('month').'"/>'.PHP_EOL;
+			echo '<input type="button" class="btn btn-default btn-xs" title="'.htmlspecialchars((string) get_vocab("see_week_for_this_room")).'" onclick="charger();javascript: location.href=\'week.php?year='.$year.'&amp;month='.$month.'&amp;cher='.$day.'&amp;room='.$id_room[$i].'\';" value="'.get_vocab('week').'"/>'.PHP_EOL;
+			echo '<input type="button" class="btn btn-default btn-xs" title="'.htmlspecialchars((string) get_vocab("see_month_for_this_room")).'" onclick="charger();javascript: location.href=\'month.php?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;room='.$id_room[$i].'\';" value="'.get_vocab('month').'"/>'.PHP_EOL;
 			echo '</span>'.PHP_EOL;
 			echo '</th>'.PHP_EOL;
-			if (htmlspecialchars($row['3']).$temp != '')
+			if (htmlspecialchars((string) $row['3']).$temp != '')
 			{
-				if (htmlspecialchars($row['3']) != '')
+				if (htmlspecialchars((string) $row['3']) != '')
 					$saut = '<br />';
 				else
 					$saut = '';
@@ -468,12 +468,12 @@ else
 							if ($settings->get("display_level_view_entry") == 0)
 							{
 								$currentPage = 'day';
-								echo '<a title="'.htmlspecialchars($today[$room][$t]["who"]).'" class="lienModal" onclick="requestModal('.$id.','.$day.','.$month.',',$year.',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal" >'.$descr.PHP_EOL;
+								echo '<a title="'.htmlspecialchars((string) $today[$room][$t]["who"]).'" class="lienModal" onclick="requestModal('.$id.','.$day.','.$month.',',$year.',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal" >'.$descr.PHP_EOL;
 								//echo '<a title="'.htmlspecialchars($today[$room][$t]["who"]).'" data-width="675" onclick="request('.$id.','.$day.','.$month.','.$year.',\''.$currentPage.'\',readData);" data-rel="popup_name" class="poplight">'.$descr.PHP_EOL;
 							}
 							else
 							{
-								echo '<a class="lienCellule" title="',htmlspecialchars($today[$room][$t]["who"]),'" href="view_entry.php?id=',$id,'&amp;day=',$day,'&amp;month=',$month,'&amp;year=',$year,'&amp;page=day">',$descr;
+								echo '<a class="lienCellule" title="',htmlspecialchars((string) $today[$room][$t]["who"]),'" href="view_entry.php?id=',$id,'&amp;day=',$day,'&amp;month=',$month,'&amp;year=',$year,'&amp;page=day">',$descr;
 							}
 						}
 						else

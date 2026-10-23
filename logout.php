@@ -57,7 +57,7 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 grr_closeSession($_GET['auto']);
 if (isset($_GET['url']))
 {
-	$url = rawurlencode($_GET['url']);
+	$url = rawurlencode((string) $_GET['url']);
 	header("Location: login.php?url=".$url);
 	exit;
 }
@@ -70,7 +70,7 @@ if ($url != '')
 }
 if (isset($_GET['redirect_page_accueil']) && ($_GET['redirect_page_accueil'] == 'yes'))
 {
-	header("Location: ./".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ./".htmlspecialchars_decode((string) page_accueil())."");
 	exit;
 }
 echo begin_page(get_vocab("mrbs"),"no_session");

@@ -89,7 +89,7 @@ if ((Settings::get("authentification_obli")==0) and (getUserName()=='')) {
     $type_session = "with_session";
 }
 
-$id = isset($_GET["id"]) ? $_GET["id"] : NULL;
+$id = $_GET["id"] ?? NULL;
 if (isset($id)) settype($area_id,"integer");
 
 if (authGetUserLevel(getUserName(),$id,"etab") < 4)
@@ -97,7 +97,7 @@ if (authGetUserLevel(getUserName(),$id,"etab") < 4)
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
 
@@ -111,7 +111,7 @@ grr_sql_free($res);
 
 ?>
 
-<h3 style="text-align:center;"><?php echo get_vocab("match_etab").get_vocab("deux_points")."&nbsp;".htmlspecialchars($row["shortname"]);?></h3>
+<h3 style="text-align:center;"><?php echo get_vocab("match_etab").get_vocab("deux_points")."&nbsp;".htmlspecialchars((string) $row["shortname"]);?></h3>
 
 <?php 
 	// On affiche pour les administrateurs les utilisateurs ayant des privilèges sur cette établissement

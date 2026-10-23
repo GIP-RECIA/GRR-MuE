@@ -45,7 +45,7 @@
 include "../include/admin.inc.php";
 $grr_script_name = "admin_right_admin.php";
 
-$id_area = isset($_POST["id_area"]) ? $_POST["id_area"] : (isset($_GET["id_area"]) ? $_GET["id_area"] : NULL);
+$id_area = $_POST["id_area"] ?? $_GET["id_area"] ?? NULL;
 if (!isset($id_area))
 	settype($id_area,"integer");
 
@@ -62,10 +62,10 @@ print_header("", "", "", $type="with_session");
 // Affichage de la colonne de gauche
 include "admin_col_gauche.php";
 
-$reg_admin_login = isset($_POST["reg_admin_login"]) ? $_POST["reg_admin_login"] : NULL;
-$reg_multi_admin_login = isset($_POST["reg_multi_admin_login"]) ? $_POST["reg_multi_admin_login"] : NULL;
+$reg_admin_login = $_POST["reg_admin_login"] ?? NULL;
+$reg_multi_admin_login = $_POST["reg_multi_admin_login"] ?? NULL;
 $test_user =  isset($_POST["reg_multi_admin_login"]) ? "multi" : (isset($_POST["reg_admin_login"]) ? "simple" : NULL);
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$action = $_GET["action"] ?? NULL;
 $msg = '';
 
 if ($test_user == "multi")
@@ -152,7 +152,7 @@ if ($res)
 	{
 		$selected = ($row[0] == $id_area) ? "selected=\"selected\"" : "";
 		$link = "admin_right_admin.php?id_area=$row[0]";
-		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>\n";
+		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>\n";
 	}
 }
 $out_html .= "</select>
@@ -219,7 +219,7 @@ $is_admin = 'yes';
 				$exist_admin = 'yes';
 			}
 			echo "<b>";
-			echo htmlspecialchars($row[1])." ".htmlspecialchars($row[2])."</b> | <a href='admin_right_admin.php?action=del_admin&amp;login_admin=".urlencode($row[0])."&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
+			echo htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])."</b> | <a href='admin_right_admin.php?action=del_admin&amp;login_admin=".urlencode((string) $row[0])."&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
 		}
 	}
 	if ($exist_admin == 'no')
@@ -259,7 +259,7 @@ $is_admin = 'yes';
 				<option value=''><?php echo get_vocab("nobody"); ?></option>
 				<?php
 					if ($listeUser) foreach ($listeUser as $row ) {
-						echo "<option value='$row[0]'>".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])."</option>";
+						echo "<option value='$row[0]'>".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])."</option>";
 					}
 				?>
 			</select>
@@ -279,7 +279,7 @@ $is_admin = 'yes';
 			<div><select name="agent" size="8" style="width:200px;" multiple="multiple" ondblclick="Deplacer(this.form.agent,this.form.elements['reg_multi_admin_login[]'])">
 				<?php
 				if ($listeUser) foreach ($listeUser as $row ) {
-					echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+					echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
 				}
 				?>
 			</select>

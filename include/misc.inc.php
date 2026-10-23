@@ -42,88 +42,53 @@ $sous_version_grr = "i"; // a, b, c, ...
 $version_grr_RC = "";
 
 # Liste des tables
-$liste_tables = array(
-	"_area",
-	"_area_periodes",
-	"_calendar",
-	"_calendrier_jours_cycle",
-	"_entry",
-	"_entry_moderate",
-	"_type_area",
-	"_j_type_area",
-	"_j_mailuser_room",
-	"_j_user_area",
-	"_j_user_room",
-	"_log",
-	"_repeat",
-	"_room",
-	"_setting",
-	"_utilisateurs",
-	"_j_useradmin_area",
-	"_overload",
-	"_site",
-	"_j_useradmin_site",
-	"_j_site_area",
-	"_correspondance_statut",
-	);
+$liste_tables = ["_area", "_area_periodes", "_calendar", "_calendrier_jours_cycle", "_entry", "_entry_moderate", "_type_area", "_j_type_area", "_j_mailuser_room", "_j_user_area", "_j_user_room", "_log", "_repeat", "_room", "_setting", "_utilisateurs", "_j_useradmin_area", "_overload", "_site", "_j_useradmin_site", "_j_site_area", "_correspondance_statut"];
 
 # Liste des feuilles de style
-$liste_themes = array(
-	/*"default31",
-	"vert",
-	"violet",
-	"orange",
-	"bleu",
-	"rouge",
-	"rose",
-	"fluo",*/
-	"default",
-	"agricole",
-	"netocentre",
-	"touraine",
-	"chercan",
-	"colleges41",
-	"e-colleges36",
-	"mon-e-college45"
-	);
+$liste_themes = [
+    /*"default31",
+    	"vert",
+    	"violet",
+    	"orange",
+    	"bleu",
+    	"rouge",
+    	"rose",
+    	"fluo",*/
+    "default",
+    "agricole",
+    "netocentre",
+    "touraine",
+    "chercan",
+    "colleges41",
+    "e-colleges36",
+    "mon-e-college45",
+];
 
 # Liste des noms des styles
-$liste_name_themes = array(
-	/*"Grand bleu",
-	"Verdoyant",
-	"Violeta",
-	"Orange Talmont",
-	"Bleu Talmont",
-	"Rouge Feu",
-	"Roseline",
-	"Jaune Fluo",*/
-	"Sans thème",
-	"Agricole",
-	"NetO’Centre",
-	"Touraine E-School",
-	"Cher Cartable Numérique",
-	"Colleges41",
-	"e-colleges Indre",
-	"Mon e-college loirétain"
-	);
+$liste_name_themes = [
+    /*"Grand bleu",
+    	"Verdoyant",
+    	"Violeta",
+    	"Orange Talmont",
+    	"Bleu Talmont",
+    	"Rouge Feu",
+    	"Roseline",
+    	"Jaune Fluo",*/
+    "Sans thème",
+    "Agricole",
+    "NetO’Centre",
+    "Touraine E-School",
+    "Cher Cartable Numérique",
+    "Colleges41",
+    "e-colleges Indre",
+    "Mon e-college loirétain",
+];
 
 # Liste des langues
-$liste_language = array(
-	"fr",
-	"de",
-	"en",
-	"it",
-	"es"
-	);
+$liste_language = ["fr", "de", "en", "it", "es"];
 
 # Liste des noms des langues
-$liste_name_language = array(
-	"Français",
-	"Deutch",
-	"English",
-	"Italiano",
-	"Spanish"
-	);
+$liste_name_language = ["Français", "Deutch", "English", "Italiano", "Spanish"];
 
 # Compatibilité avec les version inférieures à 1.9.6
 if ((!isset($table_prefix)) or ($table_prefix==''))
@@ -169,7 +134,7 @@ $twentyfourhour_format = 1;
 # Vous pouvez indiquer ci-dessous les identifiant de plusieurs ressources qui seront réservables, même par un simple visiteur
 # Par exemple la ligne suivante autorise les simples visiteurs à réserver les ressoures 8, 4 et 5 :
 # $id_room_autorise = array("8", "4", "5");
-$id_room_autorise = array();
+$id_room_autorise = [];
 
 # Possibilité de désactiver le bandeau supérieur dans le cas de simples visiteurs
 # Pour se connecter il est alors nécessaire de se rendre directement à l'adresse du type http://mon-site.fr/grr/login.php

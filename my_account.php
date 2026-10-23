@@ -45,25 +45,25 @@ if (!grr_resumeSession())
 	die();
 };
 Definition_ressource_domaine_site();
-$day = isset($_POST['day']) ? $_POST['day'] : (isset($_GET['day']) ? $_GET['day'] : date('d'));
-$month = isset($_POST['month']) ? $_POST['month'] : (isset($_GET['month']) ? $_GET['month'] : date('m'));
-$year = isset($_POST['year']) ? $_POST['year'] : (isset($_GET['year']) ? $_GET['year'] : date('Y'));
+$day = $_POST['day'] ?? $_GET['day'] ?? date('d');
+$month = $_POST['month'] ?? $_GET['month'] ?? date('m');
+$year = $_POST['year'] ?? $_GET['year'] ?? date('Y');
 include_once('include/language.inc.php');
 include "include/resume_session.php";
 $back = getBackUri();
-$user_login = isset($_POST['user_login']) ? $_POST['user_login'] : ($user_login = isset($_GET['user_login']) ? $_GET['user_login'] : NULL);
-$valid = isset($_POST['valid']) ? $_POST['valid'] : NULL;
+$user_login = $_POST['user_login'] ?? ($user_login = $_GET['user_login'] ?? NULL);
+$valid = $_POST['valid'] ?? NULL;
 $msg = '';
 if ($valid == 'yes')
 {
 	if (IsAllowedToModifyMdp())
 	{
-		$reg_password_a = isset($_POST['reg_password_a']) ? $_POST['reg_password_a'] : NULL;
-		$reg_password1 = isset($_POST['reg_password1']) ? $_POST['reg_password1'] : NULL;
-		$reg_password2 = isset($_POST['reg_password2']) ? $_POST['reg_password2'] : NULL;
+		$reg_password_a = $_POST['reg_password_a'] ?? NULL;
+		$reg_password1 = $_POST['reg_password1'] ?? NULL;
+		$reg_password2 = $_POST['reg_password2'] ?? NULL;
 		if (($reg_password_a != '') && ($reg_password1 != ''))
 		{
-			$reg_password_a_c = md5($reg_password_a);
+			$reg_password_a_c = md5((string) $reg_password_a);
 			if ($_SESSION['password'] == $reg_password_a_c)
 			{
 				if ($reg_password1 != $reg_password2)
@@ -71,7 +71,7 @@ if ($valid == 'yes')
 				else
 				{
 					VerifyModeDemo();
-					$reg_password1 = md5($reg_password1);
+					$reg_password1 = md5((string) $reg_password1);
 					$sql = "UPDATE ".TABLE_PREFIX."_utilisateurs SET password='".protect_data_sql($reg_password1)."' WHERE login='".getUserName()."'";
 					if (grr_sql_command($sql) < 0)
 						fatal_error(0, get_vocab('update_pwd_failed') . grr_sql_error());
@@ -100,13 +100,13 @@ if ($valid == 'yes')
 			$user_prenom = $row[3];
 		}
 	}
-	$reg_email = isset($_POST['reg_email']) ? $_POST['reg_email'] : $user_email;
-	$reg_nom = isset($_POST['reg_nom']) ? $_POST['reg_nom'] : $user_nom;
-	$reg_prenom = isset($_POST['reg_prenom']) ? $_POST['reg_prenom'] : $user_prenom;
+	$reg_email = $_POST['reg_email'] ?? $user_email;
+	$reg_nom = $_POST['reg_nom'] ?? $user_nom;
+	$reg_prenom = $_POST['reg_prenom'] ?? $user_prenom;
 	$champ_manquant = 'n';
-	if (trim($reg_nom) == '')
+	if (trim((string) $reg_nom) == '')
 		$champ_manquant = 'y';
-	if (trim($reg_prenom) == '')
+	if (trim((string) $reg_prenom) == '')
 		$champ_manquant = 'y';
 	if (($user_email != $reg_email) || ($user_nom != $reg_nom) || ($user_prenom != $reg_prenom))
 	{
@@ -114,18 +114,18 @@ if ($valid == 'yes')
 		$flag_virgule = 'n';
 		if (IsAllowedToModifyProfil())
 		{
-			if (trim($reg_nom) != '')
+			if (trim((string) $reg_nom) != '')
 			{
 				$sql.="nom = '" . protect_data_sql($reg_nom)."'";
 				$flag_virgule = 'y';
-				$_SESSION['nom'] = htmlspecialchars($reg_nom);
+				$_SESSION['nom'] = htmlspecialchars((string) $reg_nom);
 			}
-			if (trim($reg_prenom) != '')
+			if (trim((string) $reg_prenom) != '')
 			{
 				if ($flag_virgule == 'y') $sql .=",";
 				$sql .= "prenom = '" . protect_data_sql($reg_prenom)."'";
 				$flag_virgule = 'y';
-				$_SESSION['prenom'] = htmlspecialchars($reg_prenom);
+				$_SESSION['prenom'] = htmlspecialchars((string) $reg_prenom);
 			}
 		}
 		if (IsAllowedToModifyEmail())
@@ -148,13 +148,13 @@ if ($valid == 'yes')
 }
 if (($valid == 'yes') || ($valid=='reset'))
 {
-	$default_etablissement = isset($_POST['id_etab']) ? $_POST['id_etab'] : NULL;
-	$default_site = isset($_POST['id_site']) ? $_POST['id_site'] : NULL;
-	$default_area = isset($_POST['id_area']) ? $_POST['id_area'] : NULL;
-	$default_room = isset($_POST['id_room']) ? $_POST['id_room'] : NULL;
-	$default_style = isset($_POST['default_css']) ? $_POST['default_css'] : NULL;
-	$default_list_type = isset($_POST['area_item_format']) ? $_POST['area_item_format'] : NULL;
-	$default_language = isset($_POST['default_language']) ? $_POST['default_language'] : NULL;
+	$default_etablissement = $_POST['id_etab'] ?? NULL;
+	$default_site = $_POST['id_site'] ?? NULL;
+	$default_area = $_POST['id_area'] ?? NULL;
+	$default_room = $_POST['id_room'] ?? NULL;
+	$default_style = $_POST['default_css'] ?? NULL;
+	$default_list_type = $_POST['area_item_format'] ?? NULL;
+	$default_language = $_POST['default_language'] ?? NULL;
 	$sql = "UPDATE ".TABLE_PREFIX."_utilisateurs
 	SET default_etablissement = '".protect_data_sql($default_etablissement)."',
 		default_site = '".protect_data_sql($default_site)."',
@@ -392,11 +392,11 @@ echo ('
 		echo '<tr><td><b>'.get_vocab('last_name').get_vocab('deux_points').'</b>*</td>';
 		echo '<td><input class="form-control" type="text" name="reg_nom" value="';
 		if ($user_nom)
-			echo htmlspecialchars($user_nom);
+			echo htmlspecialchars((string) $user_nom);
 		echo '" size="30" /></td></tr>';
 		echo '<tr><td><b>'.get_vocab('first_name').get_vocab('deux_points').'</b>*</td><td><input class="form-control" type="text" name="reg_prenom" value="';
 		if ($user_prenom)
-			echo htmlspecialchars($user_prenom);
+			echo htmlspecialchars((string) $user_prenom);
 		echo '" size="30" /></td></tr>';
 	}
 	if (!(IsAllowedToModifyEmail()))
@@ -411,7 +411,7 @@ echo ('
 	{
 		echo '<tr><td><b>'.get_vocab('mail_user').get_vocab('deux_points').'</b></td><td><input class="form-control" type="text" name="reg_email" value="';
 		if ($user_email)
-			echo htmlspecialchars($user_email);
+			echo htmlspecialchars((string) $user_email);
 		echo '" size="30" /></td></tr>';
 	}
 	if ($user_statut == "utilisateur")
@@ -428,7 +428,7 @@ echo ('
 	if (IsAllowedToModifyProfil())
 	{
 		echo '<p>('.get_vocab('required').')</p>';
-		if ((trim($user_nom) == "") || (trim($user_prenom) == ''))
+		if ((trim((string) $user_nom) == "") || (trim((string) $user_prenom) == ''))
 			echo "\n".'      <h2 class="avertissement">'.get_vocab('nom_prenom_valides').'</h2>';
 	}
 	if (IsAllowedToModifyMdp())

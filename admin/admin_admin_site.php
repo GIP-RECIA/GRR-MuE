@@ -30,7 +30,7 @@
 
 include "../include/admin.inc.php";
 $grr_script_name = "admin_admin_site.php";
-$id_site = isset($_POST["id_site"]) ? $_POST["id_site"] : (isset($_GET["id_site"]) ? $_GET["id_site"] : NULL);
+$id_site = $_POST["id_site"] ?? $_GET["id_site"] ?? NULL;
 
 /*if (empty($id_site))
 	$id_site = get_default_site();*/
@@ -53,8 +53,8 @@ print_header("", "", "", $type="with_session");
 // Affichage de la colonne de gauche
 include "admin_col_gauche.php";
 
-$reg_admin_login = isset($_GET["reg_admin_login"]) ? $_GET["reg_admin_login"] : NULL;
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$reg_admin_login = $_GET["reg_admin_login"] ?? NULL;
+$action = $_GET["action"] ?? NULL;
 $msg = '';
 
 if ($reg_admin_login)
@@ -111,7 +111,7 @@ if ($res)
 	{
 		$selected = ($row[0] == $id_site) ? "selected=\"selected\"" : "";
 		$link = "admin_admin_site.php?id_site=$row[0]";
-		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>";
+		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>";
 	}
 	$out_html .= "</select>
 	<script type=\"text/javascript\" >
@@ -182,7 +182,7 @@ echo "<b>".$this_site_name."</b>";
 					$exist_admin='yes';
 				}
 				echo "<b>";
-				echo "$row[1] $row[2]</b> | <a href='admin_admin_site.php?action=del_admin&amp;login_admin=".urlencode($row[0])."&amp;id_site=$id_site'>".get_vocab("delete")."</a><br />";
+				echo "$row[1] $row[2]</b> | <a href='admin_admin_site.php?action=del_admin&amp;login_admin=".urlencode((string) $row[0])."&amp;id_site=$id_site'>".get_vocab("delete")."</a><br />";
 			}
 		}
 		if ($exist_admin=='no')
@@ -216,7 +216,7 @@ echo "<b>".$this_site_name."</b>";
 				<option value=''><?php echo get_vocab("nobody"); ?></option>
 				<?php
 					if ($listeUser) foreach ($listeUser as $row ) {
-						echo "<option value='$row[0]'>".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])."</option>";
+						echo "<option value='$row[0]'>".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])."</option>";
 					}
 				?>
 				</select>
@@ -237,7 +237,7 @@ echo "<b>".$this_site_name."</b>";
 
     <?php
 		if ($listeUser) foreach ($listeUser as $row ) {
-			echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+			echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
 		}
     ?>
 

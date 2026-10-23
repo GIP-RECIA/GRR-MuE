@@ -71,27 +71,27 @@ function create_site($id_site)
 	}
 	// Initialisation des variables du formulaire
 	if (!isset($id_site))
-		$id_site = isset($_POST['id']) ? $_POST['id'] :  NULL;
+		$id_site = $_POST['id'] ?? NULL;
 	if (!isset($sitecode))
-		$sitecode = isset($_POST['sitecode']) ? $_POST['sitecode'] : NULL;
+		$sitecode = $_POST['sitecode'] ?? NULL;
 	if (!isset($sitename))
-		$sitename = isset($_POST['sitename']) ? $_POST['sitename'] :  NULL;
+		$sitename = $_POST['sitename'] ?? NULL;
 	if (!isset($adresse_ligne1))
-		$adresse_ligne1 = isset($_POST['adresse_ligne1']) ? $_POST['adresse_ligne1'] :  NULL;
+		$adresse_ligne1 = $_POST['adresse_ligne1'] ?? NULL;
 	if (!isset($adresse_ligne2))
-		$adresse_ligne2 = isset($_POST['adresse_ligne2']) ? $_POST['adresse_ligne2'] :  NULL;
+		$adresse_ligne2 = $_POST['adresse_ligne2'] ?? NULL;
 	if (!isset($adresse_ligne3))
-		$adresse_ligne3 = isset($_POST['adresse_ligne3']) ? $_POST['adresse_ligne3'] :  NULL;
+		$adresse_ligne3 = $_POST['adresse_ligne3'] ?? NULL;
 	if (!isset($cp))
-		$cp = isset($_POST['cp']) ? $_POST['cp'] :  NULL;
+		$cp = $_POST['cp'] ?? NULL;
 	if (!isset($ville))
-		$ville = isset($_POST['ville']) ? $_POST['ville'] :  NULL;
+		$ville = $_POST['ville'] ?? NULL;
 	if (!isset($pays))
-		$pays = isset($_POST['pays']) ? $_POST['pays'] :  NULL;
+		$pays = $_POST['pays'] ?? NULL;
 	if (!isset($tel))
-		$tel = isset($_POST['tel']) ? $_POST['tel'] :  NULL;
+		$tel = $_POST['tel'] ?? NULL;
 	if (!isset($fax))
-		$fax = isset($_POST['fax']) ? $_POST['fax'] :  NULL;
+		$fax = $_POST['fax'] ?? NULL;
 	// On affiche le formulaire de saisie quand l'appel de la fonction ne provient pas de la validation de ce même formulaire
 	if ((! (isset($_POST['save']) || isset($_GET['save']))) && ($id_site==0))
 	{
@@ -134,14 +134,14 @@ function create_site($id_site)
 		if ((isset($_POST['save']) && ($_POST['save'] != 'no')) || ((isset($_GET['save'])) && ($_GET['save'] != 'no'))){
 			
 			$sql="INSERT INTO ".TABLE_PREFIX."_site
-			SET sitecode='".strtoupper(protect_data_sql($sitecode))."',
+			SET sitecode='".strtoupper((string) protect_data_sql($sitecode))."',
 			sitename='".protect_data_sql($sitename)."',
 			adresse_ligne1='".protect_data_sql($adresse_ligne1)."',
 			adresse_ligne2='".protect_data_sql($adresse_ligne2)."',
 			adresse_ligne3='".protect_data_sql($adresse_ligne3)."',
 			cp='".protect_data_sql($cp)."',
-			ville='".strtoupper(protect_data_sql($ville))."',
-			pays='".strtoupper(protect_data_sql($pays))."',
+			ville='".strtoupper((string) protect_data_sql($ville))."',
+			pays='".strtoupper((string) protect_data_sql($pays))."',
 			tel='".protect_data_sql($tel)."',
 			fax='".protect_data_sql($fax)."'";
 			if (grr_sql_command($sql) < 0)
@@ -256,7 +256,7 @@ function read_sites()
    				FROM ".TABLE_PREFIX."_site AS S JOIN ".TABLE_PREFIX."_j_etablissement_site AS J ON J.id_site = S.id
    				WHERE J.id_etablissement = $id_etablissement  
    		 		ORDER BY S.sitename,S.ville,S.id";
-   		
+
    	} else {
    		echo get_vocab('be_in_multi_etab');
 		die();
@@ -327,8 +327,8 @@ function share_site($id_site,$id_etab){
 		}
 		
 		// Initialisation des variables du formulaire
-		if (!isset($id_site)) $id_site = isset($_POST['id_site']) ? $_POST['id_site'] :  NULL;
-		if (!isset($id_etab)) $id_etab = isset($_POST['id_etab']) ? $_POST['id_etab'] :  NULL;
+		if (!isset($id_site)) $id_site = $_POST['id_site'] ?? NULL;
+		if (!isset($id_etab)) $id_etab = $_POST['id_etab'] ?? NULL;
 
 		$id_etablissement = getIdEtablissementCourant();
 		
@@ -343,7 +343,7 @@ function share_site($id_site,$id_etab){
 			$nb_site = grr_sql_count($res);
 			//echo '<form action="admin_site.php?action=share&amp;id_site='.$id_site.'&amp;id_etab='.$id_etab.'" method="post">';
 			echo '<form action="admin_site.php?action=share" method="post">';
-			
+
 			if ($nb_site > 1) {
 				//En-tête et mise en garde
 				echo '      <h2>'.get_vocab('share_with_etab').'</h2>';
@@ -515,27 +515,27 @@ function update_site($id)
 		else
 		{
 			if (!isset($id))
-				$id = isset($_POST['id']) ? $_POST['id'] :  NULL;
+				$id = $_POST['id'] ?? NULL;
 			if (!isset($sitecode))
-				$sitecode = isset($_POST['sitecode']) ? $_POST['sitecode'] : NULL;
+				$sitecode = $_POST['sitecode'] ?? NULL;
 			if (!isset($sitename))
-				$sitename = isset($_POST['sitename']) ? $_POST['sitename'] :  NULL;
+				$sitename = $_POST['sitename'] ?? NULL;
 			if (!isset($adresse_ligne1))
-				$adresse_ligne1 = isset($_POST['adresse_ligne1']) ? $_POST['adresse_ligne1'] :  NULL;
+				$adresse_ligne1 = $_POST['adresse_ligne1'] ?? NULL;
 			if (!isset($adresse_ligne2))
-				$adresse_ligne2 = isset($_POST['adresse_ligne2']) ? $_POST['adresse_ligne2'] :  NULL;
+				$adresse_ligne2 = $_POST['adresse_ligne2'] ?? NULL;
 			if (!isset($adresse_ligne3))
-				$adresse_ligne3 = isset($_POST['adresse_ligne3']) ? $_POST['adresse_ligne3'] :  NULL;
+				$adresse_ligne3 = $_POST['adresse_ligne3'] ?? NULL;
 			if (!isset($cp))
-				$cp = isset($_POST['cp']) ? $_POST['cp'] :  NULL;
+				$cp = $_POST['cp'] ?? NULL;
 			if (!isset($ville))
-				$ville = isset($_POST['ville']) ? $_POST['ville'] :  NULL;
+				$ville = $_POST['ville'] ?? NULL;
 			if (!isset($pays))
-				$pays = isset($_POST['pays']) ? $_POST['pays'] :  NULL;
+				$pays = $_POST['pays'] ?? NULL;
 			if (!isset($tel))
-				$tel = isset($_POST['tel']) ? $_POST['tel'] :  NULL;
+				$tel = $_POST['tel'] ?? NULL;
 			if (!isset($fax))
-				$fax = isset($_POST['fax']) ? $_POST['fax'] :  NULL;
+				$fax = $_POST['fax'] ?? NULL;
 		 	// On vérifie que le code et le nom du site ont été renseignés
 			if ($sitecode == '' || $sitecode == NULL || $sitename == '' || $sitename==NULL)
 			{
@@ -547,14 +547,14 @@ function update_site($id)
 			if ((isset($_POST['save']) && ($_POST['save']!='no')) || ((isset($_GET['save'])) && ($_GET['save']!='no')))
 			{
 				$sql = "UPDATE ".TABLE_PREFIX."_site
-				SET sitecode='".strtoupper(protect_data_sql($sitecode))."',
+				SET sitecode='".strtoupper((string) protect_data_sql($sitecode))."',
 				sitename='".protect_data_sql($sitename)."',
 				adresse_ligne1='".protect_data_sql($adresse_ligne1)."',
 				adresse_ligne2='".protect_data_sql($adresse_ligne2)."',
 				adresse_ligne3='".protect_data_sql($adresse_ligne3)."',
 				cp='".protect_data_sql($cp)."',
-				ville='".strtoupper(protect_data_sql($ville))."',
-				pays='".strtoupper(protect_data_sql($pays))."',
+				ville='".strtoupper((string) protect_data_sql($ville))."',
+				pays='".strtoupper((string) protect_data_sql($pays))."',
 				tel='".protect_data_sql($tel)."',
 				fax='".protect_data_sql($fax)."'
 				WHERE id='".$id."'";
@@ -640,43 +640,24 @@ function update_site($id)
 	else
 		$msg = '';
 	// Lecture des paramètres passés à la page
-	$id_site = isset($_POST['id']) ? $_POST['id'] : (isset($_GET['id']) ? $_GET['id'] : NULL);
-	$id_etab = isset($_POST['id_etab']) ? $_POST['id_etab'] : (isset($_GET['id_etab']) ? $_GET['id_etab'] : NULL);
-	$action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : NULL);
+	$id_site = $_POST['id'] ?? $_GET['id'] ?? NULL;
+	$id_etab = $_POST['id_etab'] ?? $_GET['id_etab'] ?? NULL;
+	$action = $_POST['action'] ?? $_GET['action'] ?? NULL;
 	
 	if ($action == NULL)
 		$action = 'read';
 	// SWITCH sur l'action (CRUD)
-	switch($action)
-	{
-		case 'create':
-			create_site($id_site);
-		break;
-		case 'read':
-			read_sites();
-		break;
-		case 'update':
-			update_site($id_site);
-		break;
-		case 'delete':
-			delete_site($id_site);
-		break;
-		case 'shared':
-			shared_sites($id_site);
-		break;
-		case 'share':
-			share_site($id_site,$id_etab);
-		break;
-		case 'delshare':
-			delete_share($id_site,$id_etab);
-		break;
-		case 'right':
-		check_right($id_site);
-		break;
-		default:
-		read_sites();
-		break;
-	}
+	match ($action) {
+     'create' => create_site($id_site),
+     'read' => read_sites(),
+     'update' => update_site($id_site),
+     'delete' => delete_site($id_site),
+     'shared' => shared_sites(),
+     'share' => share_site($id_site,$id_etab),
+     'delshare' => delete_share($id_site,$id_etab),
+     'right' => check_right($id_site),
+     default => read_sites(),
+ };
 	// fin de l'affichage de la colonne de droite
 	//echo "</td></tr></table>\n";
 	echo '</div></div>';

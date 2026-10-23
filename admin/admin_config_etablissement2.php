@@ -62,7 +62,7 @@
 // Nombre maximum de réservation (tous domaines confondus)
 if (isset($_GET['UserAllRoomsMaxBooking'])) {
     settype($_GET['UserAllRoomsMaxBooking'],"integer");
-    if ($_GET['UserAllRoomsMaxBooking']=='') $_GET['UserAllRoomsMaxBooking'] = -1;
+    if ($_GET['UserAllRoomsMaxBooking']==0) $_GET['UserAllRoomsMaxBooking'] = -1;
     if ($_GET['UserAllRoomsMaxBooking']<-1) $_GET['UserAllRoomsMaxBooking'] = -1;
     if (!Settings::setEtab("UserAllRoomsMaxBooking", $_GET['UserAllRoomsMaxBooking'])) {
         echo "Erreur lors de l'enregistrement de UserAllRoomsMaxBooking !<br />";

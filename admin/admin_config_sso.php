@@ -308,7 +308,7 @@ echo "</table>";
 echo "<div>".get_vocab("lcs_SSO_explain_2");
 echo "<br /><br />";
 echo get_vocab("lcs_SSO_explain_3");
-echo "<br /><input type=\"text\" name=\"lcs_liste_groupes_autorises\" value=\"".htmlentities( Settings::get("lcs_liste_groupes_autorises"))."\" size=\"50\" /></div>\n";
+echo "<br /><input type=\"text\" name=\"lcs_liste_groupes_autorises\" value=\"".htmlentities( (string) Settings::get("lcs_liste_groupes_autorises"))."\" size=\"50\" /></div>\n";
 echo "<hr />\n";
 // Configuration Lasso
 echo "<h2>".get_vocab("config_lasso_title")."</h2>\n";

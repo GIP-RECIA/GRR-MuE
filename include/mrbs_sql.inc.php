@@ -244,7 +244,7 @@ function mrbsOverloadGetFieldslist($id_area, $room_id = 0 , $etablissement =0)
            $sqlstring = "SELECT fieldname,fieldtype, id, fieldlist, affichage, overload_mail, obligatoire, confidentiel FROM ".TABLE_PREFIX."_overload WHERE id_area='".$id_area."' ORDER BY fieldname,fieldtype";
 	}
 	$result = grr_sql_query($sqlstring);
-	$fieldslist = array();
+	$fieldslist = [];
 	if (!$result)
 		fatal_error(1, grr_sql_error());
 	if (grr_sql_count($result) <0)
@@ -255,9 +255,9 @@ function mrbsOverloadGetFieldslist($id_area, $room_id = 0 , $etablissement =0)
 		{
 			$fieldslist[$field_row[0]." (".$field_row[4].")"]["type"] = $field_row[1];
 			$fieldslist[$field_row[0]." (".$field_row[4].")"]["id"] = $field_row[2];
-			if (trim($field_row[3]) != "")
+			if (trim((string) $field_row[3]) != "")
 			{
-				$tab_list = explode("|", $field_row[3]);
+				$tab_list = explode("|", (string) $field_row[3]);
 				foreach ($tab_list as $value)
 				{
 					if (trim($value) != "")
@@ -278,9 +278,9 @@ function mrbsOverloadGetFieldslist($id_area, $room_id = 0 , $etablissement =0)
 			$fieldslist[$field_row[0]]["overload_mail"] = $field_row[5];
 			$fieldslist[$field_row[0]]["obligatoire"] = $field_row[6];
 			$fieldslist[$field_row[0]]["confidentiel"] = $field_row[7];
-			if (trim($field_row[3]) != "")
+			if (trim((string) $field_row[3]) != "")
 			{
-				$tab_list = explode("|", $field_row[3]);
+				$tab_list = explode("|", (string) $field_row[3]);
 				foreach ($tab_list as $value)
 				{
 					if (trim($value) != "")
@@ -300,12 +300,12 @@ function mrbsOverloadGetFieldslist($id_area, $room_id = 0 , $etablissement =0)
 function mrbsEntryGetOverloadDesc($id_entry)
 {
 	$room_id = 0;
-	$overload_array = array();
+	$overload_array = [];
 	$overload_desc = "";
 	//On récupère les données overload desc dans ".TABLE_PREFIX."_entry.
 	if ($id_entry != NULL)
 	{
-		$overload_array = array();
+		$overload_array = [];
 		$sqlstring = "SELECT overload_desc,room_id FROM ".TABLE_PREFIX."_entry WHERE id=".$id_entry.";";
 		$result = grr_sql_query($sqlstring);
 		if (!$result)
@@ -340,7 +340,7 @@ function mrbsEntryGetOverloadDesc($id_entry)
 				// le premier traitement cherche la prochaine occurence de $begin_string et retourne la portion de chaine après cette occurence
 				if ($traitement1 != false)
 				{
-					$chaine1 = strstr ($chaine, $begin_string);
+					$chaine1 = strstr ((string) $chaine, $begin_string);
 					// retourne la sous-chaîne de $chaine, allant de la première occurrence de $begin_string jusqu'à la fin de la chaîne.
 					if ($chaine1 !== false)
 					{
@@ -363,7 +363,7 @@ function mrbsEntryGetOverloadDesc($id_entry)
 					$end_pos = true;
 					while ($end_pos !== false)
 					{
-						$end_pos = strpos($chaine,$end_string,$ind);
+						$end_pos = strpos((string) $chaine,$end_string,$ind);
 						if ($end_pos !== false)
 						{
 							$balise_fermante='y';
@@ -376,7 +376,7 @@ function mrbsEntryGetOverloadDesc($id_entry)
 					//a ce niveau, $ind_old est la dernière occurence de $end_string trouvée dans $chaine
 					if ($ind != 0 )
 					{
-						$chaine = substr($chaine,0,$ind_old);
+						$chaine = substr((string) $chaine,0,$ind_old);
 						$result = $chaine;
 					}
 					else
@@ -387,7 +387,7 @@ function mrbsEntryGetOverloadDesc($id_entry)
 			if (($balise_fermante == 'n' ) || ($balise_ouvrante == 'n'))
 				$overload_array[$field]["valeur"]='';
 			else
-				$overload_array[$field]["valeur"]=urldecode($result);
+				$overload_array[$field]["valeur"]=urldecode((string) $result);
 			$overload_array[$field]["id"] = $fieldslist[$field]["id"];
 			$overload_array[$field]["affichage"] = grr_sql_query1("SELECT affichage FROM ".TABLE_PREFIX."_overload WHERE id = '".$fieldslist[$field]["id"]."'");
 			$overload_array[$field]["overload_mail"] = grr_sql_query1("SELECT overload_mail FROM ".TABLE_PREFIX."_overload WHERE id = '".$fieldslist[$field]["id"]."'");
@@ -407,12 +407,12 @@ function grrExtractValueFromOverloadDesc($chaine,$id)
 {
 	$begin_string = "@".$id."@";
 	$end_string = "@/".$id."@";
-	$begin_pos = strpos($chaine,$begin_string);
-	$end_pos = strpos($chaine,$end_string);
+	$begin_pos = strpos((string) $chaine,$begin_string);
+	$end_pos = strpos((string) $chaine,$end_string);
 	if ( $begin_pos !== false && $end_pos !== false)
 	{
 		$first = $begin_pos + strlen($begin_string);
-		$data = substr($chaine,$first,$end_pos-$first);
+		$data = substr((string) $chaine,$first,$end_pos-$first);
 		//$data = base64_decode($data);
 		$data = urldecode($data);
 	}
@@ -458,7 +458,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $r
 			$begin_string = "@".$id_field."@";
 			$end_string = "@/".$id_field."@";
 			//$overload_data_string .= $begin_string.base64_encode($overload_data[$id_field]).$end_string;
-			$overload_data_string .= $begin_string.urlencode($overload_data[$id_field]).$end_string;
+			$overload_data_string .= $begin_string.urlencode((string) $overload_data[$id_field]).$end_string;
 		}
 	}
 	//Hugo - Commande sql insérant la nouvelle réservation dans la base de données
@@ -507,7 +507,7 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $r
 			$begin_string = "@".$id_field."@";
 			$end_string = "@/".$id_field."@";
 			//$overload_data_string .= $begin_string.base64_encode($overload_data[$id_field]).$end_string;
-			$overload_data_string .= $begin_string.urlencode($overload_data[$id_field]).$end_string;
+			$overload_data_string .= $begin_string.urlencode((string) $overload_data[$id_field]).$end_string;
 		}
 	}
 	$sql = "INSERT INTO ".TABLE_PREFIX."_repeat (start_time, end_time, rep_type, end_date, rep_opt, room_id, create_by, beneficiaire, beneficiaire_ext, type, name, description, rep_num_weeks, overload_desc, jours, courrier) VALUES ($starttime, $endtime,  $rep_type, $rep_enddate, '$rep_opt', $room_id,   '".protect_data_sql($creator)."','".protect_data_sql($beneficiaire)."','".protect_data_sql($beneficiaire_ext)."', '".protect_data_sql($type)."', '".protect_data_sql($name)."', '".protect_data_sql($description)."', '$rep_num_weeks','".protect_data_sql($overload_data_string)."',".$rep_jour_c." , $courrier)";
@@ -535,8 +535,8 @@ function same_day_next_month($time)
 
 function get_day_of_month($time, $rep_month_abs1, $rep_month_abs2)
 {
-	$days = array('monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-	$rep = array('first', 'second', 'third', 'fourth', 'five', 'last');
+	$days = ['monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+	$rep = ['first', 'second', 'third', 'fourth', 'five', 'last'];
 	$time = strtotime('+1 month', $time);
 	$str = $rep[$rep_month_abs1].' '.$days[$rep_month_abs2 - 1].' of '.date("F", $time).' '.date("Y", $time);
 	return strtotime($str);
@@ -611,7 +611,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 			$sql = "SELECT * FROM ".TABLE_PREFIX."_calendrier_jours_cycle WHERE DAY >= '".$time2."' AND DAY <= '".$enddate."' AND Jours = '".$rep_jour_c."'";
 			$result = mysqli_query($GLOBALS['db_c'], $sql);
 			$kk = 0;
-			$tableFinale = array();
+			$tableFinale = [];
 			while ($table = mysqli_fetch_array($result))
 			{
 				$day   = date("d", $table['DAY']);
@@ -703,7 +703,7 @@ function mrbsGetEntryInfo($id)
 	$res = grr_sql_query($sql);
 	if (!$res)
 		return;
-	$ret = '';
+	$ret = [];
 	if (grr_sql_count($res) > 0)
 	{
 		$row = grr_sql_row($res, 0);
@@ -800,7 +800,7 @@ function moderate_entry_do($_id,$_moderate,$_description,$send_mail="yes")
 			fatal_error(0, grr_sql_error());
 		if (!(grr_backup($_id,$_SESSION['login'],$_description)))
 			fatal_error(0, grr_sql_error());
-		$tab_id_moderes = array();
+		$tab_id_moderes = [];
 	}
 	else
 	{
@@ -810,10 +810,10 @@ function moderate_entry_do($_id,$_moderate,$_description,$send_mail="yes")
 		$res = grr_sql_query($sql);
 		if (!$res)
 			fatal_error(0, grr_sql_error());
-		$tab_entry = array();
+		$tab_entry = [];
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 			$tab_entry[] = $row['0'];
-		$tab_id_moderes = array();
+		$tab_id_moderes = [];
 		// Boucle sur les résas
 		foreach ($tab_entry as $entry_tom)
 		{

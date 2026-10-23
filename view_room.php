@@ -46,7 +46,7 @@ include "include/resume_session.php";
 // Paramètres langage
 include "include/language.inc.php";
 
-$id_room = isset($_GET["id_room"]) ? $_GET["id_room"] : NULL;
+$id_room = $_GET["id_room"] ?? NULL;
 if (isset($id_room))
 	settype($id_room,"integer");
 else
@@ -72,7 +72,7 @@ if (!$res)
 $row = grr_sql_row_keyed($res, 0);
 grr_sql_free($res);
 echo "<h3 style=\"text-align:center;\">";
-echo get_vocab("room").get_vocab("deux_points")." ".htmlspecialchars($row["room_name"]);
+echo get_vocab("room").get_vocab("deux_points")." ".htmlspecialchars((string) $row["room_name"]);
 $id_area = mrbsGetRoomArea($id_room);
 $area_name = grr_sql_query1("select area_name from ".TABLE_PREFIX."_area where id='".$id_area."'");
 $area_access = grr_sql_query1("select access from ".TABLE_PREFIX."_area where id='".$id_area."'");
@@ -90,7 +90,7 @@ if ($row['statut_room'] == "0"){ //
 if (authGetUserLevel(getUserName(),-1) >= Settings::get("visu_fiche_description"))
 {
 	echo "<h3>".get_vocab("description")."</h3>\n";
-	echo "<div>".htmlspecialchars($row["description"])." </div>\n";
+	echo "<div>".htmlspecialchars((string) $row["description"])." </div>\n";
 }
 
 // Description complète

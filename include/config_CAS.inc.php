@@ -92,7 +92,7 @@ function recuperer_code_fonction($user_code_fonction)
   //Le cas �ch�ant, remplacez la ligne suivante par le code PHP ad�quat, correspondant � votre annuaire LDAP (voir exemple ci-dessous)
   # Remplacement par la r�cup�ration du code fonction depuis le ticket CAS
   #	return $user_code_fonction;
-  $tab = explode("$", $user_code_fonction);
+  $tab = explode("$", (string) $user_code_fonction);
   return $tab[1];
 }
 
@@ -114,7 +114,7 @@ function recuperer_libelle_fonction($user_libelle_fonction)
   //Le cas �ch�ant, remplacez la ligne suivante par le code PHP ad�quat, correspondant � votre annuaire LDAP (voir exemple ci-dessous)
   # Remplacement par la r�cup�ration du code fonction depuis le ticket CAS
   #	return $user_libelle_fonction;
-  $tab = explode("$", $user_libelle_fonction);
+  $tab = explode("$", (string) $user_libelle_fonction);
   return $tab[2];
 }
 

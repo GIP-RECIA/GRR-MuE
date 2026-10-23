@@ -184,10 +184,10 @@ if (isset($_POST['end_day']) and isset($_POST['end_month']) and isset($_POST['en
 				JOIN ".TABLE_PREFIX."_j_site_area AS SA ON R.area_id = SA.id_area
 				JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.id_site ";
     $idEtablissement = getIdEtablissementCourant();
-	
+
 	$test_del1 = grr_sql_count(grr_sql_query("select * from ".TABLE_PREFIX."_entry AS E ".$sqlJoin." WHERE (start_time > '$end_bookings' ) AND ES.id_etablissement = $idEtablissement"));
     $test_del2 = grr_sql_count(grr_sql_query("select * from ".TABLE_PREFIX."_repeat AS E ".$sqlJoin." WHERE (start_time > '$end_bookings') AND ES.id_etablissement = $idEtablissement"));
-   
+
     if (($test_del1!=0) or ($test_del2!=0)) {
         $demande_confirmation = 'yes';
     } else {
@@ -266,7 +266,7 @@ if (Settings::get("use_fckeditor") != 1)
     echo " ".get_vocab("description complete2");
 if (Settings::get("use_fckeditor") == 1) {
       echo "<textarea class=\"ckeditor\" id=\"editor1\" name=\"message_accueil\" rows=\"8\" cols=\"120\">\n";
-      echo htmlspecialchars(Settings::get('message_accueil'));
+      echo htmlspecialchars((string) Settings::get('message_accueil'));
       echo "</textarea>\n";
 ?>
       <script type="text/javascript">
@@ -290,7 +290,7 @@ if (Settings::get("use_fckeditor") == 1) {
 		</script>
 <?php
     } else {
-        echo "\n<textarea name=\"message_accueil\" rows=\"8\" cols=\"120\">".htmlspecialchars(Settings::get('message_accueil'))."</textarea>\n";
+        echo "\n<textarea name=\"message_accueil\" rows=\"8\" cols=\"120\">".htmlspecialchars((string) Settings::get('message_accueil'))."</textarea>\n";
     }
 echo "</p>";
 
@@ -355,13 +355,13 @@ echo "</td></tr></table>";
    $use_site='y';
  else
    $use_site='n';
- 
+
  $use_etab='y';
  $idEtablissement = getIdEtablissementCourant();
- 
+
 ?>
  <script type="text/javascript">
- 
+
 	function modifier_liste_domaines(action){
 
 		$.ajax({
@@ -386,7 +386,7 @@ echo "</td></tr></table>";
 			}
 		});
 	}
-	
+
  /*function modifier_liste_domaines(action){
     new Ajax.Updater(
         $('div_liste_domaines'),
@@ -404,7 +404,7 @@ echo "</td></tr></table>";
                 'action='+action 
 		});
  }*/
- 
+
  function modifier_liste_ressources(action){
 		$.ajax({
 			url: "../my_account_modif_listes.php",
@@ -425,7 +425,7 @@ echo "</td></tr></table>";
 			}
 		});
 	}
-	
+
  /*function modifier_liste_ressources(action){
      new Ajax.Updater(
         $('div_liste_ressources'),
@@ -470,7 +470,7 @@ else
       echo '              <option value="'.$row[0].'"';
       if (Settings::get("default_site") == $row[0])
         echo ' selected="selected" ';
-      echo '>'.htmlspecialchars($row[2]);
+      echo '>'.htmlspecialchars((string) $row[2]);
       echo '</option>'."\n";
   }
   echo('            </select>

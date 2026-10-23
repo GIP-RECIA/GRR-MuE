@@ -30,9 +30,9 @@ include "../include/admin.inc.php";
 
 $grr_script_name = "admin_user.php";
 $back = getBackUri();
-$display = isset($_GET["display"]) ? $_GET["display"] : NULL;
-$order_by = isset($_GET["order_by"]) ? $_GET["order_by"] : NULL;
-$id_etablissement_recherche = isset($_GET["id_etablissement_recherche"]) ? $_GET["id_etablissement_recherche"] : NULL;
+$display = $_GET["display"] ?? NULL;
+$order_by = $_GET["order_by"] ?? NULL;
+$id_etablissement_recherche = $_GET["id_etablissement_recherche"] ?? NULL;
 
 $msg = '';
 if ((authGetUserLevel(getUserName(), -1) < 6) && (authGetUserLevel(getUserName(), -1,'user') != 1))
@@ -89,7 +89,7 @@ if ((isset($_GET['action'])) && ($_GET['action'] == "nettoyage") && (Settings::g
 			$user_login = $row[0];
 			$user_etat[$i] = $row[1];
 			$user_source = $row[2];
-			list($user, $groups) = people_get_variables($user_login, false);
+			[$user, $groups] = people_get_variables($user_login, false);
 			$flag = 1;
 			if ($user["uid"] == "")
 			{
@@ -146,12 +146,12 @@ if ((isset($_GET['action'])) && ($_GET['action'] == "synchro") && (Settings::get
 	for ($loop=0; $loop < $total_user; $loop++ )
 	{
 		$user_login = $users[$loop]["uid"];
-		list($user, $groups) = people_get_variables($user_login, true);
+		[$user, $groups] = people_get_variables($user_login, true);
 		$user_nom = $user["nom"];
 		$user_fullname = $user["fullname"];
 		$user_email = $user["email"];
-		$long = strlen($user_fullname) - strlen($user_nom);
-		$user_prenom = substr($user_fullname, 0, $long) ;
+		$long = strlen((string) $user_fullname) - strlen((string) $user_nom);
+		$user_prenom = substr((string) $user_fullname, 0, $long) ;
 		if (is_eleve($user_login))
 			$user_statut = $statut_eleve;
 		else
@@ -225,8 +225,8 @@ if ((isset($_GET['action_del'])) and ($_GET['js_confirmed'] == 1))
 		if (($test_statut == "gestionnaire_utilisateur") || ($test_statut == "administrateur"))
 			$can_delete = "no";
 	}
-	
-	
+
+
 	// un administrateur établissement ne supprime pas definitivement un utilisateur de tous les établissements
     if(Settings::get("module_multietablissement") == "Oui" && (authGetUserLevel(getUserName(),-1) < 7)){
     	$loginToDel = $_GET['user_del'];
@@ -234,7 +234,7 @@ if ((isset($_GET['action_del'])) and ($_GET['js_confirmed'] == 1))
     	$sql ="SELECT count(*) FROM ".TABLE_PREFIX."_j_user_etablissement WHERE id_etablissement = $idEtablissement AND login = '$loginToDel'";
     	$res = grr_sql_query($sql);
     	$count = grr_sql_row($res, 0);
-    	if (count > 1){
+    	if (\COUNT > 1){
     		$can_delete = "no";
     	}  else {
     		$sql = "DELETE FROM ".TABLE_PREFIX."_j_user_etablissement WHERE id_etablissement = $idEtablissement AND login = '$loginToDel'";
@@ -245,10 +245,10 @@ if ((isset($_GET['action_del'])) and ($_GET['js_confirmed'] == 1))
     		}	
     	}
     }
-	
-	
-	
-	
+
+
+
+
 	if (($temp != getUserName()) && ($can_delete == "yes"))
 	{
 		$temp = str_replace('\\', '\\\\', $temp);
@@ -283,7 +283,7 @@ if (empty($order_by))
 	$order_by = 'nom,prenom';
 }
 
-	
+
 ?>
 <!-- | <a href="admin_user_modify.php?display=<?php echo $display; ?>"><?php //echo get_vocab("display_add_user"); ?></a> | 
 <a href="admin_import_users_csv.php"><?php //echo get_vocab("display_add_user_list_csv"); ?></a> |-->
@@ -297,14 +297,14 @@ if (sso_IsAllowedImportUsers()) {
 // On propose de supprimer les utilisateurs ext de GRR qui ne sont plus présents dans la base LCS
 if (Settings::get("sso_statut") == "lcs")
 {
-	echo "<br />Opérations LCS : | <a href=\"admin_user.php?action=nettoyage\" onclick=\"return confirmlink(this, '".AddSlashes(get_vocab("mess_maj_base_locale"))."', '".get_vocab("maj_base_locale")."')\">".get_vocab("maj_base_locale")."</a> |";
-	echo " <a href=\"admin_user.php?action=synchro\" onclick=\"return confirmlink(this, '".AddSlashes(get_vocab("mess_synchro_base_locale"))."', '".get_vocab("synchro_base_locale")."')\">".get_vocab("synchro_base_locale")."</a> |";
+	echo "<br />Opérations LCS : | <a href=\"admin_user.php?action=nettoyage\" onclick=\"return confirmlink(this, '".AddSlashes((string) get_vocab("mess_maj_base_locale"))."', '".get_vocab("maj_base_locale")."')\">".get_vocab("maj_base_locale")."</a> |";
+	echo " <a href=\"admin_user.php?action=synchro\" onclick=\"return confirmlink(this, '".AddSlashes((string) get_vocab("mess_synchro_base_locale"))."', '".get_vocab("synchro_base_locale")."')\">".get_vocab("synchro_base_locale")."</a> |";
 }
 // Autoriser ou non la modification par un utilisateur de ses informations personnelles (nom, prénom)
 // Par ailleurs un gestionnaire d'utilisateurs ne peut pas Autoriser ou non la modification par un utilisateur de ses informations personnelles
 // Ne peut se faire que si la modification est autorisée dans la définition des paramètres SSO - CD - 20170831
 //if (authGetUserLevel(getUserName(),-1,'user') !=  1)
-if (( ! sso_IsAllowedModify) and (authGetUserLevel(getUserName(),-1,'user') !=  1))
+if (( ! \SSO_ISALLOWEDMODIFY) and (authGetUserLevel(getUserName(),-1,'user') !=  1))
 {
 	echo "<form action=\"admin_user.php\" method=\"get\">\n";
 	echo "<table border=\"1\">\n";
@@ -332,7 +332,7 @@ if (( ! sso_IsAllowedModify) and (authGetUserLevel(getUserName(),-1,'user') !=  
 // Par ailleurs un gestionnaire d'utilisateurs ne peut pas Autoriser ou non la modification par un utilisateur de ses informations personnelles
 // Ne peut se faire que si la modification est autorisée dans la définition des paramètres SSO - CD - 20170831
 //if (authGetUserLevel(getUserName(), -1, 'user') != 1)
-if (( ! sso_IsAllowedModify) and (authGetUserLevel(getUserName(), -1, 'user') != 1))
+if (( ! \SSO_ISALLOWEDMODIFY) and (authGetUserLevel(getUserName(), -1, 'user') != 1))
 {
 	echo "<form action=\"admin_user.php\" method=\"get\">\n";
 	echo "<table border=\"1\">\n";
@@ -360,7 +360,7 @@ if (( ! sso_IsAllowedModify) and (authGetUserLevel(getUserName(), -1, 'user') !=
 // Par ailleurs un gestionnaire d'utilisateurs ne peut pas Autoriser ou non la modification par un utilisateur de son mot de passe
 // Ne peut se faire que si la modification est autorisée dans la définition des paramètres SSO - CD - 20170831
 //if (authGetUserLevel(getUserName(), -1, 'user') != 1)
-if (( ! sso_IsAllowedModify) and (authGetUserLevel(getUserName(), -1, 'user') != 1))
+if (( ! \SSO_ISALLOWEDMODIFY) and (authGetUserLevel(getUserName(), -1, 'user') != 1))
 {
 	echo "<form action=\"admin_user.php\" method=\"get\">\n";
 	echo "<table border=\"1\">\n";
@@ -414,7 +414,7 @@ echo " /></td>";
 			}
 		}
 ?>
-	
+
 
 	<table border="1" style="margin-top: 6px;">
 		<tr>
@@ -469,7 +469,7 @@ if (Settings::get("module_multietablissement") == "Oui"  ){
 		$id_etablissement = getIdEtablissementCourant();
 		$sql .= "JOIN ".TABLE_PREFIX."_j_user_etablissement AS UE ON UE.login = U.login 
 		WHERE UE.id_etablissement = $id_etablissement ";
-		
+
 	}
 }
 $sql .= " ORDER BY $order_by";
@@ -479,8 +479,8 @@ if ($res)
 {
 	for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 	{
-		$user_nom = htmlspecialchars($row[0]);
-		$user_prenom = htmlspecialchars($row[1]);
+		$user_nom = htmlspecialchars((string) $row[0]);
+		$user_prenom = htmlspecialchars((string) $row[1]);
 		$user_statut = $row[2];
 		$user_login = $row[3];
 		$user_etat[$i] = $row[4];
@@ -591,19 +591,19 @@ if ($res)
 			if ((authGetUserLevel(getUserName(), -1, 'user') ==  1) && (($user_statut == "gestionnaire_utilisateur") || ($user_statut == "administrateur")))
 				echo "<td class=\"".$fond."\">{$col[$i][2]}</td>\n";
 			else
-				echo "<td class=\"".$fond."\"><a href=\"admin_user_modify.php?user_login=".urlencode($user_login)."&amp;display=$display\">{$col[$i][2]}</a></td>\n";
+				echo "<td class=\"".$fond."\"><a href=\"admin_user_modify.php?user_login=".urlencode((string) $user_login)."&amp;display=$display\">{$col[$i][2]}</a></td>\n";
 			echo "<td class=\"".$fond."\">{$col[$i][3]}</td>\n";
 			echo "<td class=\"".$fond."\"><span class=\"".$color[$i]."\">{$col[$i][4]}</span></td>\n";
 			echo "<td class=\"".$fond."\">{$col[$i][5]}</td>\n";
 		// Affichage du lien 'supprimer'
 		// un gestionnaire d'utilisateurs ne peut pas supprimer un administrateur général ou un gestionnaire d'utilisateurs
 		// Un administrateur ne peut pas se supprimer lui-même
-			if (((authGetUserLevel(getUserName(), -1, 'user') ==  1) && (($user_statut == "gestionnaire_utilisateur") || ($user_statut == "administrateur"))) || (strtolower(getUserName()) == strtolower($user_login)))
+			if (((authGetUserLevel(getUserName(), -1, 'user') ==  1) && (($user_statut == "gestionnaire_utilisateur") || ($user_statut == "administrateur"))) || (strtolower((string) getUserName()) == strtolower((string) $user_login)))
 				echo "<td class=\"".$fond."\"> </td>";
 			else
 			{
 				$themessage = get_vocab("confirm_del");
-				echo "<td class=\"".$fond."\"><a href='admin_user.php?user_del=".urlencode($col[$i][1])."&amp;action_del=yes&amp;display=$display' onclick='return confirmlink(this, \"$user_login\", \"$themessage\")'>".get_vocab("delete")."</a></td>";
+				echo "<td class=\"".$fond."\"><a href='admin_user.php?user_del=".urlencode((string) $col[$i][1])."&amp;action_del=yes&amp;display=$display' onclick='return confirmlink(this, \"$user_login\", \"$themessage\")'>".get_vocab("delete")."</a></td>";
 			}
 		// Fin de la ligne courante
 			echo "</tr>";

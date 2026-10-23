@@ -43,7 +43,7 @@ $day   = date("d");
 $month = date("m");
 $year  = date("Y");
 check_access(7, $back);
-$page_config = isset($_GET["page_config"]) ? $_GET["page_config"] : '1';
+$page_config = $_GET["page_config"] ?? '1';
 
 $config_global = true;
 

@@ -3,7 +3,7 @@
 
 	if ($_POST['md5e'] != "") {
 		$mdpC = $_POST['md5e'];
-		$mdpE = md5($_POST['md5e']);
+		$mdpE = md5((string) $_POST['md5e']);
 	} else {
 		$mdpC = "";
 		$mdpE = "";

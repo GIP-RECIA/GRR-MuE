@@ -32,7 +32,7 @@
 if (isset($_GET['UserAllRoomsMaxBooking']))
 {
     settype($_GET['UserAllRoomsMaxBooking'],"integer");
-    if ($_GET['UserAllRoomsMaxBooking']=='')
+    if ($_GET['UserAllRoomsMaxBooking']==0)
         $_GET['UserAllRoomsMaxBooking'] = -1;
     if ($_GET['UserAllRoomsMaxBooking']<-1)
         $_GET['UserAllRoomsMaxBooking'] = -1;
@@ -151,10 +151,10 @@ if (Settings::getGeneral("module_multietablissement") == "Oui"){
 	echo "<hr /><h3>".get_vocab("etablissement_open_msg")."</h3>\n";
 	echo "<table>\n";
 	echo "<tr><td>".get_vocab("etablissement_open0")."</td><td>\n";
-	echo "<input type='radio' name='etablissement_open' value='0' "; if (Settings::getGeneral("etablissement_open",true)=='0') echo "checked=\"checked\""; echo " />\n";
+	echo "<input type='radio' name='etablissement_open' value='0' "; if (Settings::getGeneral("etablissement_open")=='0') echo "checked=\"checked\""; echo " />\n";
 	echo "</td></tr>\n";
 	echo "<tr><td>".get_vocab("etablissement_open1")."</td><td>\n";
-	echo "<input type='radio' name='etablissement_open' value='1' "; if (Settings::getGeneral("etablissement_open",true)=='1') echo "checked=\"checked\""; echo " />\n";
+	echo "<input type='radio' name='etablissement_open' value='1' "; if (Settings::getGeneral("etablissement_open")=='1') echo "checked=\"checked\""; echo " />\n";
 	echo "</td></tr>\n";
 	echo "</table>\n";
 }

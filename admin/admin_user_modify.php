@@ -49,8 +49,8 @@ if (isset($_GET["user_login"]) && (authGetUserLevel(getUserName(),-1,'user') == 
 
 #If we dont know the right date then make it up
 unset($user_login);
-$user_login = isset($_GET["user_login"]) ? $_GET["user_login"] : NULL;
-$valid = isset($_GET["valid"]) ? $_GET["valid"] : NULL;
+$user_login = $_GET["user_login"] ?? NULL;
+$valid = $_GET["valid"] ?? NULL;
 $msg = '';
 $user_nom = '';
 $user_prenom = '';
@@ -66,16 +66,16 @@ if ($valid == "yes")
 {
 	// Restriction dans le cas d'une démo
 	VerifyModeDemo();
-	$reg_nom = isset($_GET["reg_nom"]) ? $_GET["reg_nom"] : NULL;
-	$reg_prenom = isset($_GET["reg_prenom"]) ? $_GET["reg_prenom"] : NULL;
-	$new_login = isset($_GET["new_login"]) ? $_GET["new_login"] : NULL;
+	$reg_nom = $_GET["reg_nom"] ?? NULL;
+	$reg_prenom = $_GET["reg_prenom"] ?? NULL;
+	$new_login = $_GET["new_login"] ?? NULL;
 	$reg_password = isset($_GET["reg_password"]) ? unslashes($_GET["reg_password"]) : NULL;
 	$reg_password2 = isset($_GET["reg_password2"]) ? unslashes($_GET["reg_password2"]) : NULL;
-	$reg_statut = isset($_GET["reg_statut"]) ? $_GET["reg_statut"] : NULL;
-	$reg_email = isset($_GET["reg_email"]) ? $_GET["reg_email"] : NULL;
-	$reg_etat = isset($_GET["reg_etat"]) ? $_GET["reg_etat"] : NULL;
-	$reg_source = isset($_GET["reg_source"]) ? $_GET["reg_source"] : NULL;
-	$reg_type_authentification = isset($_GET["type_authentification"]) ? $_GET["type_authentification"] : "locale";
+	$reg_statut = $_GET["reg_statut"] ?? NULL;
+	$reg_email = $_GET["reg_email"] ?? NULL;
+	$reg_etat = $_GET["reg_etat"] ?? NULL;
+	$reg_source = $_GET["reg_source"] ?? NULL;
+	$reg_type_authentification = $_GET["type_authentification"] ?? "locale";
 	if ($reg_type_authentification != "locale")
 		$reg_password = "";
 	if (($reg_nom == '') || ($reg_prenom == ''))
@@ -88,7 +88,7 @@ if ($valid == "yes")
 		//
 		// actions si un nouvel utilisateur a été défini
 		//
-		$test_login = preg_replace("/([A-Za-z0-9_@. -])/","",$new_login);
+		$test_login = preg_replace("/([A-Za-z0-9_@. -])/","",(string) $new_login);
 		if ((isset($new_login)) && ($new_login != '') && ($test_login == ""))
 		{
 			// un gestionnaire d'utilisateurs ne peut pas créer un administrateur général ou un gestionnaire d'utilisateurs
@@ -98,9 +98,9 @@ if ($valid == "yes")
 				if (($reg_statut == "administrateur") || ($reg_statut == "gestionnaire_utilisateur"))
 					$test_statut = FALSE;
 			}
-			$new_login = strtoupper($new_login);
+			$new_login = strtoupper((string) $new_login);
 			if ($reg_password !='')
-				$reg_password_c = md5($reg_password);
+				$reg_password_c = md5((string) $reg_password);
 			else
 			{
 				if ($reg_type_authentification != "locale")
@@ -116,7 +116,7 @@ if ($valid == "yes")
 				$msg = get_vocab("erreur_choix_statut");
 				$retry = 'yes';
 			}
-			else if ((($reg_password != $reg_password2) || (strlen($reg_password) < $pass_leng)) && ($reg_type_authentification == "locale"))
+			else if ((($reg_password != $reg_password2) || (strlen((string) $reg_password) < $pass_leng)) && ($reg_type_authentification == "locale"))
 			{
 				$msg = get_vocab("passwd_error");
 				$retry = 'yes';
@@ -152,13 +152,13 @@ if ($valid == "yes")
 					else
 						$sql .= "source='ext'";
 					if (grr_sql_command($sql) < 0){
-						
+
 						fatal_error(0, get_vocab("msg_login_created_error") . grr_sql_error());
 					}
 					else{
-						
+
 						if (Settings::get("module_multietablissement") == "Oui"){
-							
+
                     		$id_etablissement = getIdEtablissementCourant();
                     		$sql = "INSERT INTO ".TABLE_PREFIX."_j_user_etablissement SET
                     		 login='".protect_data_sql($new_login)."',
@@ -170,9 +170,9 @@ if ($valid == "yes")
                     			$msg = get_vocab("msg_login_created");
                     		}
                     	}
-						
+
 					}
-					
+
 					$user_login = $new_login;
 				}
 			}
@@ -212,8 +212,8 @@ if ($valid == "yes")
 				}
 				else
 				{
-					$reg_password_c = md5($reg_password);
-					if (($reg_password != $reg_password2) || (strlen($reg_password) < $pass_leng))
+					$reg_password_c = md5((string) $reg_password);
+					if (($reg_password != $reg_password2) || (strlen((string) $reg_password) < $pass_leng))
 					{
 						$msg = get_vocab("passwd_error");
 						$retry = 'yes';
@@ -331,11 +331,11 @@ if (isset($user_login) && ($user_login != ''))
 	{
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 		{
-			$user_nom = htmlspecialchars($row[0]);
-			$user_prenom = htmlspecialchars($row[1]);
+			$user_nom = htmlspecialchars((string) $row[0]);
+			$user_prenom = htmlspecialchars((string) $row[1]);
 			$user_statut = $row[2];
 			$user_etat = $row[3];
-			$user_mail = htmlspecialchars($row[4]);
+			$user_mail = htmlspecialchars((string) $row[4]);
 			$user_source = $row[5];
 			if ($user_source == "local")
 				$flag_is_local = "y";
@@ -433,21 +433,21 @@ else
 				  <td><b>'.get_vocab("last_name").'</b></td><td>'.get_vocab("deux_points").'</td>
 				  <td>'.$user_nom.'</td>
 				  <td><input type="hidden" name="reg_nom" size=\"40\" value="';
-				  if ($user_nom) echo htmlspecialchars($user_nom);
+				  if ($user_nom) echo htmlspecialchars((string) $user_nom);
 		echo '     "<td>
 			   </tr>';
 		echo '  <tr>
 				  <td><b>'.get_vocab("first_name").'</b></td><td>'.get_vocab("deux_points").'</td>
 				  <td>'.$user_prenom.'</td>
 				  <td><input type="hidden" name="reg_prenom" size=\"40\" value="';
-				  if ($user_prenom) echo htmlspecialchars($user_prenom);
+				  if ($user_prenom) echo htmlspecialchars((string) $user_prenom);
 		echo '     "<td>
 			   </tr>';
 		echo '  <tr>
 				  <td><b>'.get_vocab("mail_user").'</b></td><td>'.get_vocab("deux_points").'</td>
 				  <td>'.$user_mail.'</td>
 				  <td><input type="hidden" name="reg_email" size=\"40\" value="';
-				  if ($user_mail) echo htmlspecialchars($user_mail);
+				  if ($user_mail) echo htmlspecialchars((string) $user_mail);
 		echo '     "<td>
 			   </tr>
 			 </table>';
@@ -468,17 +468,17 @@ else
 		echo "<table border=\"0\" cellpadding=\"5\"><tr>\n";
 		echo "<td>".get_vocab("last_name")." *".get_vocab("deux_points")." </td>\n<td><input type=\"text\" name=\"reg_nom\" size=\"40\" value=\"";
 		if ($user_nom)
-			echo htmlspecialchars($user_nom);
+			echo htmlspecialchars((string) $user_nom);
 		echo "\" /></td>\n";
 		echo "<td>".get_vocab("first_name")." *".get_vocab("deux_points")." </td>\n<td><input type=\"text\" name=\"reg_prenom\" size=\"20\" value=\"";
 		if ($user_nom)
-			echo htmlspecialchars($user_prenom);
+			echo htmlspecialchars((string) $user_prenom);
 		echo "\" /></td>\n";
 		echo "<td></td><td></td>";
 		echo "</tr>\n";
 		echo "<tr><td>".get_vocab("mail_user").get_vocab("deux_points")."</td><td><input type=\"text\" name=\"reg_email\" size=\"30\" value=\"";
 		if ($user_mail)
-			echo htmlspecialchars($user_mail);
+			echo htmlspecialchars((string) $user_mail);
 		echo "\" /></td>\n";
    }
 	
@@ -513,7 +513,7 @@ else
 		echo ">".get_vocab("statut_administrator")."</option>\n";
 	}
 	echo "</select></td>\n";
-	if (strtolower(getUserName()) != strtolower($user_login))
+	if (strtolower((string) getUserName()) != strtolower((string) $user_login))
 	{
 		echo "<td>".get_vocab("activ_no_activ").get_vocab("deux_points")."</td>";
 		echo "<td><select name=\"reg_etat\" size=\"1\">\n";

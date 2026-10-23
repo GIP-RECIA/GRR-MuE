@@ -193,7 +193,7 @@ if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statu
 		die();
 	}
 	if (grr_resumeSession())
-	header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 	// Cas d'une authentification Lemonldap
 }
 else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('sso_statut') == 'lemon_utilisateur'))
@@ -211,7 +211,7 @@ else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('ss
 		if ((Settings::get("Url_cacher_page_login") != "") && ((!isset($sso_super_admin)) || ($sso_super_admin == false)))
 		header("Location: ".Settings::get("Url_cacher_page_login"));
 		else
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 		//header("Location: ./login.php");
 		// Echec de l'authentification lemonldap
 		die();
@@ -245,7 +245,7 @@ else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('ss
 		die();
 	}
 	if (grr_resumeSession())
-	header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 	// Cas d'une authentification LCS
 }
 else if (Settings::get('sso_statut') == 'lcs')
@@ -310,7 +310,7 @@ else if (Settings::get('sso_statut') == 'lcs')
 			die();
 		}
 		if (grr_resumeSession())
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 	}
 	else
 	{
@@ -323,7 +323,7 @@ else if (Settings::get('sso_statut') == 'lcs')
 			header("Location:".LCS_PAGE_AUTHENTIF);
 		}
 		else
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 		// authentification non obligatoire, l'utilisateur est simple visiteur
 	}
 }
@@ -426,7 +426,7 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 		die();
 	}
 	if (grr_resumeSession())
-	header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 	// Cas d'une authentification apache
 }
 else if ((Settings::get('sso_statut') == 'http_visiteur') || (Settings::get('sso_statut') == 'http_utilisateur'))
@@ -533,7 +533,7 @@ else if ((Settings::get('sso_statut') == 'http_visiteur') || (Settings::get('sso
 
 	if (grr_resumeSession() )
 	{
-		header("Location: ".htmlspecialchars_decode(page_accueil())."");
+		header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 	}
 }
 else
@@ -543,7 +543,7 @@ else
 		if ($cook["path"] != '')
 		{
 			if (grr_resumeSession())
-			header("Location: ".htmlspecialchars_decode(page_accueil())."");
+			header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 			else
 			{
 				if ((Settings::get("Url_cacher_page_login") != "") && ((!isset($sso_super_admin)) || ($sso_super_admin == false)))
@@ -561,6 +561,6 @@ else
 		}
 	}
 	else
-	header("Location: ".htmlspecialchars_decode(page_accueil())."");
+	header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 }
 ?>

@@ -94,7 +94,7 @@ if ($_GET['type'] == "domaine")
 				$display_liste .=  '              <option value="'.$row[0].'"';
 				if ($area == $row[0])
 					$display_liste .= ' selected="selected" ';
-				$display_liste .= '>'.htmlspecialchars($row[1]);
+				$display_liste .= '>'.htmlspecialchars((string) $row[1]);
 				$display_liste .= '</option>'."\n";
 			}
 		}
@@ -145,7 +145,7 @@ if ($_GET['type']=="ressource")
 			$display_liste .=  '              <option value="'.$row[0].'"';
 			if ($room == $row[0])
 				$display_liste .= ' selected="selected" ';
-			$display_liste .= '>'.htmlspecialchars($row[1]);
+			$display_liste .= '>'.htmlspecialchars((string) $row[1]);
 			$display_liste .= '</option>'."\n";
 		}
 

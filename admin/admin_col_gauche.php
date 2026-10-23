@@ -52,24 +52,24 @@
 
 // affichage tableau bootstrap
 function affichetableau($liste,$titre=''){
-	
+
 	global $chaine, $vocab;
 	if (count($liste) > 0){
-		
-		
-		echo '<h4 class="titreAdmin">'.mb_strtoupper($titre).'</h4>';
+
+
+		echo '<h4 class="titreAdmin">'.mb_strtoupper((string) $titre).'</h4>';
         echo '<ul class="nav nav-pills nav-stacked">';
 		$k = 0;
-		
+
 		foreach ($liste as $key){
-			
+
 			if ($chaine == $key)
 				echo '<li class="active"><a href="'.$key.'">'.get_vocab($key).'</a></li>';
 			else
 				echo '<li><a href="'.$key.'">'.get_vocab($key).'</a></li>';
 			$k++;
 		}
-		
+
 		echo "</ul></fieldset>\n";
 	}
 }
@@ -86,17 +86,17 @@ echo '<div class="row">';
 		<?php
 		if (get_request_uri() != '')
 		{
-			$url_ = parse_url(get_request_uri());
+			$url_ = parse_url((string) get_request_uri());
 			$pos = strrpos($url_['path'], "/") + 1;
 			$chaine = substr($url_['path'], $pos);
 		}
 		else
 			$chaine = '';
-		
+
 		echo "<div id=\"colgauche\">\n";
 		echo '<div id="sidebar" class="well sidebar-nav">';
 
-		$liste = array();
+		$liste = [];
 		if (authGetUserLevel(getUserName(), -1, 'area') >= 7)
 			$liste[] = 'admin_config.php';
 		if (authGetUserLevel(getUserName(), -1, 'area') >= 7)
@@ -108,11 +108,11 @@ echo '<div class="row">';
 			if (authGetUserLevel(getUserName(), -1, 'area') >= 7)
 				$liste[] = 'admin_calend_jour_cycle.php';
 		}
-		
+
 		affichetableau($liste,get_vocab("admin_menu_general"));
-		
+
 		if (Settings::get("module_multietablissement") == "Oui") {
-			$liste = array();
+			$liste = [];
 			if(authGetUserLevel(getUserName(),-1,'area') >= 6)
 				$liste[] = 'admin_config_etablissement.php';
 			if(authGetUserLevel(getUserName(),-1,'area') >= 6 )
@@ -121,8 +121,8 @@ echo '<div class="row">';
 				$liste[] = 'admin_calend_ignore.php';
 			affichetableau($liste,get_vocab("admin_menu_etablissement"));
 		}
-		
-		$liste = array();
+
+		$liste = [];
 		if (Settings::get("module_multietablissement") == "Oui") {
 			if(authGetUserLevel(getUserName(),-1,'area') >= 6)
 			$liste[] = 'admin_etablissement.php';
@@ -132,12 +132,12 @@ echo '<div class="row">';
 			if (authGetUserLevel(getUserName(), -1, 'area') >= 6)
 				$liste[] = 'admin_site.php';
 		}
-		
+
 		if (authGetUserLevel(getUserName(), -1, 'area') >= 4)
 			$liste[] = 'admin_room.php';
 		if (authGetUserLevel(getUserName(), -1, 'area') >= 4)
 			$liste[] = 'admin_overload.php';
-		
+
 
 		if (Settings::get("module_multietablissement") == "Oui") {
 			affichetableau($liste,get_vocab("admin_menu_etab_site_area_room"));
@@ -146,11 +146,11 @@ echo '<div class="row">';
 		else
 			affichetableau($liste,get_vocab("admin_menu_arearoom"));
 
-		
-		$liste = array();
+
+		$liste = [];
 		if ((authGetUserLevel(getUserName(), -1, 'area') >= 6) || (authGetUserLevel(getUserName(), -1, 'user') == 1))
 			$liste[] = 'admin_user.php';
-		
+
 		if (Settings::get("module_multietablissement") == "Oui" and authGetUserLevel(getUserName(),-1,'area') >= 7) {
 			$liste[] = 'admin_admin_etablissement.php';
 		}
@@ -170,12 +170,12 @@ echo '<div class="row">';
 			{
 				if (authGetUserLevel(getUserName(), -1, 'area') >= 6)
 					$liste[] = 'admin_purge_accounts.php';
-		
+
 			}*/
-			
+
 			affichetableau($liste,get_vocab("admin_menu_user"));
-			$liste = array();
-			
+			$liste = [];
+
 			if (authGetUserLevel(getUserName(), -1, 'area') >= 4)
 				$liste[] = 'admin_email_manager.php';
 			if (authGetUserLevel(getUserName(), -1, 'area') >= 7)
@@ -188,13 +188,13 @@ echo '<div class="row">';
 				if (authGetUserLevel(getUserName(), -1, 'area') >= 5)
 					$liste[] = 'admin_corresp_statut.php';
 			}
-			
+
 			affichetableau($liste,get_vocab("admin_menu_various"));
-			
+
 		// Possibilité de bloquer l'affichage de la rubrique "Authentification et ldap"
 			if ((!isset($sso_restrictions)) || ($sso_restrictions == false))
 			{
-				$liste = array();
+				$liste = [];
 				if (authGetUserLevel(getUserName(), -1, 'area') >= 7)
 					$liste[] = 'admin_config_ldap.php';
 				if (authGetUserLevel(getUserName(), -1, 'area') >= 7)

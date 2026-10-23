@@ -34,8 +34,8 @@ check_access(6, $back);
 // Restriction dans le cas d'une démo
 VerifyModeDemo();
 unset($user_login);
-$user_login = isset($_POST["user_login"]) ? $_POST["user_login"] : ($user_login = isset($_GET["user_login"]) ? $_GET["user_login"] : NULL);
-$valid = isset($_POST["valid"]) ? $_POST["valid"] : NULL;
+$user_login = $_POST["user_login"] ?? ($user_login = $_GET["user_login"] ?? NULL);
+$valid = $_POST["valid"] ?? NULL;
 $msg = '';
 if ($valid == "yes")
 {
@@ -43,8 +43,8 @@ if ($valid == "yes")
     $reg_password1 = unslashes($_POST["reg_password1"]);
     unset($reg_password2);
     $reg_password2 = unslashes($_POST["reg_password2"]);
-    $reg_password_c = md5($reg_password1);
-    if (($reg_password1 != $reg_password2) || (strlen($reg_password1) < $pass_leng))
+    $reg_password_c = md5((string) $reg_password1);
+    if (($reg_password1 != $reg_password2) || (strlen((string) $reg_password1) < $pass_leng))
         $msg = get_vocab("passwd_error");
     else
     {

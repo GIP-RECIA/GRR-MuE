@@ -31,13 +31,13 @@
 include "../include/admin.inc.php";
 $grr_script_name = "admin_access_area.php";
 
-$id_area = isset($_POST["id_area"]) ? $_POST["id_area"] : (isset($_GET["id_area"]) ? $_GET["id_area"] : NULL);
+$id_area = $_POST["id_area"] ?? $_GET["id_area"] ?? NULL;
 if (!isset($id_area))
 	settype($id_area,"integer");
-$reg_user_login = isset($_POST["reg_user_login"]) ? $_POST["reg_user_login"] : NULL;
-$reg_multi_user_login = isset($_POST["reg_multi_user_login"]) ? $_POST["reg_multi_user_login"] : NULL;
+$reg_user_login = $_POST["reg_user_login"] ?? NULL;
+$reg_multi_user_login = $_POST["reg_multi_user_login"] ?? NULL;
 $test_user =  isset($_POST["reg_multi_user_login"]) ? "multi" : (isset($_POST["reg_user_login"]) ? "simple" : NULL);
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$action = $_GET["action"] ?? NULL;
 $msg = '';
 
 
@@ -169,7 +169,7 @@ if ($res)
 		// on affiche que les domaines que l'utilisateur connecté a le droit d'administrer
 		if (authGetUserLevel(getUserName(),$row[0],'area') >= 4)
 		{
-			$out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>";
+			$out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>";
 			$existe_domaine = 'yes';
 		}
 	}
@@ -206,10 +206,10 @@ if ($id_area != -1)
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 		{
 			$login_user = $row[0];
-			$nom_admin = htmlspecialchars($row[1]);
-			$prenom_admin = htmlspecialchars($row[2]);
+			$nom_admin = htmlspecialchars((string) $row[1]);
+			$prenom_admin = htmlspecialchars((string) $row[2]);
 			echo "<b>";
-			echo "$nom_admin $prenom_admin</b> | <a href='admin_access_area.php?action=del_user&amp;login_user=".urlencode($login_user)."&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />\n";
+			echo "$nom_admin $prenom_admin</b> | <a href='admin_access_area.php?action=del_user&amp;login_user=".urlencode((string) $login_user)."&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />\n";
 		}
 		if ($nombre == 0)
 			echo "<h3 class='avertissement'>".get_vocab("no_user_area")."</h3>\n";
@@ -244,7 +244,7 @@ if ($id_area != -1)
 				$res = grr_sql_query($sql);
 				if ($res)
 					for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
-						echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+						echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
 					?>
 				</select>
 				<input type="hidden" name="id_area" value="<?php echo $id_area;?>" />
@@ -281,7 +281,7 @@ if ($id_area != -1)
 					<div><select name="agent" size="8" style="width:200px;" multiple="multiple" ondblclick="Deplacer(this.form.agent,this.form.elements['reg_multi_user_login[]'])">
 						 <?php
 							if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
-								echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+								echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
 							}
 						?>
 						</select>

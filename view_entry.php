@@ -61,7 +61,7 @@ else
 	$type_session = "with_session";
 unset($reg_statut_id);
 
-$reg_statut_id = isset($_GET["statut_id"]) ? $_GET["statut_id"] : "";
+$reg_statut_id = $_GET["statut_id"] ?? "";
 
 if (isset($_GET["id"])){
 	$id = $_GET["id"];
@@ -156,10 +156,10 @@ else{
 grr_sql_free($res);
 
 $breve_description 	= $row[0];
-$description  		= bbcode(htmlspecialchars($row[1]),'');
-$beneficiaire    	= htmlspecialchars($row[2]);
-$room_name    		= htmlspecialchars($row[3]);
-$area_name    		= htmlspecialchars($row[4]);
+$description  		= bbcode(htmlspecialchars((string) $row[1]),'');
+$beneficiaire    	= htmlspecialchars((string) $row[2]);
+$room_name    		= htmlspecialchars((string) $row[3]);
+$area_name    		= htmlspecialchars((string) $row[4]);
 $type         		= $row[5];
 $room_id      		= $row[6];
 $repeat_id    		= $row[7];
@@ -170,10 +170,10 @@ $statut_id 			= $row[13];
 $delais_option_reservation 	= $row[14];
 $option_reservation 		= $row[15];
 $moderate 					= $row[16];
-$beneficiaire_ext   		= htmlspecialchars($row[17]);
-$create_by    				= htmlspecialchars($row[18]);
-$jour_cycle    				= htmlspecialchars($row[19]);
-$active_ressource_empruntee = htmlspecialchars($row[20]);
+$beneficiaire_ext   		= htmlspecialchars((string) $row[17]);
+$create_by    				= htmlspecialchars((string) $row[18]);
+$jour_cycle    				= htmlspecialchars((string) $row[19]);
+$active_ressource_empruntee = htmlspecialchars((string) $row[20]);
 $keys						= $row[21];
 $courrier					= $row[22];
 $rep_type 					= 0;
@@ -266,11 +266,11 @@ $date_now = time();
 
 get_planning_area_values($area);
 if ($enable_periods == 'y')
-	list( $start_period, $start_date) = period_date_string($row[10]);
+	[$start_period, $start_date] = period_date_string($row[10]);
 else
 	$start_date = time_date_string($row[10],$dformat);
 if ($enable_periods == 'y')
-	list( , $end_date) =  period_date_string($row[11], -1);
+	[, $end_date] =  period_date_string($row[11], -1);
 else
 	$end_date = time_date_string($row[11], $dformat);
 if ($beneficiaire != "")
@@ -285,7 +285,7 @@ if ($enable_periods == 'y')
 else
 	toTimeString($duration, $dur_units);
 
-if (strstr ($back, 'view_entry.php')){
+if (strstr ((string) $back, 'view_entry.php')){
 	
 	$sql = "SELECT start_time, room_id FROM ".TABLE_PREFIX."_entry WHERE id=". $id;
 	$res = grr_sql_query($sql);
@@ -351,8 +351,8 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 						$affiche_champ = 'n';
 					if ($affiche_champ == 'y')
 					{
-						echo "<tr><td><b>".bbcode(htmlspecialchars($fieldname).get_vocab("deux_points"), '')."</b></td>\n";
-						echo "<td>".bbcode(htmlspecialchars($fielddata["valeur"]), '')."</td></tr>\n";
+						echo "<tr><td><b>".bbcode(htmlspecialchars((string) $fieldname).get_vocab("deux_points"), '')."</b></td>\n";
+						echo "<td>".bbcode(htmlspecialchars((string) $fielddata["valeur"]), '')."</td></tr>\n";
 					}
 				}
 			}
@@ -611,14 +611,14 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 				grr_sql_free($res);
 				
 				if ($enable_periods == 'y')
-					list( $start_period, $start_date) = period_date_string($start_time);
+					[$start_period, $start_date] = period_date_string($start_time);
 				else
 					$start_date = time_date_string($start_time, $dformat);
 				if ($enable_periods == 'y')
 					toPeriodString($start_period, $duration, $dur_units);
 				else
 					toTimeString($duration, $dur_units);
-				$weeklist = array("unused", "every week", "week 1/2", "week 1/3", "week 1/4", "week 1/5");
+				$weeklist = ["unused", "every week", "week 1/2", "week 1/3", "week 1/4", "week 1/5"];
 				if ($rep_type == 2)
 					$affiche_period = get_vocab($weeklist[$rep_num_weeks]);
 				else

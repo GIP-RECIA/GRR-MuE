@@ -35,8 +35,8 @@ $day   = date("d");
 $month = date("m");
 $year  = date("Y");
 check_access(6, $back);
-$sql_file = isset($_FILES["sql_file"]) ? $_FILES["sql_file"] : NULL;
-$file_name = isset($_GET["file_name"]) ? $_GET["file_name"] : NULL;
+$sql_file = $_FILES["sql_file"] ?? NULL;
+$file_name = $_GET["file_name"] ?? NULL;
 VerifyModeDemo();
 if (!$file_name)
 	print_header("", "", "", $type="with_session");
@@ -50,7 +50,7 @@ if (!$file_name)
 {
 	echo "<h3>Restauration à partir du ficher : ";
 	echo $sql_file['name']."</h3>\n";
-	$file_name = str_replace("\\","/",dirname($sql_file['tmp_name'])."/".$sql_file['name']);
+	$file_name = str_replace("\\","/",dirname((string) $sql_file['tmp_name'])."/".$sql_file['name']);
 	$ok = @copy($sql_file['tmp_name'],$file_name);
 	$file = fopen($file_name, "r") or exit("Unable to open file!");
 	$line = fgets($file);

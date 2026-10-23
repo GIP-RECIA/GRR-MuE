@@ -27,32 +27,14 @@ function traite_requete($requete = ""){
 		$retour = "";
 	else{
 		
-		switch ($erreur_no){
-			
-			case "1060":
-			// le champ existe déjà : pas de problème
-			$retour = "";
-			break;
-			case "1061":
-			// La cléf existe déjà : pas de problème
-			$retour = "";
-			break;
-			case "1062":
-			// Présence d'un doublon : création de la cléf impossible
-			$retour = "<span style=\"color:#FF0000;\">Erreur (<b>non critique</b>) sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n";
-			break;
-			case "1068":
-			// Des cléfs existent déjà : pas de problème
-			$retour = "";
-			break;
-			case "1091":
-			// Déjà supprimé : pas de problème
-			$retour = "";
-			break;
-			default:
-			$retour = "<span style=\"color:#FF0000;\">Erreur sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n";
-			break;
-		}
+		$retour = match ((string) $erreur_no) {
+      "1060" => "",
+      "1061" => "",
+      "1062" => "<span style=\"color:#FF0000;\">Erreur (<b>non critique</b>) sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n",
+      "1068" => "",
+      "1091" => "",
+      default => "<span style=\"color:#FF0000;\">Erreur sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n",
+  };
 	}
 	return $retour;
 }

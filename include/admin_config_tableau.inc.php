@@ -40,39 +40,39 @@
 echo '<ul class="nav nav-pills nav-justified">';
 
 if ($config_global){
-	
+
 	for ($k = 1; $k < 6; $k++){
-		
+
 		if ($page_config == $k){
 
 			echo '<li role="presentation" class="active"><a href="#">'.get_vocab('admin_config'.$k.'.php').'</a></li>';
 		}
 		else{
-			
+
 			echo '<li role="presentation"><a href="./admin_config.php?page_config='.$k.'">'.get_vocab('admin_config'.$k.'.php').'</a></li>';	
 		}
 	}
 
 }else{
-	
+
 	for ($k = 1; $k < 6; $k++){
-		
+
 		if ($k != 4) {
-			
+
 			if ($page_config == $k) {
-				
+
 				echo '<li role="presentation" class="active"><a href="#">'.get_vocab('admin_config'.$k.'.php').'</a></li>';
 			} 
 			else {
-				
+
 				echo '<li role="presentation"><a href="./admin_config_etablissement.php?page_config='.$k.'">'.get_vocab('admin_config'.$k.'.php').'</a></li>';
-			
+
 			}
 		}
 	}	
 }
 echo '</ul><hr>';
-	
+
 
 // Ancienne gestion onglet par tableau
 /*echo "<table class=\"table_adm\">\n";
@@ -98,7 +98,7 @@ if ($config_global){
 	}
 	echo "</tr></tbody></table>".PHP_EOL;
 }else{
-	
+
 	for ($k=1;$k<6;$k++) {
 		if ($k != 4) {
 			echo "<td style=\"width:20%;\">";
@@ -114,6 +114,6 @@ if ($config_global){
 		}
 	}
 	echo "</tr></tbody></table>\n".PHP_EOL;
-	
+
 }*/
 ?>

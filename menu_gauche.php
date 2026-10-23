@@ -3,7 +3,7 @@
 if ($_GET['pview'] != 1)
 {
 	$path = $_SERVER['PHP_SELF'];
-	$file = basename ($path);
+	$file = basename ((string) $path);
 	if ( $file== 'month_all2.php' or Settings::get("menu_gauche") == 0){
 		echo '<div id="menuGaucheMonthAll2">';
 	} else{
@@ -11,7 +11,7 @@ if ($_GET['pview'] != 1)
 	}
 	echo '<div id="menuGauche">';
 	
-	$pageActuel = str_replace(".php","",basename($_SERVER['PHP_SELF']));
+	$pageActuel = str_replace(".php","",basename((string) $_SERVER['PHP_SELF']));
     $out = demandeModeration(getUserName());
     if(count($out) != 0){
         echo '<td id="ouvrir" style="cursor: inherit;width: 100%;" class="fontcolor4" align="center" >	

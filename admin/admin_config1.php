@@ -240,7 +240,7 @@ if (isset($_POST['mail_etat_destinataire'])) {
 }
 // gestion_lien_aide
 if (isset($_POST['gestion_lien_aide'])) {
-    if (($_POST['gestion_lien_aide'] == 'perso') && (trim($_POST['lien_aide']) == '')) {
+    if (($_POST['gestion_lien_aide'] == 'perso') && (trim((string) $_POST['lien_aide']) == '')) {
         $_POST['gestion_lien_aide'] = 'ext';
     } elseif ($_POST['gestion_lien_aide'] != 'perso') {
         $_POST['lien_aide'] = '';
@@ -302,14 +302,14 @@ if (isset($_POST['ok'])) {
         }
     }
     // Enregistrement du logo
-    $doc_file = isset($_FILES['doc_file']) ? $_FILES['doc_file'] : null;
+    $doc_file = $_FILES['doc_file'] ?? null;
     /* Test premier, juste pour bloquer les double extensions */
-    if (count(explode('.', $doc_file['name'])) > 2) {
+    if (count(explode('.', (string) $doc_file['name'])) > 2) {
 
         $msg .= "L\'image n\'a pas pu être enregistrée : les seules extentions autorisées sont gif, png et jpg.\\n";
         $ok = 'no';
 
-    } elseif (preg_match("`\.([^.]+)$`", $doc_file['name'], $match)) {
+    } elseif (preg_match("`\.([^.]+)$`", (string) $doc_file['name'], $match)) {
         /* normalement, si on arrive ici l'image n'a qu'une extension */
 
         $ext = strtolower($match[1]);
@@ -359,7 +359,7 @@ if (isset($_POST['ok'])) {
 
                 /* je test si la destination est writable */
                 $dest = '../images/';
-                $randName = md5(uniqid(rand(), true));
+                $randName = md5(uniqid(random_int(0, mt_getrandmax()), true));
 
                 $pictureName = $randName.'.'.$extSafe;
                 $picturePath = $dest.$pictureName;
@@ -617,7 +617,7 @@ if (Settings::getGeneral('use_fckeditor') != 1) {
 }
 if (Settings::getGeneral('use_fckeditor') == 1) {
     echo '<textarea class="ckeditor" id="editor1" name="message_accueil" rows="8" cols="120">'.PHP_EOL;
-    echo htmlspecialchars(Settings::getGeneral('message_accueil'));
+    echo htmlspecialchars((string) Settings::getGeneral('message_accueil'));
     echo "</textarea>\n";
     ?>
 	<script type="text/javascript">
@@ -641,7 +641,7 @@ if (Settings::getGeneral('use_fckeditor') == 1) {
 	<?php
 
 } else {
-    echo "\n<textarea name=\"message_accueil\" rows=\"8\" cols=\"120\">".htmlspecialchars(Settings::getGeneral('message_accueil')).'</textarea>'.PHP_EOL;
+    echo "\n<textarea name=\"message_accueil\" rows=\"8\" cols=\"120\">".htmlspecialchars((string) Settings::getGeneral('message_accueil')).'</textarea>'.PHP_EOL;
 }
 echo '</p>'.PHP_EOL;
 //
@@ -780,7 +780,7 @@ if (Settings::getGeneral('module_multisite') == 'Oui') {
 
  $use_etab='n';  
  $idEtablissement = -1;
- 
+
 ?>
 <script type="text/javascript">
 	function modifier_liste_domaines(action){
@@ -854,7 +854,7 @@ if (Settings::getGeneral('module_multisite') == 'Oui') {
         if (Settings::getGeneral('default_site') == $row[0]) {
             echo ' selected="selected" ';
         }
-        echo '>'.htmlspecialchars($row[2]);
+        echo '>'.htmlspecialchars((string) $row[2]);
         echo '</option>'."\n";
     }
     echo('</select>
@@ -1341,7 +1341,7 @@ echo '<tr>'.PHP_EOL;
 echo '<td>'.PHP_EOL;
 $vacances = simplexml_load_file('../vacances.xml');
 $libelle = $vacances->academies->children();
-$acad = array();
+$acad = [];
 foreach ($libelle as $key => $value) {
     if (!in_array($value['zone'], $acad)) {
         $acad[] .= $value['zone'];

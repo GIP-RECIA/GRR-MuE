@@ -145,7 +145,7 @@ echo '</div>'.PHP_EOL;
 //echo "<br/>";
 
 // Affichage du domaine
-echo '<div class="titre_planningRessource">' .ucfirst($this_area_name)." - ".get_vocab("all_areas"). '</div>'.PHP_EOL;
+echo '<div class="titre_planningRessource">' .ucfirst((string) $this_area_name)." - ".get_vocab("all_areas"). '</div>'.PHP_EOL;
 //echo "</h4>";
 
 echo '</div>';
@@ -155,7 +155,7 @@ if ($_GET['pview'] == 1 && $_GET['precedent'] == 1){
 	<button class=\"btn btn-default btn-xs\" onclick=\"charger();javascript:history.back();\">Précedent</button>
 </span>";
 }
-$all_day = preg_replace("/ /", " ", get_vocab("all_day"));
+$all_day = preg_replace("/ /", " ", (string) get_vocab("all_day"));
 $sql = "SELECT start_time, end_time,".TABLE_PREFIX."_entry.id, name, beneficiaire, room_name, statut_entry, ".TABLE_PREFIX."_entry.description, ".TABLE_PREFIX."_entry.option_reservation, ".TABLE_PREFIX."_room.delais_option_reservation, type, ".TABLE_PREFIX."_entry.moderate
 FROM ".TABLE_PREFIX."_entry inner join ".TABLE_PREFIX."_room on ".TABLE_PREFIX."_entry.room_id=".TABLE_PREFIX."_room.id
 WHERE (start_time <= $month_end AND end_time > $month_start and area_id='".$area."')
@@ -205,8 +205,8 @@ else
 			$midnight_tonight = $midnight + 86400;
 			if ($enable_periods == 'y')
 			{
-				$start_str = preg_replace("/ /", " ", period_time_string($row[0]));
-				$end_str   = preg_replace("/ /", " ", period_time_string($row[1], -1));
+				$start_str = preg_replace("/ /", " ", (string) period_time_string($row[0]));
+				$end_str   = preg_replace("/ /", " ", (string) period_time_string($row[1], -1));
 				switch (cmp3($row[0], $midnight) . cmp3($row[1], $midnight_tonight))
 				{
 					case "> < ":
@@ -316,11 +316,11 @@ for ($k = 1; $k <= $days_in_month; $k++)
 		if (Settings::get("jours_cycles_actif") == "Oui" && intval($jour_cycle) > -1)
 		{
 			if (intval($jour_cycle) > 0)
-				echo "<br /></><i> ".ucfirst(substr(get_vocab("rep_type_6"), 0, 1)).$jour_cycle."</i>";
+				echo "<br /></><i> ".ucfirst(substr((string) get_vocab("rep_type_6"), 0, 1)).$jour_cycle."</i>";
 			else
 			{
-				if (strlen($jour_cycle) > 5)
-					$jour_cycle = substr($jour_cycle, 0, 3)."..";
+				if (strlen((string) $jour_cycle) > 5)
+					$jour_cycle = substr((string) $jour_cycle, 0, 3)."..";
 				echo "<br /></><i>".$jour_cycle."</i>";
 			}
 		}
@@ -335,7 +335,7 @@ for ($ir = 0; ($row = grr_sql_row($res, $ir)); $ir++)
 	if ($verif_acces_ressource)
 	{
 		$acces_fiche_reservation = verif_acces_fiche_reservation(getUserName(), $row[2]);
-		echo "<tr><th class=\"tableau_month_all2\">" . htmlspecialchars($row[0]) ."</th>\n";
+		echo "<tr><th class=\"tableau_month_all2\">" . htmlspecialchars((string) $row[0]) ."</th>\n";
 		$li++;
 		//$t2 = mktime(0, 0, 0,$month, 1, $year);
 		for ($k = 1; $k <= $days_in_month; $k++)
@@ -383,12 +383,12 @@ for ($ir = 0; ($row = grr_sql_row($res, $ir)); $ir++)
 										{
 											$currentPage = 'month_all2';
 											$id =   $d[$cday]["id"][$i];
-											echo '<a title="'.htmlspecialchars($d[$cday]["who1"][$i]).'" class="lienModal" onclick="requestModal('.$id.','.$cday.','.$month.','.$year,',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">'.$d[$cday]["who1"][$i].'</a>';
+											echo '<a title="'.htmlspecialchars((string) $d[$cday]["who1"][$i]).'" class="lienModal" onclick="requestModal('.$id.','.$cday.','.$month.','.$year,',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">'.$d[$cday]["who1"][$i].'</a>';
 											//echo "<a title=\"".htmlspecialchars($d[$cday]["who1"][$i])."\" data-width=\"675\" onclick=\"request($id,$cday,$month,$year,'$currentPage',readData);\" data-rel=\"popup_name\" class=\"poplight\">" .$d[$cday]["who1"][$i]."</a>";
 										}
 										else
 										{
-											echo "<a title=\"".htmlspecialchars($d[$cday]["data"][$i])."\" href=\"view_entry.php?id=" . $d[$cday]["id"][$i]."&amp;page=month\">"
+											echo "<a title=\"".htmlspecialchars((string) $d[$cday]["data"][$i])."\" href=\"view_entry.php?id=" . $d[$cday]["id"][$i]."&amp;page=month\">"
 											.$d[$cday]["who1"][$i][0]
 											. "</a>";
 										}

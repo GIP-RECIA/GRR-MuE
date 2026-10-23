@@ -53,7 +53,7 @@ function getSchoolHolidays($now, $year)
 	$zone = 'A';
 	if (Settings::get("holidays_zone") != NULL)
 		$zone = Settings::get("holidays_zone");
-	$sh = array(false, "");
+	$sh = [false, ""];
 	$vacances = simplexml_load_file('vacances.xml');
 	$libelle = $vacances->libelles->children();
 	$node = $vacances->calendrier->children();
@@ -70,7 +70,7 @@ function getSchoolHolidays($now, $year)
 					{
 						$nom = (int)$value['libelle'];
 						$nom = $libelle->libelle[$nom - 1];
-						$sh = array(true, $nom);
+						$sh = [true, $nom];
 						break;
 					}
 
@@ -88,21 +88,29 @@ function getHolidays($year = null)
 	$easterDay   = date('j', $easterDate);
 	$easterMonth = date('n', $easterDate);
 	$easterYear  = date('Y', $easterDate);
-	$holidays = array(
-	// Dates fixes
-	mktime(0, 0, 0, 1,  1,  $year),  // 1er janvier
-	mktime(0, 0, 0, 5,  1,  $year),  // Fête du travail
-	mktime(0, 0, 0, 5,  8,  $year),  // Victoire des alliés
-	mktime(0, 0, 0, 7,  14, $year),  // Fête nationale
-	mktime(0, 0, 0, 8,  15, $year),  // Assomption
-	mktime(0, 0, 0, 11, 1,  $year),  // Toussaint
-	mktime(0, 0, 0, 11, 11, $year),  // Armistice
-	mktime(0, 0, 0, 12, 25, $year),  // Noel
-	// Dates variables
-	mktime(0, 0, 0, $easterMonth, $easterDay + 1,  $easterYear),
-	mktime(0, 0, 0, $easterMonth, $easterDay + 39, $easterYear),
-	mktime(0, 0, 0, $easterMonth, $easterDay + 50, $easterYear),
-	);
+	$holidays = [
+     // Dates fixes
+     mktime(0, 0, 0, 1,  1,  $year),
+     // 1er janvier
+     mktime(0, 0, 0, 5,  1,  $year),
+     // Fête du travail
+     mktime(0, 0, 0, 5,  8,  $year),
+     // Victoire des alliés
+     mktime(0, 0, 0, 7,  14, $year),
+     // Fête nationale
+     mktime(0, 0, 0, 8,  15, $year),
+     // Assomption
+     mktime(0, 0, 0, 11, 1,  $year),
+     // Toussaint
+     mktime(0, 0, 0, 11, 11, $year),
+     // Armistice
+     mktime(0, 0, 0, 12, 25, $year),
+     // Noel
+     // Dates variables
+     mktime(0, 0, 0, $easterMonth, $easterDay + 1,  $easterYear),
+     mktime(0, 0, 0, $easterMonth, $easterDay + 39, $easterYear),
+     mktime(0, 0, 0, $easterMonth, $easterDay + 50, $easterYear),
+ ];
 	sort($holidays);
 	return $holidays;
 }
@@ -203,7 +211,7 @@ function get_request_uri()
 			$_SERVER['QUERY_STRING'] = "";
 		if ((Settings::get("use_grr_url") == "y") && (Settings::get("grr_url") != ""))
 		{
-			if (substr(Settings::get("grr_url"), -1) != "/")
+			if (!str_ends_with((string) Settings::get("grr_url"), "/"))
 				$ad_signe = "/";
 			else
 				$ad_signe = "";
@@ -305,7 +313,7 @@ function affiche_lien_contact($_cible, $_type_cible, $option_affichage)
 		}
 		else
 		{
-			$tab_email = explode(';', trim($_email));
+			$tab_email = explode(';', trim((string) $_email));
 			$i = 0;
 			foreach ($tab_email as $item_email)
 			{
@@ -326,7 +334,7 @@ function affiche_lien_contact($_cible, $_type_cible, $option_affichage)
 					//$affichage .=  'encode_adresse("'.$person.'", "'.$domain.'", 0);'.PHP_EOL;
 				}
 			}
-			$affichage .=  '">'.AddSlashes($_identite).'</a>';
+			$affichage .=  '">'.AddSlashes((string) $_identite).'</a>';
 			//$affichage .=  'encode_fin_adresse("'.AddSlashes($_identite).'");'.PHP_EOL;
 			//$affichage .=  '</script>'.PHP_EOL;
 		}
@@ -342,7 +350,7 @@ function Definition_ressource_domaine_site()
 	if (isset($_GET['room']))
 	{
 		//$room = $_GET['room'];
-		$room = mysqli_real_escape_string($GLOBALS['db_c'], $_GET['room']);
+		$room = mysqli_real_escape_string($GLOBALS['db_c'], (string) $_GET['room']);
 		settype($room, "integer");
 		$area = mrbsGetRoomArea($room);
 		$id_site = mrbsGetAreaSite($area);
@@ -353,7 +361,7 @@ function Definition_ressource_domaine_site()
 		if (isset($_GET['area']))
 		{
 			//$area = $_GET['area'];
-			$area = mysqli_real_escape_string($GLOBALS['db_c'], $_GET['area']);
+			$area = mysqli_real_escape_string($GLOBALS['db_c'], (string) $_GET['area']);
 			settype($area, "integer");
 			$id_site = mrbsGetAreaSite($area);
 		}
@@ -363,7 +371,7 @@ function Definition_ressource_domaine_site()
 			if (isset($_GET["id_site"]))
 			{
 				//$id_site = $_GET["id_site"];
-				$id_site = mysqli_real_escape_string($GLOBALS['db_c'], $_GET["id_site"]);
+				$id_site = mysqli_real_escape_string($GLOBALS['db_c'], (string) $_GET["id_site"]);
 				settype($id_site, "integer");
 				$area = get_default_area($id_site);
 			}
@@ -449,16 +457,16 @@ function bbCode($t,$type)
 			$t = preg_replace($regLienEtendu, "\\1", $t);
 		$regMailSimple = "`\[email\] ?([^\[]*) ?\[/email\]`";
 		$regMailEtendu = "`\[email ?=([^\[]*) ?] ?([^]]*) ?\[/email\]`";
-		if (preg_match($regMailSimple, $t))
-			$t = preg_replace($regMailSimple, "\\1", $t);
+		if (preg_match($regMailSimple, (string) $t))
+			$t = preg_replace($regMailSimple, "\\1", (string) $t);
 		else
-			$t = preg_replace($regMailEtendu, "\\1", $t);
+			$t = preg_replace($regMailEtendu, "\\1", (string) $t);
 		$regImage = "`\[img\] ?([^\[]*) ?\[/img\]`";
 		$regImageAlternatif = "`\[img ?= ?([^\[]*) ?\]`";
-		if (preg_match($regImage, $t))
-			$t = preg_replace($regImage, "", $t);
+		if (preg_match($regImage, (string) $t))
+			$t = preg_replace($regImage, "", (string) $t);
 		else
-			$t = preg_replace($regImageAlternatif, "", $t);
+			$t = preg_replace($regImageAlternatif, "", (string) $t);
 		$t = str_replace("[b]", "", $t);
 		$t = str_replace("[/b]", "", $t);
 		$t = str_replace("[i]", "", $t);
@@ -491,16 +499,16 @@ function bbCode($t,$type)
 	}
 	$regMailSimple = "`\[email\] ?([^\[]*) ?\[/email\]\`";
 	$regMailEtendu = "`\[email ?=([^\[]*) ?] ?([^]]*) ?\[/email\]`";
-	if (preg_match("'".$regMailSimple."'", $t))
-		$t = preg_replace($regMailSimple, "<a href=\"mailto:\\1\">\\1</a>", $t);
+	if (preg_match("'".$regMailSimple."'", (string) $t))
+		$t = preg_replace($regMailSimple, "<a href=\"mailto:\\1\">\\1</a>", (string) $t);
 	else
-		$t = preg_replace($regMailEtendu, "<a href=\"mailto:\\1\">\\2</a>", $t);
+		$t = preg_replace($regMailEtendu, "<a href=\"mailto:\\1\">\\2</a>", (string) $t);
 	$regImage = "`\[img\] ?([^\[]*) ?\[/img\]`";
 	$regImageAlternatif = "`\[img ?= ?([^\[]*) ?\]`";
-	if (preg_match($regImage, $t))
-		$t = preg_replace($regImage, "<img src=\"\\1\" alt=\"\" class=\"image\" />", $t);
+	if (preg_match($regImage, (string) $t))
+		$t = preg_replace($regImage, "<img src=\"\\1\" alt=\"\" class=\"image\" />", (string) $t);
 	else
-		$t = preg_replace($regImageAlternatif, "<img src=\"\\1\" alt=\"\" class=\"image\" />", $t);
+		$t = preg_replace($regImageAlternatif, "<img src=\"\\1\" alt=\"\" class=\"image\" />", (string) $t);
 	$t = str_replace("[b]", "<strong>", $t);
 	$t = str_replace("[/b]", "</strong>", $t);
 	$t = str_replace("[i]", "<em>", $t);
@@ -593,12 +601,9 @@ function plages_libre_semaine_ressource($id_room, $month_week, $day_week, $year_
  	include "config_ldap.inc.php";
  	$est_membre="non";
 	// LDAP attributs
- 	$members_attr = array (
- 		"memberUid"
-		// Recherche des Membres du groupe
- 		);
+ 	$members_attr = ["memberUid"];
 		// Avec des GroupOfNames, ce ne serait pas ça.
- 	$ds = @ldap_connect($ldap_adresse, $ldap_port);
+ 	$ds = @ldap_connect("{$ldap_adresse}:{$ldap_port}");
  	if ($ds)
  	{
  		$r = @ldap_bind ($ds);
@@ -736,7 +741,7 @@ function heure_ete_hiver($type, $annee, $heure)
 function unslashes($s)
 {
 	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc())
-		return stripslashes($s);
+		return stripslashes((string) $s);
 	else
 		return $s;
 }
@@ -755,13 +760,13 @@ function protect_data_sql($_value)
 	global $use_function_mysql_real_escape_string;
 	//if (get_magic_quotes_gpc())
 	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc())
-		$_value = stripslashes($_value);
+		$_value = stripslashes((string) $_value);
 	if (!is_numeric($_value))
 	{
 		if (isset($use_function_mysql_real_escape_string) && ($use_function_mysql_real_escape_string==0))
-			$_value = mysqli_real_escape_string($GLOBALS['db_c'], $_value);
+			$_value = mysqli_real_escape_string($GLOBALS['db_c'], (string) $_value);
 		else
-			$_value = mysqli_real_escape_string($GLOBALS['db_c'], $_value);
+			$_value = mysqli_real_escape_string($GLOBALS['db_c'], (string) $_value);
 	}
 	return $_value;
 }
@@ -769,7 +774,7 @@ function protect_data_sql($_value)
 // Traite les données envoyées par la methode GET de la variable $_GET["page"]
 function verif_page()
 {
-	$page = array("day", "week", "month", "week_all", "month_all");
+	$page = ["day", "week", "month", "week_all", "month_all"];
 	if (isset($_GET["page"]))
 	{
 		if (in_array($_GET["page"], $page))
@@ -896,7 +901,7 @@ function begin_page($title, $page = "with_session"){
 	header('Content-Type: text/html; charset=utf-8');
 	if (!isset($_COOKIE['open']))
 	{
-		setcookie("open", "true", time()+3600);
+		setcookie("open", "true", ['expires' => time()+3600]);
 	}
 	$a = '<!DOCTYPE html>'.PHP_EOL;
 	$a .= '<html lang="fr">'.PHP_EOL;
@@ -1167,7 +1172,7 @@ function print_header($dayParam = '', $monthParam = '', $yearParam = '', $type_s
 			$_SESSION['chemin_retour'] = '';
 			if (isset($_SERVER['QUERY_STRING']) && ($_SERVER['QUERY_STRING'] != '')){
 
-				$parametres_url = htmlspecialchars($_SERVER['QUERY_STRING'])."&amp;";
+				$parametres_url = htmlspecialchars((string) $_SERVER['QUERY_STRING'])."&amp;";
 				$_SESSION['chemin_retour'] = traite_grr_url($grr_script_name)."?". $_SERVER['QUERY_STRING'];
 				echo '<a onclick="charger();" href="'.traite_grr_url($grr_script_name).'?'.$parametres_url.'default_language=fr"><img src="'.$racine.'img_grr/fr_dp.png" alt="France" title="france" width="20" height="13" class="image" /></a>'.PHP_EOL;
 				echo '<a onclick="charger();" href="'.traite_grr_url($grr_script_name).'?'.$parametres_url.'default_language=de"><img src="'.$racine.'img_grr/de_dp.png" alt="Deutch" title="deutch" width="20" height="13" class="image" /></a>'.PHP_EOL;
@@ -1236,7 +1241,7 @@ function print_header($dayParam = '', $monthParam = '', $yearParam = '', $type_s
 					$s .= "javascript:window.open(";
 					$s .= "'".traite_grr_url($grr_script_name)."?";
 					if (isset($_SERVER['QUERY_STRING']) && ($_SERVER['QUERY_STRING'] != ''))
-						$s .= htmlspecialchars($_SERVER['QUERY_STRING']) . "&amp;";
+						$s .= htmlspecialchars((string) $_SERVER['QUERY_STRING']) . "&amp;";
 					$s .= "pview=1')\"";
 				}
 				else{
@@ -1245,7 +1250,7 @@ function print_header($dayParam = '', $monthParam = '', $yearParam = '', $type_s
 					$s .= "   javascript:location.href=";
 					$s .= "'".traite_grr_url($grr_script_name)."?";
 					if (isset($_SERVER['QUERY_STRING']) && ($_SERVER['QUERY_STRING'] != ''))
-						$s .= htmlspecialchars($_SERVER['QUERY_STRING']) . "&amp;";
+						$s .= htmlspecialchars((string) $_SERVER['QUERY_STRING']) . "&amp;";
 					$s .= "pview=1&amp;precedent=1'\"";
 				}
 				$s.= ">Imprimer la page</a></li>";
@@ -1347,9 +1352,9 @@ function print_header($dayParam = '', $monthParam = '', $yearParam = '', $type_s
 
                                 echo '<div class="row">';
                                    echo '<div id="message-accueil" class="col-md-offset-2 col-md-10">';
-                                        if(strlen(strip_tags(Settings::get('message_accueil'))) >= 100){
-                                                echo substr(strip_tags(Settings::get('message_accueil')), 0, 100).'...';
-                                                $messageEchappe = addslashes(Settings::get('message_accueil'));
+                                        if(strlen(strip_tags((string) Settings::get('message_accueil'))) >= 100){
+                                                echo substr(strip_tags((string) Settings::get('message_accueil')), 0, 100).'...';
+                                                $messageEchappe = addslashes((string) Settings::get('message_accueil'));
                                                 echo "<a id='popoverMessage' role='button' class='btn btn-link' data-toggle='popover' data-content='".$messageEchappe."' data-placement='bottom' data-html='true' data-trigger='click'>Lire la suite</a>";
                                         }else{
                                                 echo Settings::get('message_accueil');
@@ -1657,7 +1662,7 @@ function genDateSelectorForm($prefix, $day, $month, $year, $option)
 		$year = date("y");
 	if ($day != "")
 	{
-		$selector_data .= "<select name=\"${prefix}day\" id=\"${prefix}day\">\n";
+		$selector_data .= "<select name=\"{$prefix}day\" id=\"{$prefix}day\">\n";
 		for ($i = 1; $i <= 31; $i++)
 		{
 			if ($i < 10)
@@ -1667,7 +1672,7 @@ function genDateSelectorForm($prefix, $day, $month, $year, $option)
 		}
 		$selector_data .= "</select>";
 	}
-	$selector_data .= "<select name=\"${prefix}month\" id=\"${prefix}month\">\n";
+	$selector_data .= "<select name=\"{$prefix}month\" id=\"{$prefix}month\">\n";
 	for ($i = 1; $i <= 12; $i++)
 	{
 		$m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
@@ -1681,7 +1686,7 @@ function genDateSelectorForm($prefix, $day, $month, $year, $option)
 		}
 	}
 	$selector_data .=  "</select>";
-	$selector_data .=  "<select name=\"${prefix}year\" id=\"${prefix}year\">\n";
+	$selector_data .=  "<select name=\"{$prefix}year\" id=\"{$prefix}year\">\n";
 	$min = strftime("%Y", Settings::get("begin_bookings"));
 	if ($option == "more_years")
 		$min = date("Y") - $nb_year_calendar;
@@ -1740,8 +1745,8 @@ function compare_ip_adr($ip1, $ip2)
 {
 	if ($ip2 == "")
 		return true;
-	$tab_ip1 = explode(".",$ip1);
-	$tab_ip2 = explode(".",$ip2);
+	$tab_ip1 = explode(".",(string) $ip1);
+	$tab_ip2 = explode(".",(string) $ip2);
 	$i = 0;
 	$ip1 = "";
 	$ip2 = "";
@@ -1883,12 +1888,12 @@ function get_default_etablissement()
  */
 function day_name($daynumber)
 {
-	return utf8_encode(strftime("%A", mktime(0, 0, 0, 1, 2 + $daynumber, 2000)));
+	return mb_convert_encoding(strftime("%A", mktime(0, 0, 0, 1, 2 + $daynumber, 2000)), 'UTF-8', 'ISO-8859-1');
 }
 
 function day_short_name($daynumber)
 {
-	return utf8_encode(strftime("%a", mktime(0, 0, 0, 1, 2 + $daynumber, 2000)));
+	return mb_convert_encoding(strftime("%a", mktime(0, 0, 0, 1, 2 + $daynumber, 2000)), 'UTF-8', 'ISO-8859-1');
 }
 
 function affiche_heure_creneau($t,$resolution)
@@ -1933,7 +1938,7 @@ function period_date_string($t, $mod_time = 0)
 	}
 	if ( $p_num >= count($periods_name) - 1 )
 		$p_num = count($periods_name) - 1;
-	return array($p_num, $periods_name[$p_num] . utf8_strftime(", ".$dformat, $t));
+	return [$p_num, $periods_name[$p_num] . utf8_strftime(", ".$dformat, $t)];
 }
 
 /*
@@ -1997,7 +2002,7 @@ function tdcell($colclass, $width = '')
 	static $ecolors;
 	//if (($colclass >= "A") && ($colclass <= "Z")){
 
-	if (preg_match("/[[:alnum:]]+/",$colclass)) {
+	if (preg_match("/[[:alnum:]]+/",(string) $colclass)) {
 
 		$num_couleur = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_type_area WHERE type_letter='".$colclass."'");
 
@@ -2020,7 +2025,7 @@ function tdcell_rowspan($colclass, $step)
 		$step = 1;
 
 	// if (($colclass >= "A") && ($colclass <= "Z"))
-	if (preg_match("/[[:alnum:]]+/",$colclass)) {
+	if (preg_match("/[[:alnum:]]+/",(string) $colclass)) {
 		$num_couleur = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_type_area WHERE type_letter='".$colclass."'");
 		echo '<td rowspan="'.$step.'" style="background-color:'.$tab_couleur[$num_couleur].';">'.PHP_EOL;
 	}
@@ -2082,7 +2087,7 @@ function colorType($colclass){
 	static $ecolors;
 
 
-	if (preg_match("/[[:alnum:]]+/",$colclass)) {
+	if (preg_match("/[[:alnum:]]+/",(string) $colclass)) {
 
 		$num_couleur = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_type_area WHERE type_letter='".$colclass."'");
 
@@ -2231,7 +2236,7 @@ function make_site_select_html($link, $current_site, $year, $month, $day, $user)
 					$nb_sites_a_afficher++;
 					$selected = ($row[0] == $current_site) ? 'selected="selected"' : '';
 					$link2 = $link.'?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;area='.$default_area;
-					$out_html .= '<option '.$selected.' value="'.$link2.'">'.htmlspecialchars($row[1]).'</option>'.PHP_EOL;
+					$out_html .= '<option '.$selected.' value="'.$link2.'">'.htmlspecialchars((string) $row[1]).'</option>'.PHP_EOL;
 				}
 			}
 		}
@@ -2331,7 +2336,7 @@ function make_area_select_html( $link, $current_site, $current_area, $year, $mon
 			$link2 = $link.'?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;area='.$row[0];
 			if (authUserAccesArea($user,$row[0]) == 1){
 
-				$out_html .= '<option '.$selected.' value="'.$link2.'">'.htmlspecialchars($row[1]).'</option>'.PHP_EOL;
+				$out_html .= '<option '.$selected.' value="'.$link2.'">'.htmlspecialchars((string) $row[1]).'</option>'.PHP_EOL;
 			}
 		}
 	}
@@ -2380,7 +2385,7 @@ function make_room_select_html($link, $current_area, $current_room, $year, $mont
 			if (verif_acces_ressource(getUserName(),$row[0]))
 			{
 				if ($row[2])
-					$temp = " (".htmlspecialchars($row[2]).")";
+					$temp = " (".htmlspecialchars((string) $row[2]).")";
 				else
 					$temp = "";
 				$selected = ($row[0] == $current_room) ? "selected=\"selected\"" : "";
@@ -2478,13 +2483,13 @@ function make_site_list_html($link, $current_site, $year, $month, $day,$user)
 					if ($row[0] == $current_site){
 
 						$out_html .= '
-						<b><a id="liste_select"   href="'.$link.'?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;id_site='.$row[0].'" title="'.$row[1].'">&gt; '.htmlspecialchars($row[1]).'</a></b>
+						<b><a id="liste_select"   href="'.$link.'?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;id_site='.$row[0].'" title="'.$row[1].'">&gt; '.htmlspecialchars((string) $row[1]).'</a></b>
 						<br />'."\n";
 					}
 					else{
 
 						$out_html .= '
-						<a id="liste"  href="'.$link.'?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;id_site='.$row[0].'" title="'.$row[1].'">'.htmlspecialchars($row[1]).'</a>
+						<a id="liste"  href="'.$link.'?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;id_site='.$row[0].'" title="'.$row[1].'">'.htmlspecialchars((string) $row[1]).'</a>
 						<br />'."\n";
 					}
 				}
@@ -2571,9 +2576,9 @@ function make_area_list_html($link, $current_site, $current_area, $year, $month,
 
 				if ($row[0] == $current_area){
 
-					echo "<a id=\"liste_select\" onclick=\"charger();\" href=\"".$link."?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">&gt; ".htmlspecialchars($row[1])."</a></b><br />\n";
+					echo "<a id=\"liste_select\" onclick=\"charger();\" href=\"".$link."?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">&gt; ".htmlspecialchars((string) $row[1])."</a></b><br />\n";
 				} else {
-					echo "<a id=\"liste\" onclick=\"charger();\" href=\"".$link."?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">&gt; ".htmlspecialchars($row[1])."</a><br />\n";
+					echo "<a id=\"liste\" onclick=\"charger();\" href=\"".$link."?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">&gt; ".htmlspecialchars((string) $row[1])."</a><br />\n";
 				}
 			}
 		}
@@ -2605,9 +2610,9 @@ function make_room_list_html($link,$current_area, $current_room, $year, $month, 
 			if (verif_acces_ressource(getUserName(), $row[0]))
 			{
 				if ($row[0] == $current_room)
-					echo "<span id=\"liste_select\">&gt; ".htmlspecialchars($row[1])."</span><br />\n";
+					echo "<span id=\"liste_select\">&gt; ".htmlspecialchars((string) $row[1])."</span><br />\n";
 				else
-					echo "<a id=\"liste\" onclick=\"charger();\" href=\"".$link."?year=$year&amp;month=$month&amp;day=$day&amp;&amp;room=$row[0]\">".htmlspecialchars($row[1]). "</a><br />\n";
+					echo "<a id=\"liste\" onclick=\"charger();\" href=\"".$link."?year=$year&amp;month=$month&amp;day=$day&amp;&amp;room=$row[0]\">".htmlspecialchars((string) $row[1]). "</a><br />\n";
 			}
 		}
 	}
@@ -2684,12 +2689,12 @@ function make_site_item_html($link, $current_site, $year, $month, $day, $user){
 				if ($current_site != null)
 				{
 					if ($current_site == $row[0])
-						$out_html .= "<input id=\"item_select\" type=\"button\" class=\"btn btn-primary btn-xs\" name=\"$row[0]\" value=\"".htmlspecialchars($row[1])."\" onclick=\"location.href='$link2';charger();\" /><br />".PHP_EOL;
+						$out_html .= "<input id=\"item_select\" type=\"button\" class=\"btn btn-primary btn-xs\" name=\"$row[0]\" value=\"".htmlspecialchars((string) $row[1])."\" onclick=\"location.href='$link2';charger();\" /><br />".PHP_EOL;
 					else
-						$out_html .= "<input type=\"button\" class=\"btn btn-default btn-xs item\" name=\"$row[0]\" value=\"".htmlspecialchars($row[1])." \" onclick=\"location.href='$link2';charger();\" /><br />".PHP_EOL;
+						$out_html .= "<input type=\"button\" class=\"btn btn-default btn-xs item\" name=\"$row[0]\" value=\"".htmlspecialchars((string) $row[1])." \" onclick=\"location.href='$link2';charger();\" /><br />".PHP_EOL;
 				}
 				else
-					$out_html .= "<input type=\"button\" class=\"btn btn-default btn-xs item\" name=\"$row[0]\" value=\"".htmlspecialchars($row[1])." \" onclick=\"location.href='$link2';charger();\" /><br />".PHP_EOL;
+					$out_html .= "<input type=\"button\" class=\"btn btn-default btn-xs item\" name=\"$row[0]\" value=\"".htmlspecialchars((string) $row[1])." \" onclick=\"location.href='$link2';charger();\" /><br />".PHP_EOL;
 			}
 		}
 
@@ -2795,12 +2800,12 @@ function make_area_item_html( $link, $current_site, $current_area, $year, $month
 				if ($current_area != null)
 				{
 					if ($current_area == $row[0])
-						$out_html .= '<input class="btn btn-primary btn-lg btn-block item_select" name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
+						$out_html .= '<input class="btn btn-primary btn-lg btn-block item_select" name="'.$row[0].'" value="'.htmlspecialchars((string) $row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
 					else
-						$out_html .= '<input class="btn btn-default btn-lg btn-block item " name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
+						$out_html .= '<input class="btn btn-default btn-lg btn-block item " name="'.$row[0].'" value="'.htmlspecialchars((string) $row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
 				}
 				else
-					$out_html .= '<input class="btn btn-default btn-lg btn-block item" name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
+					$out_html .= '<input class="btn btn-default btn-lg btn-block item" name="'.$row[0].'" value="'.htmlspecialchars((string) $row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
 			}
 		}
 	}
@@ -2838,7 +2843,7 @@ function make_room_item_html($link, $current_area, $current_room, $year, $month,
 				{
 					if (isset($all_ressource) && $all_ressource == 0)
 						$out_html .= '<div class="panel-body">'.PHP_EOL.'<input id="item_select" class="btn btn-primary btn-lg btn-block" name="all_room" value="Toutes les ressources" onclick="location.href=\''.$link_all_room.'\' ;charger();"/>'.PHP_EOL;
-					$out_html .= '<input class="btn btn-default btn-lg btn-block item" type="button" name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
+					$out_html .= '<input class="btn btn-default btn-lg btn-block item" type="button" name="'.$row[0].'" value="'.htmlspecialchars((string) $row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
 					$all_ressource = 1;
 				}
 				else //changed (Ajout de type = " button pr gerer saut de ligne "
@@ -2847,9 +2852,9 @@ function make_room_item_html($link, $current_area, $current_room, $year, $month,
 						$out_html .= '<input class="btn btn-primary btn-lg btn-block item" type="button" name="all_room" value="Toutes les ressources" onclick="location.href=\''.$link_all_room.'\' ;charger();"/>'.PHP_EOL;
 					$all_ressource = 1;
 					if ($current_room == $row[0])
-						$out_html .= '<input class="btn btn-primary btn-lg btn-block item_select" type="button" name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\';charger();"/>'.PHP_EOL;
+						$out_html .= '<input class="btn btn-primary btn-lg btn-block item_select" type="button" name="'.$row[0].'" value="'.htmlspecialchars((string) $row[1]).'" onclick="location.href=\''.$link2.'\';charger();"/>'.PHP_EOL;
 					else
-						$out_html .= '<input class="btn btn-default btn-lg btn-block item" type="button" name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
+						$out_html .= '<input class="btn btn-default btn-lg btn-block item" type="button" name="'.$row[0].'" value="'.htmlspecialchars((string) $row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
 				}
 			}
 		}
@@ -2861,7 +2866,7 @@ function make_room_item_html($link, $current_area, $current_room, $year, $month,
 /**
  * @param integer $action
  */
-function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
+function send_mail($id_entry, $action, $dformat, $tab_id_moderes = [])
 {
 	global $vocab, $grrSettings, $locale, $weekstarts, $enable_periods, $periods_name;
 
@@ -2917,22 +2922,22 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 	grr_sql_free($res);
 
 	get_planning_area_values($row[12]);
-	$breve_description 			= bbcode(removeMailUnicode(htmlspecialchars($row[0])), 'nobbcode');
-	$description  				= bbcode(removeMailUnicode(htmlspecialchars($row[1])), 'nobbcode');
-	$beneficiaire 				= htmlspecialchars($row[2]);
-	$room_name    				= removeMailUnicode(htmlspecialchars($row[3]));
-	$area_name    				= removeMailUnicode(htmlspecialchars($row[4]));
+	$breve_description 			= bbcode(removeMailUnicode(htmlspecialchars((string) $row[0])), 'nobbcode');
+	$description  				= bbcode(removeMailUnicode(htmlspecialchars((string) $row[1])), 'nobbcode');
+	$beneficiaire 				= htmlspecialchars((string) $row[2]);
+	$room_name    				= removeMailUnicode(htmlspecialchars((string) $row[3]));
+	$area_name    				= removeMailUnicode(htmlspecialchars((string) $row[4]));
 	$room_id      				= $row[6];
 	$repeat_id    				= $row[7];
 	$date_avis    				= strftime("%Y/%m/%d", $row[10]);
 	$delais_option_reservation 	= $row[13];
 	$option_reservation 		= $row[14];
 	$moderate 					= $row[15];
-	$beneficiaire_ext			= htmlspecialchars($row[16]);
-	$jours_cycle 				= htmlspecialchars($row[17]);
+	$beneficiaire_ext			= htmlspecialchars((string) $row[16]);
+	$jours_cycle 				= htmlspecialchars((string) $row[17]);
 	$duration     				= $row[9];
 	if ($enable_periods == 'y')
-		list($start_period, $start_date) = period_date_string($row[10]);
+		[$start_period, $start_date] = period_date_string($row[10]);
 	else
 		$start_date = time_date_string($row[10],$dformat);
 	$rep_type = 0;
@@ -2959,7 +2964,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 		toPeriodString($start_period, $duration, $dur_units);
 	else
 		toTimeString($duration, $dur_units);
-	$weeklist = array("unused", "every week", "week 1/2", "week 1/3", "week 1/4", "week 1/5");
+	$weeklist = ["unused", "every week", "week 1/2", "week 1/3", "week 1/4", "week 1/5"];
 	if ($rep_type == 2)
 		$affiche_period = $vocab[$weeklist[$rep_num_weeks]];
 	else
@@ -3095,7 +3100,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 	$reservation = $reservation.$vocab["start_of_the_booking"]." ".$start_date."\n";
 	$reservation = $reservation.$vocab["duration"]." ".$duration." ".$dur_units."\n";
 	if (trim($breve_description) != "")
-		$reservation = $reservation.$vocab["namebooker"].preg_replace("/ /", " ",$vocab["deux_points"])." ".$breve_description."\n";
+		$reservation = $reservation.$vocab["namebooker"].preg_replace("/ /", " ",(string) $vocab["deux_points"])." ".$breve_description."\n";
 	else
 		$reservation = $reservation.$vocab["entryid"].$room_id."\n";
 	if ($description !='')
@@ -3109,7 +3114,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 	else
 		$temp = removeMailUnicode($temp);
 
-	$reservation = $reservation.$vocab["type"].preg_replace("/ /", " ",$vocab["deux_points"])." ".$temp."\n";
+	$reservation = $reservation.$vocab["type"].preg_replace("/ /", " ",(string) $vocab["deux_points"])." ".$temp."\n";
 
 	if ($rep_type != 0)
 		$reservation = $reservation.$vocab["rep_type"]." ".$affiche_period."\n";
@@ -3130,7 +3135,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 		if ($rep_type == 6)
 		{
 			if (Settings::get("jours_cycles_actif") == "Oui")
-				$reservation = $reservation.$vocab["rep_type_6"].preg_replace("/ /", " ",$vocab["deux_points"]).ucfirst(substr($vocab["rep_type_6"],0,1)).$jours_cycle."\n";
+				$reservation = $reservation.$vocab["rep_type_6"].preg_replace("/ /", " ",(string) $vocab["deux_points"]).ucfirst(substr((string) $vocab["rep_type_6"],0,1)).$jours_cycle."\n";
 		}
 		$reservation = $reservation.$vocab["rep_end_date"]." ".$rep_end_date."\n";
 	}
@@ -3148,14 +3153,14 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 	if ($nombre > 0)
 	{
         $destinataire = "";
-		$tab_destinataire = array();
+		$tab_destinataire = [];
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 		{
 			if ($row[0] != "")
 				$tab_destinataire[] = $row[0];
 		}
         foreach ($tab_destinataire as $value){
-            +			$destinataire = $destinataire .";". $value;
+            			$destinataire = $destinataire .";". $value;
         }
 
         Email::Envois($destinataire, $sujet, $message, $repondre, '', '');
@@ -3250,7 +3255,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 
 	// Cas d'une création, modification ou suppression d'un message par un utilisateur différent du bénéficiaire :
 	// On envoie un message au bénéficiaire de la réservation pour l'avertir d'une modif ou d'une suppression
-	if ((($action == 1) || ($action == 2) || ($action == 3)) && ((strtolower($user_login) != strtolower($beneficiaire)) || (Settings::get('send_always_mail_to_creator') == '1')) && ($beneficiaire_email != '') && ($beneficiaire_actif == 'actif'))
+	if ((($action == 1) || ($action == 2) || ($action == 3)) && ((strtolower((string) $user_login) != strtolower($beneficiaire)) || (Settings::get('send_always_mail_to_creator') == '1')) && ($beneficiaire_email != '') && ($beneficiaire_actif == 'actif'))
 	{
 		$sujet2 = $vocab["subject_mail1"].$room_name." - ".$date_avis;
 		$message2 = removeMailUnicode(Settings::get("company"))." - ".$vocab["title_mail"];
@@ -3305,9 +3310,9 @@ function getWritable($beneficiaire, $user, $id)
 	//if ($beneficiaire == "") $beneficiaire = $user;
 	// Dans le cas d'un bénéficiaire extérieure, $beneficiaire est vide. On fait comme si $user était le bénéficiaire
 	$dont_allow_modify = grr_sql_query1("select dont_allow_modify from ".TABLE_PREFIX."_room WHERE id = '".$id_room."'");
-	$owner = strtolower(grr_sql_query1("SELECT create_by FROM ".TABLE_PREFIX."_entry WHERE id='".protect_data_sql($id)."'"));
-	$beneficiaire = strtolower($beneficiaire);
-	$user = strtolower($user);
+	$owner = strtolower((string) grr_sql_query1("SELECT create_by FROM ".TABLE_PREFIX."_entry WHERE id='".protect_data_sql($id)."'"));
+	$beneficiaire = strtolower((string) $beneficiaire);
+	$user = strtolower((string) $user);
 	//Il reste à étudier le cas d'un utilisateur sans droits particuliers. quatre cas possibles :
 	//Cas 1 : l'utilisateur (U) n'est ni le créateur (C) ni le bénéficiaire (B)
 	//	R1 -> on retourne 0
@@ -3358,7 +3363,7 @@ function auth_visiteur($user,$id_room)
 	if (!$res || grr_sql_count($res) == 0)
 		return 0;
 	$status = mysqli_fetch_row($res);
-	if (strtolower($status[0]) == 'visiteur')
+	if (strtolower((string) $status[0]) == 'visiteur')
 	{
 		if ((in_array($id_room,$id_room_autorise)) && ($id_room_autorise != ""))
 			return 1;
@@ -3400,13 +3405,13 @@ function authGetUserLevel($user, $id, $type = 'room')
 	// Teste si le type concerne la gestion des utilisateurs
 	if ($type === 'user'){
 
-		if (strtolower($status[0]) == 'gestionnaire_utilisateur')
+		if (strtolower((string) $status[0]) == 'gestionnaire_utilisateur')
 			return 1;
 		else
 			return 0;
 	}
 
-	switch (strtolower($status[0])){
+	switch (strtolower((string) $status[0])){
 
 		case 'visiteur':
 		return 1;
@@ -3416,7 +3421,7 @@ function authGetUserLevel($user, $id, $type = 'room')
 		break;
 	}
 
-	if ((strtolower($status[0]) == 'utilisateur') || (strtolower($status[0]) == 'gestionnaire_utilisateur')){
+	if ((strtolower((string) $status[0]) == 'utilisateur') || (strtolower((string) $status[0]) == 'gestionnaire_utilisateur')){
 
 		if ($id == -1){
 
@@ -3946,7 +3951,7 @@ function verif_acces_ressource($user, $id_room)
 	}
 	else
 	{
-		$tab_rooms_noaccess = array();
+		$tab_rooms_noaccess = [];
 		$sql = "SELECT id, who_can_see FROM ".TABLE_PREFIX."_room";
 		$res = grr_sql_query($sql);
 		if (!$res)
@@ -4006,7 +4011,7 @@ function verif_qui_peut_reserver_pour($_room_id, $user, $_beneficiaire)
 {
 	if ($_beneficiaire == "")
 		return true;
-	if (strtolower($user) == strtolower($_beneficiaire))
+	if (strtolower((string) $user) == strtolower((string) $_beneficiaire))
 		return true;
 	$qui_peut_reserver_pour  = grr_sql_query1("SELECT qui_peut_reserver_pour FROM ".TABLE_PREFIX."_room WHERE id='".$_room_id."'");
 	if (authGetUserLevel($user, $_room_id) >= $qui_peut_reserver_pour)
@@ -4114,7 +4119,7 @@ function showAccessDenied($back)
 		</p>
 	</body>
 	</html>
-	<?php
+<?php
 }
 /* showNoReservation()
  *
@@ -4225,14 +4230,14 @@ function date_time_string($t, $dformat)
 function describe_period_span($starts, $ends)
 {
 	global $enable_periods, $periods_name, $vocab, $duration;
-	list($start_period, $start_date) =  period_date_string($starts);
-	list( , $end_date) =  period_date_string($ends, -1);
+	[$start_period, $start_date] =  period_date_string($starts);
+	[, $end_date] =  period_date_string($ends, -1);
 	$duration = $ends - $starts;
 	toPeriodString($start_period, $duration, $dur_units);
 	if ($duration > 1)
 	{
-		list( , $start_date) =  period_date_string($starts);
-		list( , $end_date) =  period_date_string($ends, -1);
+		[, $start_date] =  period_date_string($starts);
+		[, $end_date] =  period_date_string($ends, -1);
 		$temp = $start_date . " ==> " . $end_date;
 	}
 	else
@@ -4277,7 +4282,7 @@ function get_planning_area_values($id_area)
 	$nb_display_day = 0;
 	for ($i = 0; $i < 7; $i++)
 	{
-		if (substr($row_[8],$i,1) == 'y')
+		if (substr((string) $row_[8],$i,1) == 'y')
 		{
 			$display_day[$i] = 1;
 			$nb_display_day++;
@@ -4324,7 +4329,7 @@ function encode_message_utf8($tag)
 {
 	global $charset_html, $unicode_encoding;
 	if ($unicode_encoding)
-		return iconv($charset_html,"utf-8",$tag);
+		return iconv((string) $charset_html,"utf-8",(string) $tag);
 	else
 		return $tag;
 }
@@ -4336,7 +4341,7 @@ function removeMailUnicode($string)
 {
 	global $unicode_encoding, $charset_html;
 	if ($unicode_encoding)
-		return @iconv("utf-8", $charset_html, $string);
+		return @iconv("utf-8", (string) $charset_html, $string);
 	else
 		return $string;
 }
@@ -4474,7 +4479,7 @@ function est_hors_reservation($time,$area="-1"){
 		$sql = "SELECT display_days FROM ".TABLE_PREFIX."_area WHERE id = '".protect_data_sql($area)."'";
 		$result = grr_sql_query1($sql);
 		$jour_semaine = date("w",$time);
-		if (substr($result,$jour_semaine,1) == 'n')
+		if (substr((string) $result,$jour_semaine,1) == 'n')
 			return true;
 	}
 	return false;
@@ -4503,10 +4508,10 @@ function resa_est_hors_reservation2($start_time,$end_time,$area){
 	$sql = "SELECT display_days FROM ".TABLE_PREFIX."_area WHERE id = '".protect_data_sql($area)."'";
 	$result = grr_sql_query1($sql);
 	$jour_semaine = date("w",$start_time);
-	if (substr($result, $jour_semaine, 1) == 'n')
+	if (substr((string) $result, $jour_semaine, 1) == 'n')
 		return true;
 	$jour_semaine = date("w",$end_time);
-	if (substr($result, $jour_semaine, 1) == 'n')
+	if (substr((string) $result, $jour_semaine, 1) == 'n')
 		return true;
 	return false;
 }
@@ -4514,7 +4519,7 @@ function resa_est_hors_reservation2($start_time,$end_time,$area){
 // trouve les utilisateurs gestionnaires de ressource
 function find_user_room ($id_room)
 {
-	$emails = array ();
+	$emails = [];
 	$sql = "select email from ".TABLE_PREFIX."_utilisateurs, ".TABLE_PREFIX."_j_user_room
 	where ".TABLE_PREFIX."_utilisateurs.login = ".TABLE_PREFIX."_j_user_room.login and id_room='".$id_room."'";
 	$res = grr_sql_query($sql);
@@ -4582,7 +4587,7 @@ function validate_email ($email)
 	$domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)';
 		// caractères autorisés après l'arobase (nom de domaine)
 	$regex = '/^' . $atom . '+' . '(\.' . $atom . '+)*' . '@' . '(' . $domain . '{1,63}\.)+' . $domain . '{2,63}$/i';
-	if (preg_match($regex, $email))
+	if (preg_match($regex, (string) $email))
 		return true;
 	else
 		return false;
@@ -4611,13 +4616,13 @@ function grrDelOverloadFromEntries($id_field)
 		for ($j = 0; ($row2 = grr_sql_row($call_resa, $j)); $j++)
 		{
 			$overload_desc = $row2[1];
-			$begin_pos = strpos($overload_desc,$begin_string);
-			$end_pos = strpos($overload_desc,$end_string);
+			$begin_pos = strpos((string) $overload_desc,$begin_string);
+			$end_pos = strpos((string) $overload_desc,$end_string);
 			if ( $begin_pos !== false && $end_pos !== false )
 			{
 				$endpos = $end_pos + 1 + strlen($begin_string);
-				$debut_new_chaine = substr($overload_desc,0,$begin_pos);
-				$fin_new_chaine = substr($overload_desc,$endpos);
+				$debut_new_chaine = substr((string) $overload_desc,0,$begin_pos);
+				$fin_new_chaine = substr((string) $overload_desc,$endpos);
 				$new_chaine = $debut_new_chaine.$fin_new_chaine;
 				grr_sql_command("UPDATE ".TABLE_PREFIX."_entry SET overload_desc = '".$new_chaine."' WHERE id = '".$row2[0]."'");
 			}
@@ -4629,13 +4634,13 @@ function grrDelOverloadFromEntries($id_field)
 		for ($j = 0; ($row2 = grr_sql_row($call_resa, $j)); $j++)
 		{
 			$overload_desc = $row2[1];
-			$begin_pos = strpos($overload_desc,$begin_string);
-			$end_pos = strpos($overload_desc,$end_string);
+			$begin_pos = strpos((string) $overload_desc,$begin_string);
+			$end_pos = strpos((string) $overload_desc,$end_string);
 			if ($begin_pos !== false && $end_pos !== false)
 			{
 				$endpos = $end_pos + 1 + strlen($begin_string);
-				$debut_new_chaine = substr($overload_desc,0,$begin_pos);
-				$fin_new_chaine = substr($overload_desc,$endpos);
+				$debut_new_chaine = substr((string) $overload_desc,0,$begin_pos);
+				$fin_new_chaine = substr((string) $overload_desc,$endpos);
 				$new_chaine = $debut_new_chaine.$fin_new_chaine;
 				grr_sql_command("UPDATE ".TABLE_PREFIX."_repeat SET overload_desc = '".$new_chaine."' WHERE id = '".$row2[0]."'");
 			}
@@ -4653,7 +4658,7 @@ function traite_grr_url($grr_script_name = "", $force_use_grr_url = "n", $url_en
 
         if (((Settings::get("use_grr_url") == "y") && ($url_grr_used != "")) || ($force_use_grr_url == "y"))
         {
-                if (substr($url_grr_used, -1) != "/")
+                if (!str_ends_with((string) $url_grr_used, "/"))
                         $ad_signe = "/";
                 else
                         $ad_signe = "";
@@ -4701,7 +4706,7 @@ function affichage_lien_resa_planning($breve_description, $id_resa)
 		$affichage = $breve_description;
 	else
 		$affichage = get_vocab("entryid").$id_resa;
-	return bbCode(htmlspecialchars($affichage,ENT_NOQUOTES),'titre');
+	return bbCode(htmlspecialchars((string) $affichage,ENT_NOQUOTES),'titre');
 }
 /*
 Construit les informations à afficher sur les plannings
@@ -4710,7 +4715,7 @@ function affichage_resa_planning($_description, $id_resa)
 {
 	$affichage = "";
 	if (Settings::get("display_full_description") == 1)
-		$affichage = htmlspecialchars($_description,ENT_NOQUOTES);
+		$affichage = htmlspecialchars((string) $_description,ENT_NOQUOTES);
 	// Les champs add :
 	$overload_data = mrbsEntryGetOverloadDesc($id_resa);
 	foreach ($overload_data as $fieldname=>$field)
@@ -4719,7 +4724,7 @@ function affichage_resa_planning($_description, $id_resa)
 		{
 			if ($affichage != "")
 				$affichage .= "<br />";
-			$affichage .= htmlspecialchars($fieldname,ENT_NOQUOTES).get_vocab("deux_points").htmlspecialchars($field["valeur"],ENT_NOQUOTES);
+			$affichage .= htmlspecialchars((string) $fieldname,ENT_NOQUOTES).get_vocab("deux_points").htmlspecialchars((string) $field["valeur"],ENT_NOQUOTES);
 		}
 	}
 	return $affichage;
@@ -4735,7 +4740,7 @@ function affichage_champ_add_mails($id_resa)
 	foreach ($overload_data as $fieldname=>$field)
 	{
 		if (($field["overload_mail"] == 'y') && ($field["valeur"] != ""))
-			$affichage .= bbcode(htmlspecialchars($fieldname).get_vocab("deux_points").htmlspecialchars($field["valeur"]),'nobbcode')."\n";;
+			$affichage .= bbcode(htmlspecialchars((string) $fieldname).get_vocab("deux_points").htmlspecialchars((string) $field["valeur"]),'nobbcode')."\n";;
 	}
 	return $affichage;
 }
@@ -4791,12 +4796,12 @@ Retourne un tableau contenant les nom et prénom et l'email de $_beneficiaire
 */
 function donne_nom_email($_beneficiaire)
 {
-	$tab_benef = array();
+	$tab_benef = [];
 	$tab_benef["nom"] = "";
 	$tab_benef["email"] = "";
 	if ($_beneficiaire == "")
 		return $tab_benef;
-	$temp = explode("|",$_beneficiaire);
+	$temp = explode("|",(string) $_beneficiaire);
 	if (isset($temp[0]))
 		$tab_benef["nom"] = $temp[0];
 	if (isset($temp[1]))
@@ -4812,7 +4817,7 @@ function concat_nom_email($_nom, $_email)
 	$_nom = trim(str_replace("|","",$_nom));
 	if ($_nom == "")
 		return "-1";
-	$_email = trim($_email);
+	$_email = trim((string) $_email);
 	if ($_email != "")
 	{
 		if (strstr($_email,"|"))
@@ -4885,12 +4890,12 @@ function affiche_nom_prenom_email($_beneficiaire, $_beneficiaire_ext, $type = "n
 		}
 		else if (($type == "withmail") && ($tab_benef["email"] != ""))
 		{
-			$email = explode('@',$tab_benef["email"]);
+			$email = explode('@',(string) $tab_benef["email"]);
 			$person = $email[0];
 			if (isset($email[1]))
 			{
 				$domain = $email[1];
-				$chaine = "<script type=\"text/javascript\">encode_adresse('".$person."','".$domain."','".AddSlashes($tab_benef["nom"])."',1);</script>";
+				$chaine = "<script type=\"text/javascript\">encode_adresse('".$person."','".$domain."','".AddSlashes((string) $tab_benef["nom"])."',1);</script>";
 			}
 			else
 				$chaine = $tab_benef["nom"];
@@ -5123,7 +5128,7 @@ function spinner ($duration)
 function comboBoxHeureDebutFinReservation($debut_Matin,$fin_Soir,$duree_petit_bloc_area,$start_hour,$start_min,$isend,$duree_par_defaut_reservation_area = 0){
     $name = $isend ? 'end_' : 'start_';
     echo "<div class=\"input-group col-xs-6\"><select class=\"form-control\" name=\"".$name."\"  >";
-    $optionsResolution = array();
+    $optionsResolution = [];
     //Recuperation des heures de debut de la journée et de fin
     $debut_Matin=  $debut_Matin.":00:00";
     $fin_Soir=  $fin_Soir.":00:00";
@@ -5188,8 +5193,8 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 	// Récupération de tous les utilisateurs de la source EXT
 	$requete_users_ext = "SELECT login FROM ".TABLE_PREFIX."_utilisateurs WHERE source='ext' and statut<>'administrateur'";
 	$res = grr_sql_query($requete_users_ext);
-	$logins = array();
-	$logins_liaison  = array();
+	$logins = [];
+	$logins_liaison  = [];
 	if ($res)
 	{
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
@@ -5262,7 +5267,7 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 					$req_j_mailuser_room .= " OR login = '".$log."'";
 			}
 			else
-				$logins_liaison[] = strtolower($log);
+				$logins_liaison[] = strtolower((string) $log);
 		}
 		// Table grr_j_user_area
 		$test = grr_sql_query1("SELECT count(login) FROM ".TABLE_PREFIX."_j_user_area WHERE login='".$log."'");
@@ -5276,7 +5281,7 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 					$req_j_user_area .= " OR login = '".$log."'";
 			}
 			else
-				$logins_liaison[] = strtolower($log);
+				$logins_liaison[] = strtolower((string) $log);
 		}
 		// Table grr_j_user_room
 		$test = grr_sql_query1("SELECT count(login) FROM ".TABLE_PREFIX."_j_user_room WHERE login='".$log."'");
@@ -5290,7 +5295,7 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 					$req_j_user_room .= " OR login = '".$log."'";
 			}
 			else
-				$logins_liaison[] = strtolower($log);
+				$logins_liaison[] = strtolower((string) $log);
 		}
 		// Table grr_j_useradmin_area
 		$test = grr_sql_query1("SELECT count(login) FROM ".TABLE_PREFIX."_j_useradmin_area WHERE login='".$log."'");
@@ -5304,7 +5309,7 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 					$req_j_useradmin_area .= " OR login = '".$log."'";
 			}
 			else
-				$logins_liaison[] = strtolower($log);
+				$logins_liaison[] = strtolower((string) $log);
 		}
 		// Table grr_j_useradmin_site
 		$test = grr_sql_query1("SELECT count(login) FROM ".TABLE_PREFIX."_j_useradmin_site WHERE login='".$log."'");
@@ -5318,7 +5323,7 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 					$req_j_useradmin_site .= " OR login = '".$log."'";
 			}
 			else
-				$logins_liaison[] = strtolower($log);
+				$logins_liaison[] = strtolower((string) $log);
 		}
 	}
 		// Suppression effective
@@ -5386,7 +5391,7 @@ function supprimerReservationsUtilisateursEXT($avec_resa,$avec_privileges)
 		$n = 0;
 		foreach ($logins as $log)
 		{
-			if (!in_array(strtolower($log), $logins_liaison))
+			if (!in_array(strtolower((string) $log), $logins_liaison))
 			{
 				grr_sql_command("DELETE FROM ".TABLE_PREFIX."_utilisateurs WHERE login='".$log."'");
 				$n++;
@@ -5429,9 +5434,9 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 								WHERE ES.id_etablissement = $id_etablissement" ;
 
 	$res = grr_sql_query($requete_users_ext);
-	$loginsMulti = array();
-	$logins = array();
-	$logins_liaison  = array();
+	$loginsMulti = [];
+	$logins = [];
+	$logins_liaison  = [];
 	if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
 
 		$requete_users_ext_multi = "SELECT * FROM ".TABLE_PREFIX."_j_user_etablissement
@@ -5584,7 +5589,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_mailuser_room .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_user_area
@@ -5599,7 +5604,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_user_area .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_user_room
@@ -5614,7 +5619,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_user_room .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_useradmin_area
@@ -5629,7 +5634,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_useradmin_area .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_useradmin_site
@@ -5639,12 +5644,12 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 				if ($req_j_useradmin_site_empty) {
 					// pas de OR devant le login
 					$req_j_useradmin_site = " login='".$log."'";
-					$$req_j_useradmin_site_empty = false;
+					${$req_j_useradmin_site_empty} = false;
 				} else {
 					$req_j_useradmin_site .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 	}
@@ -5696,7 +5701,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_mailuser_room .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_user_area
@@ -5711,7 +5716,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_user_area .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_user_room
@@ -5726,7 +5731,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_user_room .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_useradmin_area
@@ -5741,7 +5746,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 					$req_j_useradmin_area .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 		// Table grr_j_useradmin_site
@@ -5751,12 +5756,12 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 				if ($req_j_useradmin_site_empty) {
 					// pas de OR devant le login
 					$req_j_useradmin_site = " login='".$log."'";
-					$$req_j_useradmin_site_empty = false;
+					${$req_j_useradmin_site_empty} = false;
 				} else {
 					$req_j_useradmin_site .= " OR login = '".$log."'";
 				}
 			} else {
-				$logins_liaison[]=strtolower($log);
+				$logins_liaison[]=strtolower((string) $log);
 			}
 		}
 	}
@@ -5794,7 +5799,7 @@ function supprimerReservationsUtilisateursEXTParEtab($avec_resa,$avec_privileges
 	} else {
 		$n=0;
 		foreach($logins as $log) {
-			if (!in_array(strtolower($log),$logins_liaison)) {
+			if (!in_array(strtolower((string) $log),$logins_liaison)) {
 				grr_sql_command("DELETE FROM ".TABLE_PREFIX."_utilisateurs WHERE login='".$log."'");
 				$n++;
 			}
@@ -5885,7 +5890,7 @@ function NettoyerTablesJointure()
 function supprimer_numero($_texte) {
 	return preg_replace(
 	",^[[:space:]]*([0-9]+)([.)]|".chr(194).'?'.chr(176).")[[:space:]]+,S",
-	"", $_texte);
+	"", (string) $_texte);
 }
 
 
@@ -6000,7 +6005,7 @@ function getCompanyNameForBandeau(){
 			{
 				$selected = ($row[0] == $codeEtablissementCourant) ? "selected = \"selected\"" : "";
 			    $link = $chemin."changeEtablissement.php?code_etablissement=$row[0]";
-				$out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>";
+				$out_html .= "\n<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>";
 			}
 
 			$out_html .= "</select>
@@ -6224,7 +6229,7 @@ function canAccesAdmin(){
  * Return une liste des éléments a moderer
 */
 function demandeModeration($user){
-    $outList =  array();
+    $outList =  [];
     if (Settings::get("module_multietablissement") == "Oui"){
         $idEtablissement = getIdEtablissementCourant();
         $sql = "select ".TABLE_PREFIX."_room.id, ".TABLE_PREFIX."_room.room_name, ".TABLE_PREFIX."_room.description, j.id_area , entry.id, entry.repeat_id from grr_room
@@ -6301,7 +6306,7 @@ function getGrrUrl() {
 
   // Recuperation du path et suppression du nom du fichier
   $grr_path = $_SERVER['SCRIPT_NAME'];
-  $grr_path = preg_replace('/([[:alnum:]]|[[:space:]]|\.|_)*\.php/', "", $grr_path);
+  $grr_path = preg_replace('/([[:alnum:]]|[[:space:]]|\.|_)*\.php/', "", (string) $grr_path);
   return $server_url . $grr_path; // Recuperation de l'URL via la requete
 }
 
@@ -6311,7 +6316,7 @@ function getGrrDomain() {
 
     // Recuperation du path et suppression du nom du fichier
     $grr_path = $_SERVER['SCRIPT_NAME'];
-    $grr_path = preg_replace('/([[:alnum:]]|[[:space:]]|\.|_)*\.php/', "", $grr_path);
+    $grr_path = preg_replace('/([[:alnum:]]|[[:space:]]|\.|_)*\.php/', "", (string) $grr_path);
 
 
     return $server_url . $grr_path; // Recuperation de l'URL via la requete

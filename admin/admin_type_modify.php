@@ -38,12 +38,12 @@ $year  = date("Y");
 check_access(7, $back);
 
 // Initialisation
-$id_type = isset($_GET["id_type"]) ? $_GET["id_type"] : 0;
-$type_name = isset($_GET["type_name"]) ? $_GET["type_name"] : NULL;
-$order_display = isset($_GET["order_display"]) ? $_GET["order_display"] : NULL;
+$id_type = $_GET["id_type"] ?? 0;
+$type_name = $_GET["type_name"] ?? NULL;
+$order_display = $_GET["order_display"] ?? NULL;
 //$type_letter = isset($_GET["type_letter"]) ? $_GET["type_letter"] : NULL;
-$couleur = isset($_GET["couleur"]) ? $_GET["couleur"] : NULL;
-$disponible = isset($_GET["disponible"]) ? $_GET["disponible"] : NULL;
+$couleur = $_GET["couleur"] ?? NULL;
+$disponible = $_GET["disponible"] ?? NULL;
 $msg = '';
 
 if (isset($_GET["change_room_and_back"])){
@@ -71,7 +71,7 @@ if (isset($_GET['change_type'])){
 			if ($test > 0)
 				$msg = "Enregistrement impossible : Un type portant la même lettre existe déjà.";
 			else{*/
-			
+
 		$sql = "UPDATE ".TABLE_PREFIX."_type_area SET
 		type_name='".protect_data_sql($type_name)."',
 		order_display =";
@@ -108,13 +108,13 @@ if (isset($_GET['change_type'])){
 			$sql= $sql ."0,";
 		//$sql = $sql . 'type_letter="'.$type_letter.'",';
 		$sql = $sql . 'couleur="'.$couleur.'"';
-		
+
 		if (grr_sql_command($sql) < 0){
 			fatal_error(1, "<p>" . grr_sql_error());
 			$ok = 'no';
 		}
 		else{
-			$id = grr_sql_insert_id("", "");
+			$id = grr_sql_insert_id();
             $sql = "UPDATE  ".TABLE_PREFIX."_type_area 
 					SET type_letter=id WHERE id = $id";
             grr_sql_command($sql);	
@@ -165,7 +165,7 @@ echo get_vocab('admin_type_explications')."<br /><br />";
 	echo "<table border=\"1\">\n";
 	echo "<tr>";
 	echo "<td>".get_vocab("type_name").get_vocab("deux_points")."</td>\n";
-	echo "<td><input type=\"text\" name=\"type_name\" value=\"".htmlspecialchars($row["type_name"])."\" size=\"20\" /></td>\n";
+	echo "<td><input type=\"text\" name=\"type_name\" value=\"".htmlspecialchars((string) $row["type_name"])."\" size=\"20\" /></td>\n";
 	echo "</tr><tr>\n";
 	
 	/*echo "<td>".get_vocab("type_num").get_vocab("deux_points")."</td>\n";
@@ -185,7 +185,7 @@ echo get_vocab('admin_type_explications')."<br /><br />";
 	echo "</tr><tr>\n";*/
 	
 	echo "<td>".get_vocab("type_order").get_vocab("deux_points")."</td>\n";
-	echo "<td><input type=\"text\" name=\"order_display\" value=\"".htmlspecialchars($row["order_display"])."\" size=\"20\" /></td>\n";
+	echo "<td><input type=\"text\" name=\"order_display\" value=\"".htmlspecialchars((string) $row["order_display"])."\" size=\"20\" /></td>\n";
 	echo "</tr>";
 	echo "<tr><td>".get_vocab("disponible_pour").get_vocab("deux_points")."</td>\n";
 	echo "<td>"."<select name=\"disponible\" size=\"1\">\n";

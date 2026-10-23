@@ -125,7 +125,7 @@ $i = mktime(0, 0, 0, $month_week, $day_week +7 , $year_week);
 $ty = date("Y", $i);
 $tm = date("m", $i);
 $td = date("d", $i);
-$all_day = preg_replace("/ /", " ", get_vocab("all_day2"));
+$all_day = preg_replace("/ /", " ", (string) get_vocab("all_day2"));
 $sql = "SELECT start_time, end_time, ".TABLE_PREFIX."_entry.id, name, beneficiaire, ".TABLE_PREFIX."_room.id,type, statut_entry, ".TABLE_PREFIX."_entry.description, ".TABLE_PREFIX."_entry.option_reservation, ".TABLE_PREFIX."_room.delais_option_reservation, ".TABLE_PREFIX."_entry.moderate, beneficiaire_ext
 FROM ".TABLE_PREFIX."_entry, ".TABLE_PREFIX."_room, ".TABLE_PREFIX."_area
 where
@@ -188,8 +188,8 @@ else
 			}
 			if ($enable_periods == 'y')
 			{
-				$start_str = preg_replace("/ /", " ", period_time_string($row['0']));
-				$end_str   = preg_replace("/ /", " ", period_time_string($row['1'], -1));
+				$start_str = preg_replace("/ /", " ", (string) period_time_string($row['0']));
+				$end_str   = preg_replace("/ /", " ", (string) period_time_string($row['1'], -1));
 				switch (cmp3($row['0'], $midnight) . cmp3($row['1'], $midnight_tonight))
 				{
 					case "> < ":
@@ -339,7 +339,7 @@ else
 	for ($weekcol = 0; $weekcol < 7; $weekcol++){
 		
 		$num_day = strftime("%d", $t);
-		$temp_month = utf8_encode(strftime("%m", $t));
+		$temp_month = mb_convert_encoding(strftime("%m", $t), 'UTF-8', 'ISO-8859-1');
 		$temp_month2 = utf8_strftime("%b", $t);
 		$temp_year = strftime("%Y", $t);
 		$tt = mktime(0, 0, 0, $temp_month, $num_day, $temp_year);
@@ -419,7 +419,7 @@ else
 			else
 				echo tdcell("cell_hours2");
 			
-			echo '<a title="'.htmlspecialchars(get_vocab("see_week_for_this_room")).'" href="week.php?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;area='.$area.'&amp;room='.$row['2'].'">' . htmlspecialchars($row[0]) .'</a><br />'.PHP_EOL;
+			echo '<a title="'.htmlspecialchars((string) get_vocab("see_week_for_this_room")).'" href="week.php?year='.$year.'&amp;month='.$month.'&amp;day='.$day.'&amp;area='.$area.'&amp;room='.$row['2'].'">' . htmlspecialchars((string) $row[0]) .'</a><br />'.PHP_EOL;
 			if ($row['4'] == "0")
 				echo '<span class="texte_ress_tempo_indispo">'.get_vocab("ressource_temporairement_indisponible").'</span><br />'.PHP_EOL;
 			if (verif_display_fiche_ressource(getUserName(), $row['2']) && $_GET['pview'] != 1)
@@ -472,11 +472,11 @@ else
 									{
 										$currentPage = 'week_all';
 										$id = $d[$cday]["id"][$i];
-										echo '<a title="'.htmlspecialchars($d[$cday]["who"][$i]).'" class="lienModal" onclick="requestModal('.$id.','.$cday.','.$cmonth.','.$cyear.',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">';
+										echo '<a title="'.htmlspecialchars((string) $d[$cday]["who"][$i]).'" class="lienModal" onclick="requestModal('.$id.','.$cday.','.$cmonth.','.$cyear.',\''.$currentPage.'\',readDataModal);" data-toggle="modal" data-target="#myModal">';
 										//echo '<a title="'.htmlspecialchars($d[$cday]["who"][$i]).'" data-width="675" onclick="request('.$id.','.$cday.','.$cmonth.','.$cyear.',\''.$currentPage.'\',readData);" data-rel="popup_name" class="poplight" style = "border-bottom:1px solid #FFF">'.PHP_EOL;
 									}
 									else
-										echo '<a class="lienCellule" title="'.htmlspecialchars($d[$cday]["who"][$i]).'" href="view_entry.php?id='.$d[$cday]["id"][$i].'&amp;page=week_all&amp;day='.$cday.'&amp;month='.$cmonth.'&amp;year='.$cyear.'&amp;">'.PHP_EOL;
+										echo '<a class="lienCellule" title="'.htmlspecialchars((string) $d[$cday]["who"][$i]).'" href="view_entry.php?id='.$d[$cday]["id"][$i].'&amp;page=week_all&amp;day='.$cday.'&amp;month='.$cmonth.'&amp;year='.$cyear.'&amp;">'.PHP_EOL;
 									echo '<table class="table-header">'.PHP_EOL;
 									echo '<tr>'.PHP_EOL;
 									tdcell($d[$cday]["color"][$i]);

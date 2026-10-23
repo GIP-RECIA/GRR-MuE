@@ -66,7 +66,7 @@ if (isset($_GET['module_multietablissement'])) {
 			$res = grr_sql_query($sql);
 			if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 			{
-                $sitename = mysqli_real_escape_string($GLOBALS['db_c'], $row[2]);
+                $sitename = mysqli_real_escape_string($GLOBALS['db_c'], (string) $row[2]);
                 $sql="INSERT INTO ".TABLE_PREFIX."_site SET sitecode='".$row[1]."', sitename='site par défaut pour ".$sitename."'";
 				//$sql="INSERT INTO ".TABLE_PREFIX."_site SET sitecode='".$row[1]."', sitename='site par défaut pour ".$row[2]."'";
 				if (grr_sql_command($sql) < 0)
@@ -97,7 +97,7 @@ if (isset($_GET['module_multisite']))
 				SET sitecode='1', sitename='site par defaut'";
 				if (grr_sql_command($sql) < 0)
 					fatal_error(0,'<p>'.grr_sql_error().'</p>');
-				$id_site = grr_sql_insert_id($GLOBALS['db_c']);
+				$id_site = grr_sql_insert_id();
 			}
 						// On affecte tous les domaines à un site.
 			$sql = "SELECT id FROM ".TABLE_PREFIX."_area";
@@ -173,7 +173,7 @@ echo "<h3>".get_vocab("Activer_module_multietablissement")."</h3>\n";
 echo "<table border='0'>\n<tr>\n<td>\n";
 echo get_vocab("Activer_module_multietablissement").get_vocab("deux_points");
 echo "<select name='module_multietablissement'>\n";
-if (Settings::getGeneral("module_multietablissement",true) == "Oui") {
+if (Settings::getGeneral("module_multietablissement") == "Oui") {
 	echo "<option value=\"Oui\" selected=\"selected\">".get_vocab('YES')."</option>\n";
 	echo "<option value=\"Non\">".get_vocab('NO')."</option>\n";
 } else {

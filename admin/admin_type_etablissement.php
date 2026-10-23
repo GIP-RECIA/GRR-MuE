@@ -40,7 +40,7 @@ if(authGetUserLevel(getUserName(),$id_etablissement,'etab') < 6)
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
 

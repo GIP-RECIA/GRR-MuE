@@ -65,7 +65,7 @@ class Email{
 
             $mail->setFrom($DE, 'GRR');
 
-            $lesDestinataires = explode(";", $A);
+            $lesDestinataires = explode(";", (string) $A);
             for($i=0;$i<count($lesDestinataires);$i++){
                 if (Settings::get("grr_mail_Bcc") == "y"){
                     $mail->addCC($lesDestinataires[$i]);
@@ -80,7 +80,7 @@ class Email{
             $mail->isHTML(true);
 
             $mail->Subject = $sujet;
-            $mail->Body = nl2br($message);
+            $mail->Body = nl2br((string) $message);
             $mail->AltBody = 'Ce message ne peut-être affiché.';
 
             if(!$mail->send()) {
@@ -95,7 +95,7 @@ class Email{
                 "Reply-To: {$DE}" . "\r\n" .
                 'X-Mailer: PHP/' . phpversion();
 
-            mail($A, $sujet, $message, $headers);
+            mail((string) $A, (string) $sujet, (string) $message, $headers);
         }
 
     }

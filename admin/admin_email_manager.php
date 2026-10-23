@@ -30,8 +30,8 @@
 include "../include/admin.inc.php";
 $grr_script_name = "admin_email_manager.php";
 
-$id_area = isset($_GET["id_area"]) ? $_GET["id_area"] : NULL;
-$room = isset($_GET["room"]) ? $_GET["room"] : NULL;
+$id_area = $_GET["id_area"] ?? NULL;
+$room = $_GET["room"] ?? NULL;
 if (isset($room))
 	settype($room,"integer");
 if (!isset($id_area))
@@ -59,8 +59,8 @@ if (isset($_POST['mail1']))
 }
 
 
-$reg_admin_login = isset($_GET["reg_admin_login"]) ? $_GET["reg_admin_login"] : NULL;
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$reg_admin_login = $_GET["reg_admin_login"] ?? NULL;
+$action = $_GET["action"] ?? NULL;
 $msg='';
 
 if ($reg_admin_login) {
@@ -178,7 +178,7 @@ if ($res)
 		$link = "admin_email_manager.php?id_area=$row[0]";
 			// On affiche uniquement les domaines administrés par l'utilisateur
 		if (authGetUserLevel(getUserName(), $row[0], 'area') >= 4)
-			$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>\n";
+			$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>\n";
 	}
 }
 $out_html .= "</select></div>
@@ -219,7 +219,7 @@ if ($res)
 	for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 	{
 		if ($row[2])
-			$temp = " (".htmlspecialchars($row[2]).")";
+			$temp = " (".htmlspecialchars((string) $row[2]).")";
 		else
 			$temp="";
 		$selected = ($row[0] == $room) ? "selected=\"selected\"" : "";
@@ -279,10 +279,10 @@ else
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 		{
 			$login_admin = $row[0];
-			$nom_admin = htmlspecialchars($row[1]);
-			$prenom_admin = htmlspecialchars($row[2]);
+			$nom_admin = htmlspecialchars((string) $row[1]);
+			$prenom_admin = htmlspecialchars((string) $row[2]);
 			echo "<b>";
-			echo "$nom_admin $prenom_admin</b> | <a href='admin_email_manager.php?action=del_admin&amp;login_admin=".urlencode($login_admin)."&amp;room=$room&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
+			echo "$nom_admin $prenom_admin</b> | <a href='admin_email_manager.php?action=del_admin&amp;login_admin=".urlencode((string) $login_admin)."&amp;room=$room&amp;id_area=$id_area'>".get_vocab("delete")."</a><br />";
 		}
 	}
 	if ($nombre == 0)
@@ -312,7 +312,7 @@ else
 			for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 			{
 				if (authUserAccesArea($row[0], $id_area) == 1)
-					echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>";
+					echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>";
 			}
 		}
 		?>

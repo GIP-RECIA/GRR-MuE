@@ -8,12 +8,12 @@ if (isset($_GET["id"]))
 }
 else
 	$id = NULL;
-$period = isset($_GET["period"]) ? $_GET["period"] : NULL;
+$period = $_GET["period"] ?? NULL;
 if (isset($period))
 	settype($period,"integer");
 if (isset($period))
 	$end_period = $period;
-$edit_type = isset($_GET["edit_type"]) ? $_GET["edit_type"] : NULL;
+$edit_type = $_GET["edit_type"] ?? NULL;
 if (!isset($edit_type))
 	$edit_type = "";
 $page = verif_page();
@@ -56,7 +56,7 @@ var_dump($_POST);
 <body>
 	<div class="container">
 		<form role="form" method="POST" action="">
-			<?= $form->select('', 'beneficiaire', ucfirst(trim(get_vocab("reservation au nom de"))).get_vocab("deux_points"), $rows);?>
+			<?= $form->select('', 'beneficiaire', ucfirst(trim((string) get_vocab("reservation au nom de"))).get_vocab("deux_points"), $rows);?>
 			<?= $form->text('name', get_vocab("namebooker"));?>
 			<?= $form->textarea('description', get_vocab("fulldescription"));?>
 			<?= $form->checkbox('keys', 'y', get_vocab("status_clef").get_vocab("deux_points"), get_vocab("msg_courrier"));?>

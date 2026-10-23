@@ -77,7 +77,7 @@ $destinataire = $_POST['destinataire'];
 $sujet = "Test de la fonction mail() de PHP";
 $message = "Félicitations, la fonction mail() de votre hebergeur fonctionne!";
 
-$envoi = mail($destinataire, $sujet, $message);
+$envoi = mail((string) $destinataire, $sujet, $message);
 
 	if ($envoi == true)
 	{

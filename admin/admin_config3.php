@@ -258,7 +258,7 @@ echo "\n<input type = \"text\" name=\"grr_mail_Username\" value =\"".Settings::g
 echo "\n<br />".get_vocab('pwd').get_vocab('deux_points');
 echo "\n<input type = \"password\" name=\"grr_mail_Password\" value =\"".Settings::getGeneral('grr_mail_Password')."\" />";
 echo "\n<br />".get_vocab('Email_expediteur_messages_automatiques').get_vocab('deux_points');
-if (trim(Settings::getGeneral('grr_mail_from')) == "")
+if (trim((string) Settings::getGeneral('grr_mail_from')) == "")
 	$grr_mail_from = "noreply@mon.site.fr";
 else
 	$grr_mail_from = Settings::getGeneral('grr_mail_from');

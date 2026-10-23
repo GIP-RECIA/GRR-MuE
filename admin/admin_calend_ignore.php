@@ -106,7 +106,7 @@ echo "<h2>".get_vocab('calendrier_des_jours_hors_reservation')."</h2>\n";
 if (isset($_POST['record']) && ($_POST['record'] == 'yes')){
 	
 	// Init
-	$day_old = array();
+	$day_old = [];
 	$end_bookings = Settings::get("end_bookings");
 	$n = Settings::get("begin_bookings");
 	$month = strftime("%m", Settings::get("begin_bookings"));
@@ -208,7 +208,7 @@ echo "<table cellspacing=\"20\">\n";
 $n = Settings::get("begin_bookings");
 $end_bookings = Settings::get("end_bookings");
 $debligne = 1;
-$month = utf8_encode(strftime("%m", Settings::get("begin_bookings")));
+$month = mb_convert_encoding(strftime("%m", Settings::get("begin_bookings")), 'UTF-8', 'ISO-8859-1');
 $year = strftime("%Y", Settings::get("begin_bookings"));
 $inc = 0;
 while ($n <= $end_bookings)

@@ -120,7 +120,7 @@ $i = mktime(0,0,0,$month + 1, 1, $year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
 
-$all_day = preg_replace("/ /", " ", get_vocab("all_day2"));
+$all_day = preg_replace("/ /", " ", (string) get_vocab("all_day2"));
 //Get all meetings for this month in the room that we care about
 //row[0] = Start time
 //row[1] = End time
@@ -186,7 +186,7 @@ else
 	echo '</div>'.PHP_EOL;
 	
 	// Affichage du nom du domaine
-	echo '<div class="titre_planningRessource">' .ucfirst($this_area_name).' - '.get_vocab("all_areas"). '</div>'.PHP_EOL;
+	echo '<div class="titre_planningRessource">' .ucfirst((string) $this_area_name).' - '.get_vocab("all_areas"). '</div>'.PHP_EOL;
 	
 	echo '</div>'.PHP_EOL;
 	if (isset($_GET['precedent']))
@@ -234,8 +234,8 @@ else
 		//will incorrectly line break after a -.
 			if ($enable_periods == 'y')
 			{
-				$start_str = preg_replace("/ /", " ", period_time_string($row[0]));
-				$end_str   = preg_replace("/ /", " ", period_time_string($row[1], -1));
+				$start_str = preg_replace("/ /", " ", (string) period_time_string($row[0]));
+				$end_str   = preg_replace("/ /", " ", (string) period_time_string($row[1], -1));
 			// Debug
 			//echo affiche_date($row[0])." ".affiche_date($midnight)." ".affiche_date($row[1])." ".affiche_date($midnight_tonight)."<br />";
 				switch (cmp3($row[0], $midnight) . cmp3($row[1], $midnight_tonight))
@@ -372,7 +372,7 @@ else
 				if ($ferie_true)
 					$class .= "ferie ";
 			}
-			echo '<div class="monthday ',$class,'">',PHP_EOL,'<a title="',htmlspecialchars(get_vocab("see_all_the_rooms_for_the_day")),$title,'" href="day.php?year=',$year,'&amp;month=',$month,'&amp;day=',$cday,'&amp;area=',$area,'">',$name_day;
+			echo '<div class="monthday ',$class,'">',PHP_EOL,'<a title="',htmlspecialchars((string) get_vocab("see_all_the_rooms_for_the_day")),$title,'" href="day.php?year=',$year,'&amp;month=',$month,'&amp;day=',$cday,'&amp;area=',$area,'">',$name_day;
 			if (Settings::get("jours_cycles_actif") == "Oui" && intval($jour_cycle) > -1)
 			{
 				if (intval($jour_cycle) > 0)
@@ -413,15 +413,15 @@ else
 								{
 									$currentPage = 'month_all';
 									$id =   $d[$cday]["id"][$i];
-									echo '<a title="'.htmlspecialchars($d[$cday]["who"][$i]).'" class="lienModal" data-toggle="modal" data-target="#myModal" onclick="requestModal('.$id.','.$cday.','.$month.','.$year,',\''.$currentPage.'\',readDataModal);">'.PHP_EOL;
+									echo '<a title="'.htmlspecialchars((string) $d[$cday]["who"][$i]).'" class="lienModal" data-toggle="modal" data-target="#myModal" onclick="requestModal('.$id.','.$cday.','.$month.','.$year,',\''.$currentPage.'\',readDataModal);">'.PHP_EOL;
 									//echo '<a title="',htmlspecialchars($d[$cday]["who"][$i]),'" data-width="675" onclick="request(',$id,',',$cday,',',$month,',',$year,',\'',$currentPage,'\',readData);" data-rel="popup_name" class="poplight">',PHP_EOL;
 								}
 								else
 								{
-									echo '<a class="lienCellule" title="',htmlspecialchars($d[$cday]["who"][$i]),'" href="view_entry.php?id=',$d[$cday]["id"][$i],'&amp;day=',$cday,'&amp;month=',$month,'&amp;year=',$year,'&amp;page=month_all">',PHP_EOL;
+									echo '<a class="lienCellule" title="',htmlspecialchars((string) $d[$cday]["who"][$i]),'" href="view_entry.php?id=',$d[$cday]["id"][$i],'&amp;day=',$cday,'&amp;month=',$month,'&amp;year=',$year,'&amp;page=month_all">',PHP_EOL;
 								}
 							}
-							echo $d[$cday]["data"][$i],'<br>',htmlspecialchars($d[$cday]["room"][$i]),'<br>',$d[$cday]["who1"][$i],'<br/>',PHP_EOL;
+							echo $d[$cday]["data"][$i],'<br>',htmlspecialchars((string) $d[$cday]["room"][$i]),'<br>',$d[$cday]["who1"][$i],'<br/>',PHP_EOL;
 							$Son_GenreRepeat = grr_sql_query1("SELECT type_name FROM ".TABLE_PREFIX."_type_area ,".TABLE_PREFIX."_entry  WHERE  ".TABLE_PREFIX."_entry.id= ".$d[$cday]["id"][$i]." AND ".TABLE_PREFIX."_entry.type= ".TABLE_PREFIX."_type_area.type_letter");
 							echo $Son_GenreRepeat."<br/>";
 							if ($d[$cday]["description"][$i] != "")

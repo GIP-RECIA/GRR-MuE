@@ -31,13 +31,13 @@ require_once("include/config.inc.php");
 require_once("include/misc.inc.php");
 require_once("include/functions.inc.php");
 $nom_fic = "include/connect.inc.php";
-$etape = isset($_GET["etape"]) ? $_GET["etape"] : NULL;
-$adresse_db = isset($_GET["adresse_db"]) ? $_GET["adresse_db"] : NULL;
-$login_db = isset($_GET["login_db"]) ? $_GET["login_db"] : NULL;
-$pass_db = isset($_GET["pass_db"]) ? $_GET["pass_db"] : NULL;
-$choix_db = isset($_GET["choix_db"]) ? $_GET["choix_db"] : NULL;
-$table_new = isset($_GET["table_new"]) ? $_GET["table_new"] : NULL;
-$table_prefix = isset($_GET["table_prefix"]) ? $_GET["table_prefix"] : NULL;
+$etape = $_GET["etape"] ?? NULL;
+$adresse_db = $_GET["adresse_db"] ?? NULL;
+$login_db = $_GET["login_db"] ?? NULL;
+$pass_db = $_GET["pass_db"] ?? NULL;
+$choix_db = $_GET["choix_db"] ?? NULL;
+$table_new = $_GET["table_new"] ?? NULL;
+$table_prefix = $_GET["table_prefix"] ?? NULL;
 
 // Pour cette page uniquement, on désactive l'UTF8 et on impose l'ISO-8859-1
 $unicode_encoding = 1;
@@ -155,8 +155,8 @@ if ($etape == 4)
 			$query = fgets($fd, 5000);
 			$query = trim($query);
 			$query = preg_replace("/DROP TABLE IF EXISTS grr/","DROP TABLE IF EXISTS ".$table_prefix,$query);
-			$query = preg_replace("/CREATE TABLE grr/","CREATE TABLE ".$table_prefix,$query);
-			$query = preg_replace("/INSERT INTO grr/","INSERT INTO ".$table_prefix,$query);
+			$query = preg_replace("/CREATE TABLE grr/","CREATE TABLE ".$table_prefix,(string) $query);
+			$query = preg_replace("/INSERT INTO grr/","INSERT INTO ".$table_prefix,(string) $query);
 
 			if ($query != '')
 			{

@@ -60,10 +60,10 @@ if ($_GET['pview'] == 1)
 	$class_image = "print_image";
 else
 	$class_image = "image";
-$from_month = isset($_GET["from_month"]) ? $_GET["from_month"] : NULL;
-$from_year = isset($_GET["from_year"]) ? $_GET["from_year"] : NULL;
-$to_month = isset($_GET["to_month"]) ? $_GET["to_month"] : NULL;
-$to_year = isset($_GET["to_year"]) ? $_GET["to_year"] : NULL;
+$from_month = $_GET["from_month"] ?? NULL;
+$from_year = $_GET["from_year"] ?? NULL;
+$to_month = $_GET["to_month"] ?? NULL;
+$to_year = $_GET["to_year"] ?? NULL;
 $day = 1;
 $date_now = time();
 //Default parameters:
@@ -188,13 +188,13 @@ if ($_GET['pview'] != 1)
 	echo "<input type=\"submit\" name=\"valider\" value=\"".$vocab["goto"]."\" /></td><td> </td></tr>\n";
 	echo "</table>\n";
 	echo "</form></td>\n";
-	echo '<td><a title="'.htmlspecialchars(get_vocab('back')).'" href="'.page_accueil('no').'">'.$vocab['back'].'</a></td>';
+	echo '<td><a title="'.htmlspecialchars((string) get_vocab('back')).'" href="'.page_accueil('no').'">'.$vocab['back'].'</a></td>';
 	echo "</tr></table>\n";
 }
 $this_area_name = grr_sql_query1("SELECT area_name FROM ".TABLE_PREFIX."_area WHERE id=$area");
-echo "<div class=\"titre_planning\">".ucfirst($this_area_name)." - ".get_vocab("all_areas")." </div>\n";
+echo "<div class=\"titre_planning\">".ucfirst((string) $this_area_name)." - ".get_vocab("all_areas")." </div>\n";
 //Used below: localized "all day" text but with non-breaking spaces:
-$all_day = preg_replace("/ /", " ", get_vocab("all_day"));
+$all_day = preg_replace("/ /", " ", (string) get_vocab("all_day"));
 //Get all meetings for this month in the room that we care about
 //row[0] = Start time
 //row[1] = End time
@@ -260,8 +260,8 @@ else
 			$all_day2 = preg_replace("/ /", " ", $all_day);
 			if ($enable_periods == 'y')
 			{
-				$start_str = preg_replace("/ /", " ", period_time_string($row[0]));
-				$end_str   = preg_replace("/ /", " ", period_time_string($row[1], -1));
+				$start_str = preg_replace("/ /", " ", (string) period_time_string($row[0]));
+				$end_str   = preg_replace("/ /", " ", (string) period_time_string($row[1], -1));
 				switch (cmp3($row[0], $midnight) . cmp3($row[1], $midnight_tonight))
 				{
 					case "> < ":
@@ -371,15 +371,15 @@ while ($month_indice < $month_end)
 		if ($display_day[$cweek] == 1)
 		{
 			echo tdcell("cell_hours");
-			echo "<div><a title=\"".htmlspecialchars(get_vocab("see_all_the_rooms_for_the_day"))."\"   href=\"day.php?year=$year_num&amp;month=$month_num&amp;day=$cday&amp;area=$area\">$name_day</a>";
+			echo "<div><a title=\"".htmlspecialchars((string) get_vocab("see_all_the_rooms_for_the_day"))."\"   href=\"day.php?year=$year_num&amp;month=$month_num&amp;day=$cday&amp;area=$area\">$name_day</a>";
 			if (Settings::get("jours_cycles_actif") == "Oui" && intval($jour_cycle)>-1)
 			{
 				if (intval($jour_cycle) > 0)
-					echo "<br /><b><i>".ucfirst(substr(get_vocab("rep_type_6"),0,1)).$jour_cycle."</i></b>";
+					echo "<br /><b><i>".ucfirst(substr((string) get_vocab("rep_type_6"),0,1)).$jour_cycle."</i></b>";
 				else
 				{
-					if (strlen($jour_cycle)>5)
-						$jour_cycle = substr($jour_cycle,0,3)."..";
+					if (strlen((string) $jour_cycle)>5)
+						$jour_cycle = substr((string) $jour_cycle,0,3)."..";
 					echo "<br /><b><i>".$jour_cycle."</i></b>";
 				}
 			}
@@ -400,7 +400,7 @@ while ($month_indice < $month_end)
 			$acces_fiche_reservation = verif_acces_fiche_reservation(getUserName(), $row[2]);
 			echo "<tr>";
 			tdcell("cell_hours");
-			echo htmlspecialchars($row[0]) ."</td>\n";
+			echo htmlspecialchars((string) $row[0]) ."</td>\n";
 			$li++;
 				//Corrige un bug avec certains fuseaux horaires (par exemple GMT-05:00 celui du Québec) :
 				//plusieurs mois débutent par le dernier jours du mois précédent.
@@ -450,7 +450,7 @@ while ($month_indice < $month_end)
 									if ((isset($d[$cday][$cmonth][$cyear]["moderation"][$i])) && ($d[$cday][$cmonth][$cyear]["moderation"][$i] == 1))
 										echo " <img src=\"img_grr/flag_moderation.png\" alt=\"".get_vocab("en_attente_moderation")."\" title=\"".get_vocab("en_attente_moderation")."\" class=\"image\" /> \n";
 									if ($acces_fiche_reservation)
-										echo "<a title=\"".htmlspecialchars($d[$cday][$cmonth][$cyear]["data"][$i])."\" href=\"view_entry.php?id=" . $d[$cday][$cmonth][$cyear]["id"][$i]."&amp;page=month\">"
+										echo "<a title=\"".htmlspecialchars((string) $d[$cday][$cmonth][$cyear]["data"][$i])."\" href=\"view_entry.php?id=" . $d[$cday][$cmonth][$cyear]["id"][$i]."&amp;page=month\">"
 										.$d[$cday][$cmonth][$cyear]["who1"][$i][0]
 									. "</a>";
 									else

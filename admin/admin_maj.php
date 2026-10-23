@@ -55,38 +55,20 @@ function traite_requete($requete = ""){
 		$retour = "";
 	else{
 		
-		switch ($erreur_no){
-			
-			case "1060":
-			// le champ existe déjà : pas de problème
-			$retour = "";
-			break;
-			case "1061":
-			// La cléf existe déjà : pas de problème
-			$retour = "";
-			break;
-			case "1062":
-			// Présence d'un doublon : création de la cléf impossible
-			$retour = "<span style=\"color:#FF0000;\">Erreur (<b>non critique</b>) sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n";
-			break;
-			case "1068":
-			// Des cléfs existent déjà : pas de problème
-			$retour = "";
-			break;
-			case "1091":
-			// Déjà supprimé : pas de problème
-			$retour = "";
-			break;
-			default:
-			$retour = "<span style=\"color:#FF0000;\">Erreur sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n";
-			break;
-		}
+		$retour = match ((string) $erreur_no) {
+      "1060" => "",
+      "1061" => "",
+      "1062" => "<span style=\"color:#FF0000;\">Erreur (<b>non critique</b>) sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n",
+      "1068" => "",
+      "1091" => "",
+      default => "<span style=\"color:#FF0000;\">Erreur sur la requête : <i>".$requete."</i> (".mysqli_errno($GLOBALS['db_c'])." : ".mysqli_error($GLOBALS['db_c']).")</span><br />\n",
+  };
 	}
 	return $retour;
 }
 
-$valid = isset($_POST["valid"]) ? $_POST["valid"] : 'no';
-$version_old = isset($_POST["version_old"]) ? $_POST["version_old"] : '';
+$valid = $_POST["valid"] ?? 'no';
+$version_old = $_POST["version_old"] ?? '';
 if (isset($_GET["force_maj"]))
 	$version_old = $_GET["force_maj"];
 if (isset($_POST['submit']))
@@ -111,14 +93,14 @@ if (Settings::get('sso_statut') == 'lcs')
 {
 	include LCS_PAGE_AUTH_INC_PHP;
 	include LCS_PAGE_LDAP_INC_PHP;
-	list ($idpers,$login) = isauth();
+	[$idpers, $login] = isauth();
 	if ($idpers)
 	{
-		list($user, $groups) = people_get_variables($login, true);
+		[$user, $groups] = people_get_variables($login, true);
 		$lcs_tab_login["nom"] = $user["nom"];
 		$lcs_tab_login["email"] = $user["email"];
-		$long = strlen($user["fullname"]) - strlen($user["nom"]);
-		$lcs_tab_login["fullname"] = substr($user["fullname"], 0, $long) ;
+		$long = strlen((string) $user["fullname"]) - strlen((string) $user["nom"]);
+		$lcs_tab_login["fullname"] = substr((string) $user["fullname"], 0, $long) ;
 		foreach ($groups as $value)
 			$lcs_groups[] = $value["cn"];
 		// A ce stade, l'utilisateur est authentifié par LCS
@@ -779,12 +761,12 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 								{
 									$begin_string = "<".$value.">";
 									$end_string = "</".$value.">";
-									$begin_pos = strpos($row[0],$begin_string);
-									$end_pos = strpos($row[0],$end_string);
+									$begin_pos = strpos((string) $row[0],$begin_string);
+									$end_pos = strpos((string) $row[0],$end_string);
 									if ( $begin_pos !== false && $end_pos !== false )
 									{
 										$first = $begin_pos + strlen($begin_string);
-										$data = substr($row[0],$first,$end_pos-$first);
+										$data = substr((string) $row[0],$first,$end_pos-$first);
 										$data  = urlencode(base64_decode($data));
 										$nouvelle_chaine .= "@".$value."@".$data."@/".$value."@";
 									}

@@ -59,18 +59,18 @@ if(authGetUserLevel(getUserName(),-1) < 6)
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
 
 
 // Initialisation
-$id_type = isset($_GET["id_type"]) ? $_GET["id_type"] : 0;
-$type_name = isset($_GET["type_name"]) ? $_GET["type_name"] : NULL;
-$order_display = isset($_GET["order_display"]) ? $_GET["order_display"] : NULL;
-$type_letter = isset($_GET["type_letter"]) ? $_GET["type_letter"] : NULL;
-$couleur = isset($_GET["couleur"]) ? $_GET["couleur"] : NULL;
-$disponible = isset($_GET["disponible"]) ? $_GET["disponible"] : NULL;
+$id_type = $_GET["id_type"] ?? 0;
+$type_name = $_GET["type_name"] ?? NULL;
+$order_display = $_GET["order_display"] ?? NULL;
+$type_letter = $_GET["type_letter"] ?? NULL;
+$couleur = $_GET["couleur"] ?? NULL;
+$disponible = $_GET["disponible"] ?? NULL;
 $id_etablissement = getIdEtablissementCourant();
 $msg ='';
 if (isset($_GET["change_room_and_back"])) {
@@ -163,7 +163,7 @@ if (isset($_GET['change_type'])) {
                 		fatal_error(1, "<p>" . grr_sql_error());
                 		$ok = 'no';
                 	}else {
-                		$id = grr_sql_insert_id("", "");
+                		$id = grr_sql_insert_id();
 						$sql = "UPDATE  ".TABLE_PREFIX."_type_area 
 								SET type_letter=id WHERE id = $id";
 						grr_sql_command($sql);	
@@ -183,7 +183,7 @@ if (isset($_GET['change_type'])) {
 
 
 # print the page header
-    print_header("","","","",$type="with_session", $page="admin");
+    print_header("","","","");
 	include "admin_col_gauche.php";
 	
 	
@@ -213,7 +213,7 @@ if (isset($_GET['change_type'])) {
     echo "<table border=\"1\">\n";
     echo "<tr>";
     echo "<td>".get_vocab("type_name").get_vocab("deux_points")."</td>\n";
-    echo "<td><input type=\"text\" name=\"type_name\" value=\"".htmlspecialchars($row["type_name"])."\" size=\"20\" /></td>\n";
+    echo "<td><input type=\"text\" name=\"type_name\" value=\"".htmlspecialchars((string) $row["type_name"])."\" size=\"20\" /></td>\n";
     echo "</tr><tr>\n";
    
 	/*echo "<td>".get_vocab("type_num").get_vocab("deux_points")."</td>\n";
@@ -232,7 +232,7 @@ if (isset($_GET['change_type'])) {
 	
     echo "</tr><tr>\n";
     echo "<td>".get_vocab("type_order").get_vocab("deux_points")."</td>\n";
-    echo "<td><input type=\"text\" name=\"order_display\" value=\"".htmlspecialchars($row["order_display"])."\" size=\"20\" /></td>\n";
+    echo "<td><input type=\"text\" name=\"order_display\" value=\"".htmlspecialchars((string) $row["order_display"])."\" size=\"20\" /></td>\n";
     echo "</tr>";
     echo "<tr><td>".get_vocab("disponible_pour").get_vocab("deux_points")."</td>\n";
 	echo "<td>"."<select name=\"disponible\" size=\"1\">\n";

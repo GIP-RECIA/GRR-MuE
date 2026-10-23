@@ -180,10 +180,10 @@ if ($locale == 'fr')
 		// Si le serveur est sous windows
 	if ($server_os == "windows")
 	{
-		if ($lang_map_windows[strtolower($locale)])
+		if ($lang_map_windows[strtolower((string) $locale)])
 		{
-			setlocale(LC_ALL, $lang_map_windows[strtolower($locale)]);
-			$windows_locale = $lang_map_windows[strtolower($locale)];
+			setlocale(LC_ALL, $lang_map_windows[strtolower((string) $locale)]);
+			$windows_locale = $lang_map_windows[strtolower((string) $locale)];
 		}
 	}
 	else
@@ -228,10 +228,10 @@ if ($locale != 'fr')
 		// Si le serveur est sous windows
 	if ($server_os == "windows")
 	{
-		if ($lang_map_windows[strtolower($locale)])
+		if ($lang_map_windows[strtolower((string) $locale)])
 		{
-			setlocale(LC_ALL, $lang_map_windows[strtolower($locale)]);
-			$windows_locale = $lang_map_windows[strtolower($locale)];
+			setlocale(LC_ALL, $lang_map_windows[strtolower((string) $locale)]);
+			$windows_locale = $lang_map_windows[strtolower((string) $locale)];
 		}
 	}
 	else
@@ -242,10 +242,10 @@ if ($locale != 'fr')
 		if ($locale == 'en')
 			$locale = "en_US";
 				// Autre cas :
-		if (strlen($locale) == 2)
+		if (strlen((string) $locale) == 2)
 		{
 			# Convertit locale=xx en xx_XX, ce qui est approprié à certains système
-			$locale = strtolower($locale)."_".strtoupper($locale);
+			$locale = strtolower((string) $locale)."_".strtoupper((string) $locale);
 		}
 		if ($unicode_encoding)
 		{

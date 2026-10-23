@@ -40,7 +40,7 @@ if (empty($_POST['année']))
 if (empty($_POST['duree']))
 	$message .= "Aucune durée choisie <br/>";
 foreach ($_POST as $index => $valeur)
-	$index = stripslashes(trim($valeur));
+	$index = stripslashes(trim((string) $valeur));
 
 $mail_entete  = "MIME-Version: 1.0\r\n";
 $mail_entete .= "From: {$_POST['nom']} "
@@ -70,7 +70,7 @@ $mail_method= Settings::get("grr_mail_method");
 
 if($mail_method =='mail'){
 
-	if(mail($mail_destinataire, 'Demande de réservation', $mail_corps,$mail_entete )){
+	if(mail((string) $mail_destinataire, 'Demande de réservation', $mail_corps,$mail_entete )){
 	header('Location: week_all.php');
 	}else{
 	echo "le message n'a pas été envoyé et donc mail n'est pas installé";

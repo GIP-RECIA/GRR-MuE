@@ -120,7 +120,7 @@ if ($_GET['type']=="etab") {
 				$display_liste .=  '              <option value="'.$row[0].'"';
 				if ($default_etab == $row[0])
 					$display_liste .= ' selected="selected" ';
-				$display_liste .= '>'.htmlspecialchars($row[1]);
+				$display_liste .= '>'.htmlspecialchars((string) $row[1]);
 				$display_liste .= '</option>'."\n";
 			}
 		}
@@ -211,7 +211,7 @@ if ($_GET['type']=="site") {
 			$display_liste .=  '              <option value="'.$row[0].'"';
 			if ($default_site == $row[0])
 			$display_liste .= ' selected="selected" ';
-			$display_liste .= '>'.htmlspecialchars($row[1]);
+			$display_liste .= '>'.htmlspecialchars((string) $row[1]);
 			$display_liste .= '</option>'."\n";
 		}
 	}
@@ -316,7 +316,7 @@ if ($_GET['type']=="domaine") {
 				$display_liste .=  '              <option value="'.$row[0].'"';
 				if ($default_area == $row[0])
 					$display_liste .= ' selected="selected" ';
-				$display_liste .= '>'.htmlspecialchars($row[1]);
+				$display_liste .= '>'.htmlspecialchars((string) $row[1]);
 				if ($row[2]=='r')
 					$display_liste .= ' ('.get_vocab('restricted').')';
 				$display_liste .= '</option>'."\n";
@@ -413,7 +413,7 @@ if ($_GET['type']=="ressource") {
 			$display_liste .=  '              <option value="'.$row[0].'"';
 			if ($default_room == $row[0])
 			$display_liste .= ' selected="selected" ';
-			$display_liste .= '>'.htmlspecialchars($row[1]).' '.get_vocab('display_week');
+			$display_liste .= '>'.htmlspecialchars((string) $row[1]).' '.get_vocab('display_week');
 			$display_liste .= '</option>'."\n";
 		}
 	}

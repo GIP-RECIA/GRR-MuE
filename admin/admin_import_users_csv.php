@@ -47,8 +47,8 @@ include "admin_col_gauche.php";
 <br/><p>| <a href="admin_user.php"><?php echo get_vocab("back");?></a> |</p><br/>
 
 <?php
-$reg_data = isset($_POST["reg_data"]) ? $_POST["reg_data"] : NULL;
-$is_posted = isset($_POST["is_posted"]) ? $_POST["is_posted"] : NULL;
+$reg_data = $_POST["reg_data"] ?? NULL;
+$is_posted = $_POST["is_posted"] ?? NULL;
 $test_login_existant = '';
 $test_nom_prenom_existant = '';
 $test_login = '';
@@ -82,9 +82,9 @@ if ($reg_data != 'yes')
 				}
 				if ($is_posted == '1')
 				{
-					$valid = isset($_POST["valid"]) ? $_POST["valid"] : NULL;
-					$en_tete = isset($_POST["en_tete"]) ? $_POST["en_tete"] : NULL;
-					$csv_file = isset($_FILES["csvfile"]) ? $_FILES["csvfile"] : NULL;
+					$valid = $_POST["valid"] ?? NULL;
+					$en_tete = $_POST["en_tete"] ?? NULL;
+					$csv_file = $_FILES["csvfile"] ?? NULL;
 
 					echo "<form enctype=\"multipart/form-data\" action=\"admin_import_users_csv.php\" method=\"post\" >";
 					if ($csv_file['tmp_name'] != "")
@@ -124,10 +124,10 @@ if ($reg_data != 'yes')
 									{
 										case 0:
 										//login
-										$test_login = preg_replace("/([A-Za-z0-9_@. -])/","",$data[$c]);
+										$test_login = preg_replace("/([A-Za-z0-9_@. -])/","",(string) $data[$c]);
 										if ($test_login=="")
 										{
-											$data[$c] =    strtoupper($data[$c]);
+											$data[$c] =    strtoupper((string) $data[$c]);
 											$test = grr_sql_count(grr_sql_query("SELECT login FROM ".TABLE_PREFIX."_utilisateurs WHERE login='$data[$c]'"));
 											if ($test!='0')
 											{
@@ -155,7 +155,7 @@ if ($reg_data != 'yes')
 										case 1:
 										//Nom
 										$test_nom_prenom_existant = 'no';
-										if (preg_match ("`^.{1,30}$`", $data[$c]))
+										if (preg_match ("`^.{1,30}$`", (string) $data[$c]))
 										{
 											$test_nom = protect_data_sql($data[$c]);
 											$test_prenom = protect_data_sql($data[$c+1]);
@@ -167,7 +167,7 @@ if ($reg_data != 'yes')
 											}
 											else
 												echo "<td><p>$data[$c]</p>";
-											$data_nom = htmlentities($data[$c]);
+											$data_nom = htmlentities((string) $data[$c]);
 											echo "<input type=\"hidden\" name=\"reg_nom[$row]\" value=\"$data_nom\" /></td>";
 										}
 										else
@@ -175,13 +175,13 @@ if ($reg_data != 'yes')
 										break;
 										case 2:
 										//Prenom
-										if (preg_match ("`^.{1,30}$`", $data[$c]))
+										if (preg_match ("`^.{1,30}$`", (string) $data[$c]))
 										{
 											if ($test_nom_prenom_existant == 'yes')
 												echo "<td><p><font color=\"blue\">$data[$c]</font></p>";
 											else 
 												echo "<td><p>$data[$c]</p>";
-											$data_prenom = htmlentities($data[$c]);
+											$data_prenom = htmlentities((string) $data[$c]);
 											echo "<input type=\"hidden\" name=\"reg_prenom[$row]\" value=\"$data_prenom\" /></td>";
 										}
 										else
@@ -192,9 +192,9 @@ if ($reg_data != 'yes')
 										break;
 										case 3:
 										// Mot de passe
-										if ((preg_match ("`^.{".$pass_leng.",30}$`", $data[$c])) || ($data[$c] == ''))
+										if ((preg_match ("`^.{".$pass_leng.",30}$`", (string) $data[$c])) || ($data[$c] == ''))
 										{
-											$data_mdp = htmlentities($data[$c]);
+											$data_mdp = htmlentities((string) $data[$c]);
 											echo "<td><p>$data[$c] </p>";
 											echo "<input type=\"hidden\" name=\"reg_mdp[$row]\" value=\"$data_mdp\" /></td>";
 										}
@@ -206,9 +206,9 @@ if ($reg_data != 'yes')
 										break;
 										case 4:
 										// Adresse E-mail
-										if ((preg_match ("`^.{1,100}$`", $data[$c])) || ($data[$c] ==''))
+										if ((preg_match ("`^.{1,100}$`", (string) $data[$c])) || ($data[$c] ==''))
 										{
-											$data_email = htmlentities($data[$c]);
+											$data_email = htmlentities((string) $data[$c]);
 											echo "<td><p>$data[$c] </p>";
 											echo "<input type=\"hidden\" name=\"reg_email[$row]\" value=\"$data_email\" /></td>";
 										}
@@ -231,9 +231,9 @@ if ($reg_data != 'yes')
 										else
 											$filtre = "`(visiteur|utilisateur)`";
 
-										if (preg_match ($filtre, $data[$c]))
+										if (preg_match ($filtre, (string) $data[$c]))
 										{
-											$data_type_user = htmlentities($data[$c]);
+											$data_type_user = htmlentities((string) $data[$c]);
 											echo "<td><p>$data[$c] </p>";
 											echo "<input type=\"hidden\" name=\"reg_type_user[$row]\" value=\"$data_type_user\" /></td>";
 										}
@@ -245,9 +245,9 @@ if ($reg_data != 'yes')
 										break;
 										case 6:
 										// statut: deux valeurs autorisées : actif ou inactif
-										if (preg_match ("`(actif|inactif)`", $data[$c]))
+										if (preg_match ("`(actif|inactif)`", (string) $data[$c]))
 										{
-											$data_statut = htmlentities($data[$c]);
+											$data_statut = htmlentities((string) $data[$c]);
 											echo "<td><p>$data[$c] </p>";
 											echo "<input type=\"hidden\" name=\"reg_statut[$row]\" value=\"$data_statut\" /></td>";
 										} else {
@@ -257,8 +257,8 @@ if ($reg_data != 'yes')
 										break;
 										case 7:
 										// Type d'authentification : deux valeurs autorisées : local ou ext
-										if (preg_match ("`(local|ext)`", $data[$c])) {
-											$data_type_auth = htmlentities($data[$c]);
+										if (preg_match ("`(local|ext)`", (string) $data[$c])) {
+											$data_type_auth = htmlentities((string) $data[$c]);
 											if (($data_mdp == "") && ($data_type_auth == "local"))
 											{
 												echo "<td><font color=\"red\">local -> mot de passe incorrect</font></td>";
@@ -321,21 +321,21 @@ if ($reg_data != 'yes')
 			// Restriction dans le cas d'une démo
 			VerifyModeDemo();
 			// Phase d'enregistrement des données
-			$nb_row = isset($_POST["nb_row"]) ? $_POST["nb_row"] : NULL;
-			$reg_stat = isset($_POST["reg_stat"]) ? $_POST["reg_stat"] : NULL;
-			$reg_login = isset($_POST["reg_login"]) ? $_POST["reg_login"] : NULL;
-			$reg_nom = isset($_POST["reg_nom"]) ? $_POST["reg_nom"] : NULL;
-			$reg_prenom = isset($_POST["reg_prenom"]) ? $_POST["reg_prenom"] : NULL;
-			$reg_email = isset($_POST["reg_email"]) ? $_POST["reg_email"] : NULL;
-			$reg_mdp = isset($_POST["reg_mdp"]) ? $_POST["reg_mdp"] : NULL;
-			$reg_type_user = isset($_POST["reg_type_user"]) ? $_POST["reg_type_user"] : NULL;
-			$reg_statut = isset($_POST["reg_statut"]) ? $_POST["reg_statut"] : NULL;
-			$reg_type_auth = isset($_POST["reg_type_auth"]) ? $_POST["reg_type_auth"] : NULL;
+			$nb_row = $_POST["nb_row"] ?? NULL;
+			$reg_stat = $_POST["reg_stat"] ?? NULL;
+			$reg_login = $_POST["reg_login"] ?? NULL;
+			$reg_nom = $_POST["reg_nom"] ?? NULL;
+			$reg_prenom = $_POST["reg_prenom"] ?? NULL;
+			$reg_email = $_POST["reg_email"] ?? NULL;
+			$reg_mdp = $_POST["reg_mdp"] ?? NULL;
+			$reg_type_user = $_POST["reg_type_user"] ?? NULL;
+			$reg_statut = $_POST["reg_statut"] ?? NULL;
+			$reg_type_auth = $_POST["reg_type_auth"] ?? NULL;
 			$nb_row++;
 			for ($row = 1; $row < $nb_row; $row++)
 			{
 				if ($reg_type_auth[$row] != "ext")
-					$reg_mdp[$row] = md5(unslashes($reg_mdp[$row]));
+					$reg_mdp[$row] = md5((string) unslashes($reg_mdp[$row]));
 				// On nettoie les windozeries
 				$reg_nom[$row] = protect_data_sql(corriger_caracteres($reg_nom[$row]));
 				$reg_prenom[$row] = protect_data_sql(corriger_caracteres($reg_prenom[$row]));

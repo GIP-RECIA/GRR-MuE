@@ -128,12 +128,12 @@ if (!isset($_POST['histDay']))
 		{
 			for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 			{
-				$annee = substr($row[8],0,4);
-				$mois =  substr($row[8],5,2);
-				$jour =  substr($row[8],8,2);
-				$heures = substr($row[8],11,2);
-				$minutes = substr($row[8],14,2);
-				$secondes = substr($row[8],17,2);
+				$annee = substr((string) $row[8],0,4);
+				$mois =  substr((string) $row[8],5,2);
+				$jour =  substr((string) $row[8],8,2);
+				$heures = substr((string) $row[8],11,2);
+				$minutes = substr((string) $row[8],14,2);
+				$secondes = substr((string) $row[8],17,2);
 				$end_time = mktime($heures, $minutes, $secondes, $mois, $jour, $annee);
 				$temp1 = '';
 				$temp2 = '';
@@ -194,9 +194,9 @@ $sql = "select START from ".TABLE_PREFIX."_log order by END";
 $res = grr_sql_query($sql);
 $logs_number = grr_sql_count($res);
 $row = grr_sql_row($res, 0);
-$annee = substr($row[0],0,4);
-$mois =  substr($row[0],5,2);
-$jour =  substr($row[0],8,2);
+$annee = substr((string) $row[0],0,4);
+$mois =  substr((string) $row[0],5,2);
+$jour =  substr((string) $row[0],8,2);
 echo "<p>".get_vocab("logs_number")."<b>".$logs_number."</b><br />";
 echo get_vocab("older_date_log")."<b>".$jour."/".$mois."/".$annee."</b></p>";
 if (!isset($_POST['cleanYear']))

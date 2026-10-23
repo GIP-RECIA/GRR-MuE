@@ -1,12 +1,9 @@
 <?php
 class Form {
 
-	private $_data;
-
-	public function __construct($data = [])
-	{
-		$this->_data = $data;
-	}
+	public function __construct(private $_data = [])
+ {
+ }
 
 	private function input($type, $name, $label)
 	{

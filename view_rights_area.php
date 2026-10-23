@@ -49,7 +49,7 @@ if ((Settings::get("authentification_obli") == 0) && (getUserName() == ''))
 	$type_session = "no_session";
 else
 	$type_session = "with_session";
-$area_id = isset($_GET["area_id"]) ? $_GET["area_id"] : NULL;
+$area_id = $_GET["area_id"] ?? NULL;
 if (isset($area_id))
 	settype($area_id,"integer");
 if (authGetUserLevel(getUserName(),$area_id,"area") < 4)
@@ -64,7 +64,7 @@ if (!$res)
 $row = grr_sql_row_keyed($res, 0);
 grr_sql_free($res);
 echo '<h3 style="text-align:center;">';
-echo get_vocab("match_area").get_vocab("deux_points")." ".htmlspecialchars($row["area_name"]);
+echo get_vocab("match_area").get_vocab("deux_points")." ".htmlspecialchars((string) $row["area_name"]);
 $area_access = $row["access"];
 if ($area_access == 'r')
 	echo " (<span class=\"avertissement\">".get_vocab("access")."</span>)";

@@ -42,12 +42,12 @@ include "../include/language.inc.php";
 //Chargement des valeurs de la table settingS
 if (!Settings::load())
 	die("Erreur chargement settings");
-$valid = isset($_POST["valid"]) ? $_POST["valid"] : 'no';
-$etape = isset($_POST["etape"]) ? $_POST["etape"] : '0';
-$adresse = isset($_POST["adresse"]) ? $_POST["adresse"] : NULL;
-$port = isset($_POST["port"]) ? $_POST["port"] : NULL;
-$login_ldap = isset($_POST["login_ldap"]) ? $_POST["login_ldap"] : NULL;
-$pwd_ldap = isset($_POST["pwd_ldap"]) ? $_POST["pwd_ldap"] : NULL;
+$valid = $_POST["valid"] ?? 'no';
+$etape = $_POST["etape"] ?? '0';
+$adresse = $_POST["adresse"] ?? NULL;
+$port = $_POST["port"] ?? NULL;
+$login_ldap = $_POST["login_ldap"] ?? NULL;
+$pwd_ldap = $_POST["pwd_ldap"] ?? NULL;
 $pwd_ldap = unslashes($pwd_ldap);
 if (isset($_POST["use_tls"]))
 {
@@ -57,9 +57,9 @@ if (isset($_POST["use_tls"]))
 }
 else
 	$use_tls = FALSE;
-$base_ldap = isset($_POST["base_ldap"]) ? $_POST["base_ldap"] : NULL;
-$base_ldap_autre = isset($_POST["base_ldap_autre"]) ? $_POST["base_ldap_autre"] : NULL;
-$ldap_filter = isset($_POST["ldap_filter"]) ? $_POST["ldap_filter"] : NULL;
+$base_ldap = $_POST["base_ldap"] ?? NULL;
+$base_ldap_autre = $_POST["base_ldap_autre"] ?? NULL;
+$ldap_filter = $_POST["ldap_filter"] ?? NULL;
 $titre_ldap = "Configuration de l'authentification LDAP";
 if (isset($_POST['reg_ldap_statut']))
 {
@@ -254,7 +254,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 							$conn .= "# ligne suivante : l'identifiant et le mot de passe dans le cas d'un accès non anonyme\n";
 							$conn .= "\$ldap_login='".$login_ldap."';\n";
 							$conn .= "# Remarque : des problèmes liés à un mot de passe contenant un ou plusieurs caractères accentués ont déjà été constatés.\n";
-							$conn .= "\$ldap_pwd='".addslashes($pwd_ldap)."';\n";
+							$conn .= "\$ldap_pwd='".addslashes((string) $pwd_ldap)."';\n";
 							$conn .= "# ligne suivante : le chemin d'accès dans l'annuaire\n";
 							$conn .= "\$ldap_base='".$base_ldap."';\n";
 							$conn .= "# ligne suivante : filtre LDAP supplémentaire (facultatif)\n";
@@ -301,7 +301,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 							echo "<form action=\"admin_config_ldap.php\" method=\"post\"><div>\n";
 							// On lit toutes les infos (objectclass=*) dans le dossier
 							// Retourne un identifiant de résultat ($result), ou bien FALSE en cas d'erreur.
-							$result = ldap_read($ds, "", "objectclass=*", array("namingContexts"));
+							$result = ldap_read($ds, "", "objectclass=*", ["namingContexts"]);
 							$info = ldap_get_entries($ds, $result);
 							// Retourne un tableau associatif multi-dimensionnel ou FALSE en cas d'erreur. :
 							// $info["count"] = nombre d'entrées dans le résultat
@@ -324,14 +324,14 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 										for ($j = 0; $j < count($names); $j++)
 										{
 											$n++;
-											echo "<br /><input name=\"base_ldap\" value=\"".htmlspecialchars($names[$j])."\" type='radio' id='tab$n'";
+											echo "<br /><input name=\"base_ldap\" value=\"".htmlspecialchars((string) $names[$j])."\" type='radio' id='tab$n'";
 											if (!$checked)
 											{
 												echo " checked=\"checked\"";
 												$checked = true;
 											}
 											echo " />\n";
-											echo "<label for='tab$n'>".htmlspecialchars($names[$j])."</label>\n";
+											echo "<label for='tab$n'>".htmlspecialchars((string) $names[$j])."</label>\n";
 										}
 									}
 								}
@@ -482,7 +482,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 							if (Settings::get("ldap_champ_recherche") == '')
 								echo "<span class=\"avertissement\">";
 							echo encode_message_utf8("<b>Attribut utilisé pour la recherche dans l'annuaire</b> :");
-							echo "<input class=\"form-control\" type=\"text\" name=\"ldap_champ_recherche\" value=\"".htmlentities( Settings::get("ldap_champ_recherche"))."\" size=\"50\" />";
+							echo "<input class=\"form-control\" type=\"text\" name=\"ldap_champ_recherche\" value=\"".htmlentities( (string) Settings::get("ldap_champ_recherche"))."\" size=\"50\" />";
 							if (Settings::get("ldap_champ_recherche") == '')
 								echo "<br />Le champ ci-dessous ne doit pas être vide.</span>";
 							echo "<br />";
@@ -494,18 +494,18 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 							echo "<br /><br /><b>Liaisons GRR/LDAP</b>";
 							echo "<table><tr>";
 							echo "<td>Nom de famille : </td>";
-							echo "<td><input class=\"form-control\" type=\"text\" name=\"ldap_champ_nom\" value=\"".htmlentities( Settings::get("ldap_champ_nom"))."\" size=\"20\" /></td>";
+							echo "<td><input class=\"form-control\" type=\"text\" name=\"ldap_champ_nom\" value=\"".htmlentities( (string) Settings::get("ldap_champ_nom"))."\" size=\"20\" /></td>";
 							echo "<td>".encode_message_utf8("Prénom")." : </td>";
-							echo "<td><input class=\"form-control\" type=\"text\" name=\"ldap_champ_prenom\" value=\"".htmlentities( Settings::get("ldap_champ_prenom"))."\" size=\"20\" /></td>";
+							echo "<td><input class=\"form-control\" type=\"text\" name=\"ldap_champ_prenom\" value=\"".htmlentities( (string) Settings::get("ldap_champ_prenom"))."\" size=\"20\" /></td>";
 							echo "<td>Email : </td>";
-							echo "<td><input class=\"form-control\" type=\"text\" name=\"ldap_champ_email\" value=\"".htmlentities( Settings::get("ldap_champ_email"))."\" size=\"20\" /></td>";
+							echo "<td><input class=\"form-control\" type=\"text\" name=\"ldap_champ_email\" value=\"".htmlentities( (string) Settings::get("ldap_champ_email"))."\" size=\"20\" /></td>";
 							echo "</tr></table>";
 							echo encode_message_utf8("<br /><br /><b>Cas particulier des serveur SE3</b> : <span class=\"small\">dans le champs ci-dessous, vous pouvez préciser la liste des groupes SE3 autorisés à accéder à GRR.
 								Si le champ est laissé vide, il n'y a pas de restrictions.
 								Dans le cas contraire, seuls les utilisateurs appartenant à au moins l'un des groupes listés seront autorisés à accéder à GRR.
 								Ecrivez les groupes en les séparant par un point-vigule, par exemple : \"Profs;Administratifs\".
 								Seuls les groupes de type \"posixGroup\" sont supportés (les groupes de type \"groupOfNames\" ne sont pas supportés).</span>");
-							echo "<br />\n<input class=\"form-control\" type=\"text\" name=\"se3_liste_groupes_autorises\" value=\"".htmlentities( Settings::get("se3_liste_groupes_autorises"))."\" size=\"50\" />\n";
+							echo "<br />\n<input class=\"form-control\" type=\"text\" name=\"se3_liste_groupes_autorises\" value=\"".htmlentities( (string) Settings::get("se3_liste_groupes_autorises"))."\" size=\"50\" />\n";
 							echo "</div>\n";
 							echo "<div style=\"text-align:center;\">\n<input class=\"btn btn-primary\" type=\"submit\" name=\"Valider1\" value=\"Valider\" />\n</div>\n";
 						}
@@ -604,7 +604,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 								echo encode_message_utf8("<li>Compte pour l'accès : <br />");
 								echo "Identifiant : <b>".$ldap_login."</b><br />";
 								$ldap_pwd_hide = "";
-								for ($i=0;$i<strlen($ldap_pwd);$i++)
+								for ($i=0;$i<strlen((string) $ldap_pwd);$i++)
 									$ldap_pwd_hide .= "*";
 								echo "Mot de passe : <b>".$ldap_pwd_hide."</b></li>";
 							}

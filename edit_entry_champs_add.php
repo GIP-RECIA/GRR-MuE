@@ -102,11 +102,11 @@ foreach ($overload_fields as $fieldname=>$fieldtype)
 	else
 		$data = "";
 	if ($overload_fields[$fieldname]["type"] == "textarea" )
-		echo "<tr><td><div class=\"col-xs-12\"><textarea class=\"form-control\" cols=\"80\" rows=\"2\" name=\"addon_".$overload_fields[$fieldname]["id"]."\">".htmlspecialchars($data)."</textarea></div></td></tr>\n";
+		echo "<tr><td><div class=\"col-xs-12\"><textarea class=\"form-control\" cols=\"80\" rows=\"2\" name=\"addon_".$overload_fields[$fieldname]["id"]."\">".htmlspecialchars((string) $data)."</textarea></div></td></tr>\n";
 	else if ($overload_fields[$fieldname]["type"] == "text" )
-		echo "<tr><td><div class=\"col-xs-12\"><input class=\"form-control\" size=\"80\" type=\"text\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" value=\"".htmlspecialchars($data)."\" /></div></td></tr>\n";
+		echo "<tr><td><div class=\"col-xs-12\"><input class=\"form-control\" size=\"80\" type=\"text\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" value=\"".htmlspecialchars((string) $data)."\" /></div></td></tr>\n";
 	else if ($overload_fields[$fieldname]["type"] == "numeric" )
-		echo "<tr><td><div class=\"col-xs-12\"><input class=\"form-control\" size=\"20\" type=\"text\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" value=\"".htmlspecialchars($data)."\" /></div></td></tr>\n";
+		echo "<tr><td><div class=\"col-xs-12\"><input class=\"form-control\" size=\"20\" type=\"text\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" value=\"".htmlspecialchars((string) $data)."\" /></div></td></tr>\n";
 	else
 	{
 		echo "<tr><td><div class=\"col-xs-12\"><select class=\"form-control\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" size=\"1\">\n";
@@ -115,9 +115,9 @@ foreach ($overload_fields as $fieldname=>$fieldtype)
 		foreach ($overload_fields[$fieldname]["list"] as $value)
 		{
 			echo "<option ";
-			if (htmlspecialchars($data) == trim($value,"&") || ($data == "" && $value[0]=="&"))
+			if (htmlspecialchars((string) $data) == trim((string) $value,"&") || ($data == "" && $value[0]=="&"))
 				echo " selected=\"selected\"";
-			echo ">".trim($value,"&")."</option>\n";
+			echo ">".trim((string) $value,"&")."</option>\n";
 		}
 		echo "</select></div>\n</td></tr>\n";
 	}

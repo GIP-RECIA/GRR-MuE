@@ -1,4 +1,3 @@
-
 <?php
 /**
  * admin_confirm_change_date_bookings.php
@@ -34,14 +33,14 @@ $grr_script_name = "admin_confirm_change_date_bookings.php";
 
 $back = getBackUri();
 unset($display);
-$display = isset($_GET["display"]) ? $_GET["display"] : NULL;
+$display = $_GET["display"] ?? NULL;
 $day   = date("d");
 $month = date("m");
 $year  = date("Y");
 check_access(6, $back);
 
 if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
-	
+
 	if ($_GET['id_etablissement']) {
 
 		if (!Settings::setEtab("begin_bookings", $_GET['begin_bookings'])){
@@ -56,7 +55,7 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
 				JOIN ".TABLE_PREFIX."_j_site_area AS SA ON R.area_id = SA.id_area
 				JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.id_site 
 				WHERE ES.id_etablissement = " . $_GET['id_etablissement'];
-				
+
 			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_entry WHERE (end_time < ".Settings::get('begin_bookings').") AND id IN (".$sqlSelectEntry.$sqlJoin.")");
 			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_repeat WHERE end_date < ".Settings::get("begin_bookings").") AND id IN (".$sqlSelectRepeat.$sqlJoin.")");
 			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_entry_moderate WHERE (end_time < ".Settings::get('begin_bookings').") AND id IN (".$sqlSelectEntryModerate.$sqlJoin.")");
@@ -77,7 +76,7 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
         header("Location: ./admin_config_etablissement.php");
 
 	}else{
-		
+
 		if (!Settings::set("begin_bookings", $_GET['begin_bookings']))
 			echo "Erreur lors de l'enregistrement de begin_bookings !<br />";
 		else
@@ -102,7 +101,7 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
         header("Location: ./admin_config.php");
 
     }
-	
+
 	//header("Location: ./admin_config_etablissement.php");
 
 }

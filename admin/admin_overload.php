@@ -73,7 +73,7 @@ $res = grr_sql_query($sql);
 if (!$res)
 	fatal_error(0, grr_sql_error());
 
-$userdomain = array();
+$userdomain = [];
 if (grr_sql_count($res) != 0)
 {
 	for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
@@ -331,7 +331,7 @@ if ($action == "delete")
 				$html .= "<form method=\"post\" action=\"admin_overload.php\">\n";
 				$html .= "<div><input type=\"hidden\" name=\"id_overload\" value=\"$row[0]\" />\n";
 				$html .= "<input type=\"hidden\" name=\"action\" value=\"change\" />\n";
-				$html .= "<td><input type=\"text\" name=\"fieldname\" value=\"".htmlspecialchars($row[1])."\" /></td>\n";
+				$html .= "<td><input type=\"text\" name=\"fieldname\" value=\"".htmlspecialchars((string) $row[1])."\" /></td>\n";
 				$html .= "<td><select name=\"fieldtype\">\n";
 				$html .= "<option value=\"textarea\" ";
 				if ($row[2] =="textarea")
@@ -370,11 +370,11 @@ if ($action == "delete")
 				$html .= "<td><input type=\"submit\" value=\"".get_vocab('change')."\" /></td>";
 				if ($row[2] == "list") {
 					$html .= "<br />".get_vocab("Liste des champs").get_vocab("deux_points")."<br />";
-					$html .= "<input type=\"text\" name=\"fieldlist\" value=\"".htmlspecialchars($row[4])."\" size=\"50\" />";
+					$html .= "<input type=\"text\" name=\"fieldlist\" value=\"".htmlspecialchars((string) $row[4])."\" size=\"50\" />";
 				}
 				$html .= "</div></form></td>\n";
 				$html .= "<td><form method=\"post\" action=\"admin_overload.php\">\n";
-				$html .= "<div><input type=\"submit\" value=\"".get_vocab('del')."\" onclick=\"return confirmlink(this, '".addslashes(get_vocab("avertissement_suppression_champ_additionnel"))."', '".get_vocab("confirm_del")."')\" />\n";
+				$html .= "<div><input type=\"submit\" value=\"".get_vocab('del')."\" onclick=\"return confirmlink(this, '".addslashes((string) get_vocab("avertissement_suppression_champ_additionnel"))."', '".get_vocab("confirm_del")."')\" />\n";
 				$html .= "<input type=\"hidden\" name=\"id_overload\" value=\"$row[0]\" />\n";
 				$html .= "<input type=\"hidden\" name=\"action\" value=\"delete\" />\n";
 				$html .= "</div></form></td></tr>\n";

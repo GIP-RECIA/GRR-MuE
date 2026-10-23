@@ -49,10 +49,10 @@ if(authGetUserLevel(getUserName(),-1,'etab') < 6)
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
-$page_config = isset($_GET["page_config"]) ? $_GET["page_config"] : '1';
+$page_config = $_GET["page_config"] ?? '1';
 
 $config_global = false;
 

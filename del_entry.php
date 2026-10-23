@@ -44,7 +44,7 @@ if (!grr_resumeSession())
 	die();
 };
 include "include/language.inc.php";
-$series = isset($_GET["series"]) ? $_GET["series"] : NULL;
+$series = $_GET["series"] ?? NULL;
 if (isset($series))
 	settype($series,"integer");
 $page = verif_page();

@@ -58,22 +58,22 @@ $type_session = "no_session";
 header('Content-Type: text/html; charset=utf-8');
 echo begin_page(Settings::get("company"));
 echo "<div class=\"page_sans_col_gauche\">";
-$cible = isset($_POST["cible"]) ? $_POST["cible"] : (isset($_GET["cible"]) ? $_GET["cible"] : '');
-$cible = htmlentities($cible);
-$type_cible = isset($_POST["type_cible"]) ? $_POST["type_cible"] : (isset($_GET["type_cible"]) ? $_GET["type_cible"] : '');
+$cible = $_POST["cible"] ?? $_GET["cible"] ?? '';
+$cible = htmlentities((string) $cible);
+$type_cible = $_POST["type_cible"] ?? $_GET["type_cible"] ?? '';
 if ($type_cible != 'identifiant:non')
 	$type_cible = '';
-$action = isset($_POST["action"]) ? $_POST["action"] : '';
-$corps_message = isset($_POST["message"]) ? $_POST["message"] : '';
-$email_reponse = isset($_POST["email_reponse"]) ? $_POST["email_reponse"] : '';
+$action = $_POST["action"] ?? '';
+$corps_message = $_POST["message"] ?? '';
+$email_reponse = $_POST["email_reponse"] ?? '';
 $error_subject = 'n';
 if (isset($_POST["objet_message"]))
 {
-	$objet_message = trim($_POST["objet_message"]);
+	$objet_message = trim((string) $_POST["objet_message"]);
 	if ($objet_message == '')
 		$error_subject = 'y';
 }
-$casier = isset($_POST["casier"]) ? $_POST["casier"] : '';
+$casier = $_POST["casier"] ?? '';
 if ($error_subject == 'y')
 	$action='';
 echo "<h1>".get_vocab("Envoi d_un courriel")."</h1>";
@@ -109,10 +109,10 @@ switch ($action)
 		$user_email = grr_sql_query1("select email from ".TABLE_PREFIX."_utilisateurs where login='".getUserName()."'");
 		if (($user_email != "") && ($user_email != -1))
 			$message .= "Email du demandeur : ".$user_email."\n";
-		$message .= $vocab["statut"].preg_replace("/ /", " ",$vocab["deux_points"]).$_SESSION['statut']."\n";
+		$message .= $vocab["statut"].preg_replace("/ /", " ",(string) $vocab["deux_points"]).$_SESSION['statut']."\n";
 	}
-	$message .= $vocab["company"].preg_replace("/ /", " ",$vocab["deux_points"]).removeMailUnicode(Settings::get("company"))."\n";
-	$message .= $vocab["email"].preg_replace("/ /", " ",$vocab["deux_points"]).$email_reponse."\n";
+	$message .= $vocab["company"].preg_replace("/ /", " ",(string) $vocab["deux_points"]).removeMailUnicode(Settings::get("company"))."\n";
+	$message .= $vocab["email"].preg_replace("/ /", " ",(string) $vocab["deux_points"]).$email_reponse."\n";
 	$message.="\n".$corps_message."\n";
 	$sujet = $vocab["subject_mail1"]." - ".$objet_message;
 	require_once 'phpmailer/PHPMailerAutoload.php';

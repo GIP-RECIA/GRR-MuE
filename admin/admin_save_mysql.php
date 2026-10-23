@@ -89,7 +89,7 @@ function mysql_version()
 	if ($result != FALSE && mysqli_num_rows($result) > 0)
 	{
 		$row = mysqli_fetch_array($result);
-		$match = explode('.', $row['version']);
+		$match = explode('.', (string) $row['version']);
 	}
 	else
 	{
@@ -97,7 +97,7 @@ function mysql_version()
 		if ($result != FALSE && mysqli_num_rows($result) > 0)
 		{
 			$row = mysqli_fetch_row($result);
-			$match = explode('.', $row[1]);
+			$match = explode('.', (string) $row[1]);
 		}
 	}
 	if (!isset($match) || !isset($match[0]))
@@ -116,7 +116,7 @@ header('Content-Type: text/x-csv');
 header('Expires: ' . $now);
 if (isset($_SERVER['HTTP_USER_AGENT']))
 {
-	if (preg_match('`MSIE`', $_SERVER['HTTP_USER_AGENT']))
+	if (preg_match('`MSIE`', (string) $_SERVER['HTTP_USER_AGENT']))
 	{
 		header('Content-Disposition: inline; filename="' . $nomsql . '"');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -187,7 +187,7 @@ while ($j < count($liste_tables))
 					$lesDonnees = "";
 					for ($mp = 0; $mp < $num_fields; $mp++)
 					{
-						$lesDonnees .= "'" . mysqli_real_escape_string($GLOBALS['db_c'], $rowdata[$mp]) . "'";
+						$lesDonnees .= "'" . mysqli_real_escape_string($GLOBALS['db_c'], (string) $rowdata[$mp]) . "'";
 						//on ajoute à la fin une virgule si nécessaire
 						if ($mp<$num_fields-1)
 							$lesDonnees .= ", ";

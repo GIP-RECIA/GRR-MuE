@@ -31,7 +31,7 @@
 
 include_once "../include/admin.inc.php";
 $grr_script_name = "admin_admin_etablissement.php";
-$id = isset($_POST["id"]) ? $_POST["id"] : (isset($_GET["id"]) ? $_GET["id"] : NULL);
+$id = $_POST["id"] ?? $_GET["id"] ?? NULL;
 if (empty($id)) $id = get_default_etablissement();
 if (!isset($id)) settype($id,"integer");
 
@@ -42,7 +42,7 @@ if(authGetUserLevel(getUserName(),-1) < 6)
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
 if ($settings->get("module_multietablissement") != "Oui")
@@ -50,7 +50,7 @@ if ($settings->get("module_multietablissement") != "Oui")
     $day   = date("d");
     $month = date("m");
     $year  = date("Y");
-    showAccessDenied($day, $month, $year, '',$back);
+    showAccessDenied($day);
     exit();
 }
 
@@ -60,11 +60,11 @@ print_header('', '', '', $type = 'with_session');
 // Affichage de la colonne de gauche
 include_once "admin_col_gauche.php";
 
-$reg_admin_login = isset($_POST["reg_admin_login"]) ? $_POST["reg_admin_login"] : NULL;
-$reg_multi_admin_login = isset($_POST["reg_multi_admin_login"]) ? $_POST["reg_multi_admin_login"] : NULL;
+$reg_admin_login = $_POST["reg_admin_login"] ?? NULL;
+$reg_multi_admin_login = $_POST["reg_multi_admin_login"] ?? NULL;
 $test_user =  isset($_POST["reg_multi_admin_login"]) ? "multi" : (isset($_POST["reg_admin_login"]) ? "simple" : NULL);
 
-$action = isset($_GET["action"]) ? $_GET["action"] : NULL;
+$action = $_GET["action"] ?? NULL;
 $msg='';
 
 
@@ -114,7 +114,7 @@ if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 {
     $selected = ($row[0] == $id) ? "selected=\"selected\"" : "";
     $link = "admin_admin_etablissement.php?id=$row[0]";
-    $out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1])."</option>";
+    $out_html .= "<option $selected value=\"$link\">" . htmlspecialchars((string) $row[1])."</option>";
 }
 $out_html .= "</select>
 
@@ -168,7 +168,7 @@ if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
             $exist_admin='yes';
         }
         echo "<b>";
-        echo htmlspecialchars($row[1])." ".htmlspecialchars($row[2])."</b> | <a href='admin_admin_etablissement.php?action=del_admin&amp;login_admin=".urlencode($row[0])."&amp;id=$id'>".get_vocab("delete")."</a><br />";
+        echo htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])."</b> | <a href='admin_admin_etablissement.php?action=del_admin&amp;login_admin=".urlencode((string) $row[0])."&amp;id=$id'>".get_vocab("delete")."</a><br />";
     }
 }
 if ($exist_admin=='no') {
@@ -197,7 +197,7 @@ if ($res) for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
 <option value=''><?php echo get_vocab("nobody"); ?></option>
 <?php
 if ($listeUser) foreach ($listeUser as $row ) {
-	echo "<option value='$row[0]'>".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])."</option>";
+	echo "<option value='$row[0]'>".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])."</option>";
 }
 ?>
 </select>
@@ -218,7 +218,7 @@ if ($listeUser) foreach ($listeUser as $row ) {
 
     <?php
     if ($listeUser) foreach ($listeUser as $row ) {
-        echo "<option value=\"$row[0]\">".htmlspecialchars($row[1])." ".htmlspecialchars($row[2])." </option>\n";
+        echo "<option value=\"$row[0]\">".htmlspecialchars((string) $row[1])." ".htmlspecialchars((string) $row[2])." </option>\n";
     }
     ?>
 

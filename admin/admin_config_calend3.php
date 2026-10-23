@@ -61,11 +61,11 @@ function cal3($month, $year)
                 $jour = grr_sql_query1("SELECT Jours FROM ".TABLE_PREFIX."_calendrier_jours_cycle WHERE DAY='$temp'");
 				        if (intval($jour)>0) {
                   $alt=get_vocab('jour_cycle')." ".$jour;
-                  $jour=ucfirst(substr(get_vocab("rep_type_6"),0,1)).$jour;
+                  $jour=ucfirst(substr((string) get_vocab("rep_type_6"),0,1)).$jour;
                 } else {
                   $alt=get_vocab('jour_cycle').' '.$jour;
-                  if (strlen($jour)>5)
-                    $jour = substr($jour,0,3)."..";
+                  if (strlen((string) $jour)>5)
+                    $jour = substr((string) $jour,0,3)."..";
                 }
                 if (!isset($_GET["pview"]))
                     if (($day < 0))

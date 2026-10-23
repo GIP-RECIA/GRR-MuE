@@ -57,7 +57,7 @@ if (verif_version()){
 if (isset($_POST['login']) && isset($_POST['password'])){
 	
 	// Détruit toutes les variables de session au cas où une session existait auparavant
-	$_SESSION = array();
+	$_SESSION = [];
 	$result = grr_opensession($_POST['login'], unslashes($_POST['password']));
 	
 	// On écrit les données de session et ferme la session
@@ -111,12 +111,12 @@ if (isset($_POST['login']) && isset($_POST['password'])){
 	}
 	else{
 		if (isset($_POST['url'])){
-			$url=rawurldecode($_POST['url']);
+			$url=rawurldecode((string) $_POST['url']);
 			header("Location: ".$url);
 			die();
 		}
 		else{
-			header("Location: ./".htmlspecialchars_decode(page_accueil())."");
+			header("Location: ./".htmlspecialchars_decode((string) page_accueil())."");
 			die();
 		}
 	}
@@ -200,7 +200,7 @@ echo begin_page(get_vocab("mrbs").get_vocab("deux_points").Settings::get("compan
 			<?php
 			if (isset($_GET['url']))
 			{
-				$url = rawurlencode($_GET['url']);
+				$url = rawurlencode((string) $_GET['url']);
 				echo "<input type=\"hidden\" name=\"url\" value=\"".$url."\" />\n";
 			}
 			?>
@@ -224,7 +224,7 @@ echo begin_page(get_vocab("mrbs").get_vocab("deux_points").Settings::get("compan
 	<br />
 	<?php
 	echo "<br /><p class=\"small\"><a href=\"".$grr_devel_url."\">".get_vocab("mrbs")."</a> - ".get_vocab("grr_version").affiche_version();
-	$email = explode('@',$grr_devel_email);
+	$email = explode('@',(string) $grr_devel_email);
 	$person = $email[0];
 	$domain = $email[1];
 	echo "<br />".get_vocab("msg_login1")."<a href=\"".$grr_devel_url."\">".$grr_devel_url."</a>";

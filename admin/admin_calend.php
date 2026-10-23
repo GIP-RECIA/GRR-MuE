@@ -37,25 +37,25 @@ $back = getBackUri();
 check_access(4, $back);
 
 // Initialisation
-$etape = isset($_POST["etape"]) ? $_POST["etape"] : NULL;
-$areas = isset($_POST["areas"]) ? $_POST["areas"] : NULL;
-$rooms = isset($_POST["rooms"]) ? $_POST["rooms"] : NULL;
-$name = isset($_POST["name"]) ? $_POST["name"] : NULL;
-$beneficiaire = isset($_POST["beneficiaire"]) ? $_POST["beneficiaire"] : NULL;
-$description = isset($_POST["description"]) ? $_POST["description"] : NULL;
-$type_ = isset($_POST["type_"]) ? $_POST["type_"] : NULL;
-$type_resa = isset($_POST["type_resa"]) ? $_POST["type_resa"] : NULL;
-$hour = isset($_POST["hour"]) ? $_POST["hour"] : NULL;
+$etape = $_POST["etape"] ?? NULL;
+$areas = $_POST["areas"] ?? NULL;
+$rooms = $_POST["rooms"] ?? NULL;
+$name = $_POST["name"] ?? NULL;
+$beneficiaire = $_POST["beneficiaire"] ?? NULL;
+$description = $_POST["description"] ?? NULL;
+$type_ = $_POST["type_"] ?? NULL;
+$type_resa = $_POST["type_resa"] ?? NULL;
+$hour = $_POST["hour"] ?? NULL;
 settype($hour,"integer");
-$end_hour = isset($_POST["end_hour"]) ? $_POST["end_hour"] : NULL;
+$end_hour = $_POST["end_hour"] ?? NULL;
 settype($end_hour,"integer");
-$minute = isset($_POST["minute"]) ? $_POST["minute"] : NULL;
+$minute = $_POST["minute"] ?? NULL;
 settype($minute,"integer");
-$end_minute = isset($_POST["end_minute"]) ? $_POST["end_minute"] : NULL;
+$end_minute = $_POST["end_minute"] ?? NULL;
 settype($end_minute,"integer");
-$period = isset($_POST["period"]) ? $_POST["period"] : NULL;
-$end_period = isset($_POST["end_period"]) ? $_POST["end_period"] : NULL;
-$all_day = isset($_POST["all_day"]) ? $_POST["all_day"] : NULL;
+$period = $_POST["period"] ?? NULL;
+$end_period = $_POST["end_period"] ?? NULL;
+$all_day = $_POST["all_day"] ?? NULL;
 
 # print the page header
 print_header("", "", "", $type="with_session");
@@ -142,7 +142,7 @@ if (isset($_POST['record']) && ($_POST['record'] == 'yes')){
 										// Par sécurité, on teste quand même s'il reste des conflits
 										$err = mrbsCheckFree($row[0], $starttime, $endtime, 0,0);
 										if (!$err)
-											mrbsCreateSingleEntry($starttime, $endtime, 0, 0, $row[0], getUserName(), $beneficiaire, "", $name, $type_, $description, -1,array(),0,0,'-', 0, 0);
+											mrbsCreateSingleEntry($starttime, $endtime, 0, 0, $row[0], getUserName(), $beneficiaire, "", $name, $type_, $description, -1,[],0,0,'-', 0, 0);
 									}
 								}
 							}
@@ -403,15 +403,15 @@ else if ($etape == 2)
 		echo "</body></html>\n";
 		die();
 	}
-	
+
 	// Choix des ressources
 	echo "<form action=\"admin_calend.php\" method=\"post\" id=\"main\" onsubmit=\"return validate_and_submit();\">\n";
 	echo "<table border=\"0\">\n";
 	if ($type_resa == "resa"){
-		
-		echo "<tr><td class=\"CR\"><b>".ucfirst(trim(get_vocab("reservation au nom de"))).get_vocab("deux_points")."</b></td>\n\n";
+
+		echo "<tr><td class=\"CR\"><b>".ucfirst(trim((string) get_vocab("reservation au nom de"))).get_vocab("deux_points")."</b></td>\n\n";
 		echo "<td class=\"CL\"><select size=\"1\" name=\"beneficiaire\" class=\"form-control\">\n";
-		
+
 		if (Settings::get("module_multietablissement") == "Oui"  ){
 			$id_etablissement = getIdEtablissementCourant();
 			$sql = "SELECT DISTINCT U.login, U.nom, U.prenom FROM ".TABLE_PREFIX."_utilisateurs AS U
@@ -422,7 +422,7 @@ else if ($etape == 2)
 		} else{
 			$sql = "SELECT DISTINCT login, nom, prenom FROM ".TABLE_PREFIX."_utilisateurs WHERE  (etat!='inactif' and statut!='visiteur' ) order by nom, prenom";
 		}
-	  
+
 		$res = grr_sql_query($sql);
 		if ($res)
 		{
@@ -435,18 +435,18 @@ else if ($etape == 2)
 			}
 		}
 		echo "</select></td>\n</tr>\n";
-		
+
 		echo "<tr><td class=\"CR\"><b>".get_vocab("namebooker").get_vocab("deux_points")."</b></td>\n";
 		echo "<td class=\"CL\"><input class=\"form-control\" name=\"name\" size=\"40\" value=\"\" /></td></tr>";
 		echo "<tr><td class=\"TR\"><b>".get_vocab("fulldescription")."</b></td>\n";
 		echo "<td class=\"TL\"><textarea class=\"form-control\" name=\"description\" rows=\"8\" cols=\"40\" ></textarea></td></tr>";
 	}
-	
+
 	echo "<tr><td class=\"CR\"><b>".get_vocab("rooms").get_vocab("deux_points")."</b></td>\n";
 	echo "<td class=\"CL\" valign=\"top\"><table border=\"0\"><tr><td>";
 	echo "<select name=\"rooms[]\" multiple class=\"form-control\">";
 	foreach ( $areas as $area_id ){
-		
+
 		# then select the rooms in that area
 		$sql = "SELECT id, room_name FROM ".TABLE_PREFIX."_room WHERE area_id=$area_id ";
 		// tableau des ressources auxquelles l'utilisateur n'a pas accès
@@ -457,16 +457,16 @@ else if ($etape == 2)
 		$sql .= "order by order_display,room_name";
 		$res = grr_sql_query($sql);
 		if ($res){
-			
+
 			for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 				echo "<option value=\"".$row[0]."\">".$row[1]."</option>";
 		}
 	}
 	echo "</select></td><td>".get_vocab("ctrl_click")."</td></tr></table>\n";
 	echo "</td></tr>\n";
-	
+
 	if ($type_resa == "resa"){
-		
+
 		echo "<tr><td class=\"CR\"><b>".get_vocab("type").get_vocab("deux_points")."</b></td>\n";
 		echo "<td class=\"CL\"><select name=\"type_\" class=\"form-control\">\n";
 		echo "<option value='0'>".get_vocab("choose")."</option>\n";

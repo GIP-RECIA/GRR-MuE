@@ -70,13 +70,13 @@
      exit();
    }
    // Initialisation des variables du formulaire
-   if (!isset($id)) $id = isset($_POST['id']) ? $_POST['id'] :  NULL;
-   if (!isset($code)) $code = isset($_POST['code']) ? $_POST['code'] : NULL;
-   if (!isset($name)) $name = isset($_POST['name']) ? $_POST['name'] :  NULL;
-   if (!isset($shortname)) $shortname = isset($_POST['shortname']) ? $_POST['shortname'] :  NULL;
-   if (!isset($ville)) $ville = isset($_POST['ville']) ? $_POST['ville'] :  NULL;
-   if (!isset($codepostal)) $codepostal = isset($_POST['codepostal']) ? $_POST['codepostal'] :  NULL;
-   if (!isset($adresse)) $adresse = isset($_POST['adresse']) ? $_POST['adresse'] :  NULL;
+   if (!isset($id)) $id = $_POST['id'] ?? NULL;
+   if (!isset($code)) $code = $_POST['code'] ?? NULL;
+   if (!isset($name)) $name = $_POST['name'] ?? NULL;
+   if (!isset($shortname)) $shortname = $_POST['shortname'] ?? NULL;
+   if (!isset($ville)) $ville = $_POST['ville'] ?? NULL;
+   if (!isset($codepostal)) $codepostal = $_POST['codepostal'] ?? NULL;
+   if (!isset($adresse)) $adresse = $_POST['adresse'] ?? NULL;
    
 
    // On affiche le formulaire de saisie quand l'appel de la fonction ne provient pas de la validation de ce m�me formulaire
@@ -121,7 +121,7 @@
      if ((isset($_POST['save']) and ($_POST['save']!='no')) or ((isset($_GET['save'])) and ($_GET['save']!='no')))
      {
      	$sql="INSERT INTO ".TABLE_PREFIX."_etablissement
-       			SET code='".strtoupper(protect_data_sql($code))."',
+       			SET code='".strtoupper((string) protect_data_sql($code))."',
        			shortname='".protect_data_sql($shortname)."',
        			name='".protect_data_sql($name)."',
        			ville='".protect_data_sql($ville)."',
@@ -132,7 +132,7 @@
      	$etablissement = grr_sql_insert_id();
      	
      	$sql="INSERT INTO ".TABLE_PREFIX."_site
-                  		SET sitecode='".strtoupper(protect_data_sql($code))."',
+                  		SET sitecode='".strtoupper((string) protect_data_sql($code))."',
                   			sitename='".protect_data_sql($shortname)."'";
      	if (grr_sql_command($sql) < 0)
 	     	fatal_error(0,'<p>'.grr_sql_error().'</p>');
@@ -256,7 +256,7 @@
      $ville = $row['ville'];
      $adresse = $row['adresse'];
      $codepostal = $row['codepostal'];
-     
+
      // Affichage des titres de la page
      echo '      <h2>'.get_vocab('modifier etablissement').'</h2>';
      echo '
@@ -267,7 +267,7 @@
      } else {
 	     echo '<tr><td>'.get_vocab('etab_code').'&nbsp;*</td><td><input type="text" name="code" value="'.$code.'" size="20" title="'.get_vocab('etab_code').'" /></td></tr>';
      }
-     
+
      echo '<tr><td>'.get_vocab('etab_name').'&nbsp;*</td><td><input type="text" name="name" value="'.$name.'" size="50" title="'.get_vocab('etab_name').'" /></td></tr>
           <tr><td>'.get_vocab('etab_shortName').'&nbsp;*</td><td><input type="text" name="shortname" value="'.$shortname.'" size="30" title="'.get_vocab('etab_shortName').'" /></td></tr>
           <tr><td>'.get_vocab('etab_ville').'</td><td><input type="text" name="ville" value="'.$ville.'" size="50" title="'.get_vocab('etab_ville').'" /></td></tr>
@@ -285,13 +285,13 @@
    // Sinon, il faut valider le formulaire
    } else {
      $msg ='';
-     if (!isset($id)) $id = isset($_POST['id']) ? $_POST['id'] :  NULL;
-   if (!isset($code)) $code = isset($_POST['code']) ? $_POST['code'] : NULL;
-   if (!isset($name)) $name = isset($_POST['name']) ? $_POST['name'] :  NULL;
-   if (!isset($shortname)) $shortname = isset($_POST['shortname']) ? $_POST['shortname'] :  NULL;
-   if (!isset($ville)) $ville = isset($_POST['ville']) ? $_POST['ville'] :  NULL;
-   if (!isset($codepostal)) $codepostal = isset($_POST['codepostal']) ? $_POST['codepostal'] :  NULL;
-   if (!isset($adresse)) $adresse = isset($_POST['adresse']) ? $_POST['adresse'] :  NULL;
+     if (!isset($id)) $id = $_POST['id'] ?? NULL;
+   if (!isset($code)) $code = $_POST['code'] ?? NULL;
+   if (!isset($name)) $name = $_POST['name'] ?? NULL;
+   if (!isset($shortname)) $shortname = $_POST['shortname'] ?? NULL;
+   if (!isset($ville)) $ville = $_POST['ville'] ?? NULL;
+   if (!isset($codepostal)) $codepostal = $_POST['codepostal'] ?? NULL;
+   if (!isset($adresse)) $adresse = $_POST['adresse'] ?? NULL;
 
      // On v�rifie que le code et le nom du site ont �t� renseign�s
       if ( (($code=='' or $code==NULL ) AND $desactive_edition_code_etablissement == 0) or $name=='' or $name==NULL)
@@ -310,7 +310,7 @@
          $sql="update ".TABLE_PREFIX."_etablissement
        		SET ";
          if ($desactive_edition_code_etablissement == 0)  {
-	       	 $sql .="code='".strtoupper(protect_data_sql($code))."',";
+	       	 $sql .="code='".strtoupper((string) protect_data_sql($code))."',";
          }
          $sql .= "		shortname='".protect_data_sql($shortname)."',
             			name='".protect_data_sql($name)."',
@@ -375,7 +375,7 @@
    $day   = date('d');
    $month = date('m');
    $year  = date('Y');
-   showAccessDenied($day,$month,$year,'',$back);
+   showAccessDenied($day);
    exit();
  }
 
@@ -395,32 +395,20 @@
    $msg = '';
 
  // Lecture des param�tres pass�s � la page
- $id = isset($_POST['id']) ? $_POST['id'] : (isset($_GET['id']) ? $_GET['id'] : NULL);
- $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : NULL);
+ $id = $_POST['id'] ?? $_GET['id'] ?? NULL;
+ $action = $_POST['action'] ?? $_GET['action'] ?? NULL;
 
  if ($action == NULL)
    $action='read';
 
  // SWITCH sur l'action (CRUD)
- switch($action)
- {
-   case 'create':
-     create_etablissement($id);
-   break;
-   case 'update':
-     update_etablissement($id);
-   break;
-   case 'delete':
-     delete_etablissement($id);
-   break;
-   case 'right':
-     check_right($id);
-   break;
-   case 'read':
-   default:
-      read_etablissement();
-   break;
- }
+ match ($action) {
+     'create' => create_etablissement($id),
+     'update' => update_etablissement($id),
+     'delete' => delete_etablissement($id),
+     'right' => check_right($id),
+     default => read_etablissement(),
+ };
 // fin de l'affichage de la colonne de droite
 //echo "</td></tr></table>\n";
 echo '</div></div>';

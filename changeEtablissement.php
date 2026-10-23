@@ -28,7 +28,7 @@ if (!grr_resumeSession()) {
 };
 
 if (isset($_POST['etablissement']) ) {
-	$tabSplit = explode("=", $_POST['etablissement']);
+	$tabSplit = explode("=", (string) $_POST['etablissement']);
 	$_SESSION['current_etablisement']= $tabSplit[1];
 
 }
@@ -36,6 +36,6 @@ if (isset($_POST['etablissement']) ) {
 if (isset($_GET['code_etablissement']) ) {
 	$_SESSION['current_etablisement']=  $_GET['code_etablissement'];
 }
-header("Location: ".htmlspecialchars_decode(page_accueil())."");
+header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 
 ?>

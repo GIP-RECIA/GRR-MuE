@@ -23,69 +23,69 @@ bouton_retour_haut();
 bouton_aller_bas();
 ?>
 	<script>
-	
+
 		function remplirdureemin(res)
 		  { 
-		  
+
 				frmContact.dureemin.options.length = 0;
 				frmContact.debdureemin.options.length = 0;
 				resmin = res/60;
 				nbiteration = 60/resmin;
-				
+
 				var y= document.getElementById("debdureemin");
 				var x = document.getElementById("dureemin");
 				valeur = 0;
-				
+
 				for (i=0;i<nbiteration;i++){
 					frmContact.dureemin.options[i] = document.createElement("option");
 					frmContact.debdureemin.options[i] = document.createElement("option");
-					
+
 					if(i==0){
 						valeur = 00;
 					}else{
 						valeur = valeur + resmin;
 					}
-					
+
 						frmContact.dureemin.options[i].text = valeur +" min";
 						frmContact.dureemin.options[i].value = valeur;
 						x.add(frmContact.dureemin.options[i]);
-					
+
 						frmContact.debdureemin.options[i].text = valeur +" min";
 						frmContact.debdureemin.options[i].value = valeur;
 						y.add(frmContact.debdureemin.options[i]);
-					
+
 					}
-		
+
 				frmContact.dureemin.options.selectedIndex = 0;
 			}
 	</script>
-	
-	
-	
+
+
+
 	<form id="frmContact" method="post" action="traitementcontact.php">
 	<div id="formContact">
 		<div class="row">
-			
+
 			<fieldset>
-				
+
 				<legend><b>Vos coordonnées</b></legend>
-					
+
 				<div class="col-lg-6 col-md-6 col-xs-6">
-					
+
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
 							<input class="form-control" type="text" id="nom"  size="8" name="nom" placeholder="Votre nom" required/>
 						</div>
 					</div>
-						
+
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
 							<input class="form-control" type="text" size="8" id="prenom"  name="prenom" placeholder="Votre prénom" />
 						</div>
 					</div>
-					
+
 				</div>
 				<div class="col-lg-6 col-md-6 col-xs-6">
 					<div class="form-group">
@@ -94,7 +94,7 @@ bouton_aller_bas();
 							<input class="form-control" type="text" id="email" size="8" name="email" placeholder="Votre adresse de courriel" required />
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon"><span class="glyphicon glyphicon-earphone"></span></div>
@@ -102,19 +102,19 @@ bouton_aller_bas();
 						</div>
 					</div>
 				</div>
-				
+
 		</fieldset>
 	</div>
-				
+
 	<div class="row">
 
 				<fieldset>
 					<legend><b>Réservation</b></legend>
 					<label for="subject">Sujet :</label>
 					<textarea class="form-control" id="subject" name="sujet" cols="30" rows="4"></textarea><br/>
-					
-					
-					
+
+
+
 						<label>Domaines : </label>
 						<select id="area" name="area" class="form-control" required>
 							<option>SELECTIONNER UN DOMAINE </option>
@@ -146,13 +146,13 @@ bouton_aller_bas();
 									echo '<option onclick="" value="'.$id."/".$resolution_area.'"> '.$area_name.'</option>'.PHP_EOL;
 								}
 							}
-							
+
 							?>
 						</select>
-						
-							
-						
-						
+
+
+
+
 						<script>
 							$(document).ready(function()
 							{
@@ -165,7 +165,7 @@ bouton_aller_bas();
 									var value = values.split('/');
 									var id = value[0] ;
 									var resolution = value[1] ;
-									
+
 									remplirdureemin(resolution);
 									//~ remplirdebdureemin(resolution);
 									if (id != '')
@@ -197,14 +197,14 @@ bouton_aller_bas();
 								<option>SELECTIONNER UN DOMAINE </option>
 							</select>
 				</fieldset>
-				
+
 		</div>
-				
-				
+
+
 		<div class="row">	
-				
+
 				<br>
-				
+
 				<legend><b> Date :</b></legend>
 				<fieldset>
 
@@ -221,18 +221,18 @@ bouton_aller_bas();
 							}
 							echo "</select>";
 							echo " <select id = 'debdureemin' class =\"test\" name=\"minutes\"> </select>";
-						
-					
+
+
 						//~ jQuery_TimePicker('start_','','','');
 						?>
-								
+
 							<input class="form-control" type="text" id="duree" size="8" name="duree" placeholder="Durée en heure" />
-								
+
 							<select id="dureemin" name="dureemin" class="form-control">
 
 								<option> </option>
 								<option> </option>
-								
+
 							</select>
 
 			</fieldset>
@@ -250,11 +250,11 @@ bouton_aller_bas();
 	<?php echo get_vocab('top_of_page'); ?>
 	</div>
 
-	
+
 	<div id="toBot">
 	<?php echo get_vocab('bot_of_page'); ?>
 	</div>
-	
+
 	<script>
 	jQuery(document).ready(function() {
 	jQuery("#formStep").validate({
@@ -271,7 +271,7 @@ jQuery.extend(jQuery.validator.messages, {
 	email: "votre message",
 });
 </script>
-	
+
 </div>
 </form>
 

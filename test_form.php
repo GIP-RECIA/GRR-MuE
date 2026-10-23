@@ -72,7 +72,7 @@ var_dump($_POST);
 			$(function () {
 				$('.datepicker').datetimepicker({
 					language:'fr',
-					defaultDate: "<?= strftime("%d/%m/%Y",time()); ?>",
+					defaultDate: "<?= grr_strftime("%d/%m/%Y",time()); ?>",
 					pickTime: false
 				});
 			});

@@ -315,11 +315,11 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 							}
 						}
 						// Convertir depuis UTF-8 (jeu de caracteres par defaut)
-						if ((function_exists("utf8_decode")) && (Settings::get("ConvertLdapUtf8toIso") == "y")){
+						if (Settings::get("ConvertLdapUtf8toIso") == "y") {
 
-							$l_email = mb_convert_encoding($l_email, 'ISO-8859-1');
-							$l_nom = mb_convert_encoding($l_nom, 'ISO-8859-1');
-							$l_prenom = mb_convert_encoding($l_prenom, 'ISO-8859-1');
+							$l_email = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $l_email);
+							$l_nom = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $l_nom);
+							$l_prenom = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $l_prenom);
 						}
 					}
 					$nom_user = $l_nom;
@@ -505,9 +505,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 			// Lire les infos sur l'utilisateur depuis LDAP
 			$user_info = grr_getinfo_ldap($user_dn,$_login,$_password);
 			// Update GRR database
-			$user_info[0] = mb_convert_encoding($user_info[0], 'UTF-8', 'ISO-8859-1');
-			$user_info[1] = mb_convert_encoding($user_info[1], 'UTF-8', 'ISO-8859-1');
-			$user_info[2] = mb_convert_encoding($user_info[2], 'UTF-8', 'ISO-8859-1');
+			$user_info[0] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $user_info[0]);
+			$user_info[1] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $user_info[1]);
+			$user_info[2] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $user_info[2]);
 			$sql2 = "UPDATE ".TABLE_PREFIX."_utilisateurs SET
 			nom='".protect_data_sql($user_info[0])."',
 			prenom='".protect_data_sql($user_info[1])."',
@@ -530,9 +530,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 				return "3";
 			else
 			{
-				$user_info[0] = mb_convert_encoding($user_info[0], 'UTF-8', 'ISO-8859-1');
-				$user_info[1] = mb_convert_encoding($user_info[1], 'UTF-8', 'ISO-8859-1');
-				$user_info[2] = mb_convert_encoding($user_info[2], 'UTF-8', 'ISO-8859-1');
+				$user_info[0] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $user_info[0]);
+				$user_info[1] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $user_info[1]);
+				$user_info[2] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $user_info[2]);
 
 				// On insère le nouvel utilisateur
 				$sql = "INSERT INTO ".TABLE_PREFIX."_utilisateurs SET
@@ -1138,7 +1138,7 @@ function grr_verif_ldap($_login, $_password){
 
 function grr_connect_ldap($l_adresse,$l_port,$l_login,$l_pwd, $use_tls, $msg_error = "no"){
 
-	$ds = @ldap_connect("{$l_adresse}:{$l_port}");
+	$ds = @ldap_connect('ldap://' . $l_adresse . ':' . $l_port);
 	if ($ds)
 	{
 			 // On dit qu'on utilise LDAP V3, sinon la V2 par défaut est utilisé et le bind ne passe pas.
@@ -1374,9 +1374,9 @@ function grr_getinfo_ldap($_dn, $_login, $_password){
 	// Convertir depuis UTF-8 (jeu de caracteres par defaut)
 	if ((function_exists("utf8_decode")) and (Settings::get("ConvertLdapUtf8toIso") == "y"))
 	{
-		$l_email = mb_convert_encoding($l_email, 'ISO-8859-1');
-		$l_nom = mb_convert_encoding($l_nom, 'ISO-8859-1');
-		$l_prenom = mb_convert_encoding($l_prenom, 'ISO-8859-1');
+		$l_email = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $l_email);
+		$l_nom = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $l_nom);
+		$l_prenom = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $l_prenom);
 	}
 	// Return infos
 	return [$l_nom, $l_prenom, $l_email];

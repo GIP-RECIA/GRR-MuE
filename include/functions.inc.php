@@ -123,7 +123,7 @@ function cal($month, $year)
 	$s = "";
 	$daysInMonth = getDaysInMonth($month, $year);
 	$date = mktime(12, 0, 0, $month, 1, $year);
-	$first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
+	$first = (grr_strftime("%w",$date) + 7 - $weekstarts) % 7;
 	$monthName = ucfirst(utf8_strftime("%B", $date));
 
 	$s .= '<table class="table calendar2">'.PHP_EOL;
@@ -603,7 +603,7 @@ function plages_libre_semaine_ressource($id_room, $month_week, $day_week, $year_
 	// LDAP attributs
  	$members_attr = ["memberUid"];
 		// Avec des GroupOfNames, ce ne serait pas ça.
- 	$ds = @ldap_connect("{$ldap_adresse}:{$ldap_port}");
+	$ds = @ldap_connect('ldap://' . $ldap_adresse . ':' . $ldap_port);
  	if ($ds)
  	{
  		$r = @ldap_bind ($ds);
@@ -734,16 +734,9 @@ function heure_ete_hiver($type, $annee, $heure)
 	return $debut;
 }
 
-# Remove backslash-escape quoting if PHP is configured to do it with
-# magic_quotes_gpc. Use this whenever you need the actual value of a GET/POST
-# form parameter (which might have special characters) regardless of PHP's
-# magic_quotes_gpc setting.
 function unslashes($s)
 {
-	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc())
-		return stripslashes((string) $s);
-	else
-		return $s;
+	return $s;
 }
 
 // Corrige les caracteres degoutants utilises par les Windozeries
@@ -758,9 +751,6 @@ function corriger_caracteres($texte)
 function protect_data_sql($_value)
 {
 	global $use_function_mysql_real_escape_string;
-	//if (get_magic_quotes_gpc())
-	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc())
-		$_value = stripslashes((string) $_value);
 	if (!is_numeric($_value))
 	{
 		if (isset($use_function_mysql_real_escape_string) && ($use_function_mysql_real_escape_string==0))
@@ -1687,10 +1677,10 @@ function genDateSelectorForm($prefix, $day, $month, $year, $option)
 	}
 	$selector_data .=  "</select>";
 	$selector_data .=  "<select name=\"{$prefix}year\" id=\"{$prefix}year\">\n";
-	$min = strftime("%Y", Settings::get("begin_bookings"));
+	$min = grr_strftime("%Y", Settings::get("begin_bookings"));
 	if ($option == "more_years")
 		$min = date("Y") - $nb_year_calendar;
-	$max = strftime("%Y", Settings::get("end_bookings"));
+	$max = grr_strftime("%Y", Settings::get("end_bookings"));
 	if ($option == "more_years")
 		$max = date("Y") + $nb_year_calendar;
 	for($i = $min; $i <= $max; $i++)
@@ -1888,12 +1878,12 @@ function get_default_etablissement()
  */
 function day_name($daynumber)
 {
-	return mb_convert_encoding(strftime("%A", mktime(0, 0, 0, 1, 2 + $daynumber, 2000)), 'UTF-8', 'ISO-8859-1');
+	return grr_strftime("%A", mktime(0, 0, 0, 1, 2 + $daynumber, 2000));
 }
 
 function day_short_name($daynumber)
 {
-	return mb_convert_encoding(strftime("%a", mktime(0, 0, 0, 1, 2 + $daynumber, 2000)), 'UTF-8', 'ISO-8859-1');
+	return grr_strftime("%a", mktime(0, 0, 0, 1, 2 + $daynumber, 2000));
 }
 
 function affiche_heure_creneau($t,$resolution)
@@ -2929,7 +2919,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = [])
 	$area_name    				= removeMailUnicode(htmlspecialchars((string) $row[4]));
 	$room_id      				= $row[6];
 	$repeat_id    				= $row[7];
-	$date_avis    				= strftime("%Y/%m/%d", $row[10]);
+	$date_avis    				= grr_strftime("%Y/%m/%d", $row[10]);
 	$delais_option_reservation 	= $row[13];
 	$option_reservation 		= $row[14];
 	$moderate 					= $row[15];
@@ -2954,7 +2944,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = [])
 		{
 			$row2 = grr_sql_row($res, 0);
 			$rep_type     = $row2[0];
-			$rep_end_date = strftime($dformat,$row2[1]);
+			$rep_end_date = grr_strftime($dformat,$row2[1]);
 			$rep_opt      = $row2[2];
 			$rep_num_weeks = $row2[3];
 		}
@@ -4258,7 +4248,7 @@ function describe_span($starts, $ends, $dformat)
 		$ampm = date("a",$starts);
 		$timeformat = "%I:%M$ampm";
 	}
-	$start_time = strftime($timeformat, $starts);
+	$start_time = grr_strftime($timeformat, $starts);
 	$duration = $ends - $starts;
 	if ($start_time == "00:00:00" && $duration == 60 * 60 * 24)
 		return $start_date . " - " . get_vocab("all_day");

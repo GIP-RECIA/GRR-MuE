@@ -65,6 +65,12 @@ phpCAS::setCasServerCACert($serveurSSOPathCA);
 if (isset($Url_CAS_setFixedServiceURL) && ($Url_CAS_setFixedServiceURL != ''))
   phpCAS::setFixedServiceURL($Url_CAS_setFixedServiceURL);
 
+if (isset($cas_logout_rebroadcast_nodes) && is_array($cas_logout_rebroadcast_nodes)) {
+  foreach ($cas_logout_rebroadcast_nodes as $node) {
+    phpCAS::addRebroadcastNode($node);
+  }
+}
+
 phpCAS::handleLogoutRequests(true, $serveurSSOProxy);
 
 if (phpCAS::checkAuthentication()){

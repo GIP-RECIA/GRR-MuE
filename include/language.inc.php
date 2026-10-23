@@ -130,7 +130,7 @@ function test_utf8($str)
     else {
         // retourne TRUE
         // si la chaine decoder et encoder est egale a elle meme
-        return (mb_convert_encoding(mb_convert_encoding($str, 'ISO-8859-1'), 'UTF-8', 'ISO-8859-1') == $str);
+         return preg_match('//u', $str) === 1;
     }    
 }
 
@@ -151,7 +151,7 @@ function utf8_convert($string)
 	}
 
 	if (!test_utf8($string)){
-		return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+		return iconv('ISO-8859-1', 'UTF-8//IGNORE', $string);
 	} else{
 		return $string;
 	}
@@ -161,8 +161,7 @@ function utf8_convert($string)
  */
 function utf8_strftime($format, $time)
 {
-	$result = strftime($format, $time);
-	return utf8_convert($result);
+	return grr_strftime($format, $time);
 }
 # A map is needed to convert from the HTTP language specifier to a
 # locale specifier for Windows

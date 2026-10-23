@@ -16,8 +16,20 @@ $cas_service_base_urls=array(
   'https://formations-sociales.netocentre.fr',
   'https://ent.recia.fr',
 );
-/* Set all proxies that are authorized to send a logout request */
-$serveurSSOProxy=array();
+/* Hosts authorized to send CAS single logout requests. */
+$serveurSSOProxy=array(
+  'ha1.giprecia.net',
+  'ha2.giprecia.net',
+  'php-node1.giprecia.net',
+  'php-node2.giprecia.net',
+  'php-node5.giprecia.net',
+);
+/* Nodes that receive rebroadcast CAS logout requests. */
+$cas_logout_rebroadcast_nodes=array(
+  'http://php-node1.giprecia.net',
+  'http://php-node2.giprecia.net',
+  'http://php-node5.giprecia.net',
+);
 /* Uncomment this line to enable phpCAS debug log and set the file path to use */
 //$serveurSSODebugFile='/tmp/phpcas_grr2.log';
 /* Set the path to the CA cert used for the CAS server */

@@ -189,8 +189,7 @@ if (isset($_GET['smtp_port']))
 // Si Email test renseigné on y envois un mail
 if (isset($_GET['mail_test']) && !empty($_GET['mail_test']))
     {
-    	require_once '../include/mail.class.php';
-    	require_once '../phpmailer/PHPMailerAutoload.php';
+		require_once '../include/mail.class.php';
     	Email::Envois($_GET['mail_test'], 'Votre GRR', "Ceci est un test depuis l'administration de votre GRR.<br>Le mail est arrivée à destination.", Settings::get('grr_mail_from'), '', '');
     }
 if (isset($_GET['ok']))

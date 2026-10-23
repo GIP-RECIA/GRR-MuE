@@ -2871,10 +2871,8 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = [])
 	// $action = 7 -> Notification d'un retard dans la restitution d'une ressource.
 
 	if (@file_exists('include/mail.class.php')){
-		require_once 'phpmailer/PHPMailerAutoload.php';
 		require_once 'include/mail.class.php';
 	}else{
-		require_once '../phpmailer/PHPMailerAutoload.php';
 		require_once '../include/mail.class.php';
 	}
 

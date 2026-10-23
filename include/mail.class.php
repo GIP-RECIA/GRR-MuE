@@ -29,6 +29,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 class Email{
 
     public static function Envois ($A, $sujet, $message, $DE, $cc1='', $cc2='') {
@@ -41,7 +43,7 @@ class Email{
             $smtpsecure	= Settings::get('smtp_secure');
             $port		= Settings::get('smtp_port');
 
-            $mail = new PHPMailer;
+            $mail = new \PHPMailer\PHPMailer\PHPMailer();
             $mail->CharSet = 'UTF-8';
 
             $mail->SMTPDebug = 0;
@@ -70,7 +72,7 @@ class Email{
                 if (Settings::get("grr_mail_Bcc") == "y"){
                     $mail->addCC($lesDestinataires[$i]);
                 } else{
-                    $mail->AddAddress($lesDestinataires[$i]);
+                    $mail->addAddress($lesDestinataires[$i]);
                 }
             }
 

@@ -56,14 +56,7 @@ ini_set('session.cookie_httponly', true);
 $session = new Session();
 
 // On précise les méthodes à employer pour les sessions
-session_set_save_handler(
-	array($session, 'open'),
-	array($session, 'close'),
-	array($session, 'read'),
-	array($session, 'write'),
-	array($session, 'destroy'),
-	array($session, 'gc')
-);
+session_set_save_handler($session, true);
 
 /**
  * Open a new session
@@ -1438,7 +1431,7 @@ function getBackUri()
  *
  * @author Aurore
  */
-class Session{
+class Session implements SessionHandlerInterface {
 
 	public $session_time = 7200;//2 heures
 	public $session = array();
@@ -1449,14 +1442,14 @@ class Session{
 	}
 
 	//pour l'ouverture
-	public function open(){
+	public function open($save_path, $session_name): bool {
 
 		$this->gc();//on appelle la fonction gc
 		return true;
 	}
 
 	//lecture
-	public function read ($sid){
+	public function read($sid): string {
 
 	    $sid = session_id();
 
@@ -1466,12 +1459,12 @@ class Session{
 		$query = grr_sql_query($sql) or exit(grr_sql_error());
 		$data = mysqli_fetch_array($query);
 
-		if(empty($data)) return FALSE;
+		if(empty($data)) return '';
 		else return $data['sess_datas'];//on retourne la valeur de sess_datas
 	}
 
 	//écriture
-	public function write ($sid, $data){
+	public function write($sid, $data): bool {
 
 		// si $GLOBALS['db_c] n'est pas défini, on le redéfinit
 		if(!isset($GLOBALS['db_c'])){
@@ -1509,11 +1502,11 @@ class Session{
 		}
 		$query = grr_sql_query($sql) or exit(grr_sql_error());
 
-		return $query;
+		return (bool)$query;
 	}
 
 	//fermeture
-	public function close(){
+	public function close(): bool {
 
 		return true;
 		//if ($this->connect){
@@ -1522,24 +1515,24 @@ class Session{
 	}
 
 	//destruction
-	public function destroy ($sid){
+	public function destroy($sid): bool {
 
 	 $sid = session_id();
 		$sql = "DELETE FROM ".TABLE_PREFIX."_session
 				WHERE sess_id = '$sid' ";//on supprime la session de la bdd
 		$query = grr_sql_query($sql) or exit(grr_sql_error());
-		return $query;
+		return (bool)$query;
 	}
 
 	//nettoyage
-	public function gc (){
+	public function gc($max_lifetime): int {
 
 		$sql = "DELETE FROM ".TABLE_PREFIX."_session
 				WHERE sess_expire < ".time(); //on supprime les vieilles sessions
 
 		$query = grr_sql_query($sql) or exit(grr_sql_error());
 
-		return $query;
+		return $query ? mysqli_affected_rows($GLOBALS['db_c']) : 0;
 	}
 
 }//fin de la classe

@@ -27,6 +27,7 @@
  * along with GRR; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+mysqli_report(MYSQLI_REPORT_ERROR);
 if (empty($db_nopersist))
 	$GLOBALS['db_c'] = @mysqli_connect('p:'.$dbHost, $dbUser, $dbPass, $dbPort);
 else

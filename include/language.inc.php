@@ -130,7 +130,7 @@ function test_utf8($str)
     else {
         // retourne TRUE
         // si la chaine decoder et encoder est egale a elle meme
-        return (utf8_encode(utf8_decode($str)) == $str);
+        return (mb_convert_encoding(mb_convert_encoding($str, 'ISO-8859-1'), 'UTF-8', 'ISO-8859-1') == $str);
     }    
 }
 
@@ -146,12 +146,12 @@ function utf8_convert($string)
 	{
 		if ($winlocale_codepage_map[$windows_locale])
 		{
-			$string = iconv($winlocale_codepage_map[$windows_locale],"utf-8",$string);
+			$string = iconv((string) $winlocale_codepage_map[$windows_locale],"utf-8",$string);
 		}
 	}
 
 	if (!test_utf8($string)){
-		return utf8_encode($string);
+		return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
 	} else{
 		return $string;
 	}
@@ -166,109 +166,10 @@ function utf8_strftime($format, $time)
 }
 # A map is needed to convert from the HTTP language specifier to a
 # locale specifier for Windows
-$lang_map_windows = array
-(
-	'cs' => 'csy',
-	'cs-cs' => 'csy',
-	'cs-cz' => 'csy',
-	'cz' => 'csy',
-	'cz-cz' => 'csy',
-	'da' => 'dan',
-	'da-da' => 'dan',
-	'de' => 'deu',
-	'de-at' => 'dea',
-	'de-ch' => 'des',
-	'de-de' => 'deu',
-	'el' => 'ell',
-	'el-el' => 'ell',
-	'el-gr' => 'ell',
-	'en' => 'eng',
-	'en-au' => 'ena',
-	'en-ca' => 'enc',
-	'en-en' => 'eng',
-	'en-ie' => 'eng',
-	'en-nz' => 'enz',
-	'en-gb' => 'eng',
-	'en-us' => 'usa',
-	'es' => 'esp',
-	'es-es' => 'esp',
-	'es-mx' => 'esm',
-	'fi' => 'fin',
-	'fi-fi' => 'fin',
-	'fr' => 'fra',
-	'fr-be' => 'frb',
-	'fr-ca' => 'frc',
-	'fr-ch' => 'frs',
-	'fr-fr' => 'fra',
-	'it' => 'ita',
-	'it-ch' => 'its',
-	'it-it' => 'its',
-	'ja' => 'jpn',
-	'ja-ja' => 'jpn',
-	'ja-jp' => 'jpn',
-	'ko' => 'kor',
-	'ko-ko' => 'kor',
-	'ko-kr' => 'kor',
-	'nl' => 'nld',
-	'nl-be' => 'nlb',
-	'nl-nl' => 'nld',
-	'no' => 'norwegian',
-	'no-no' => 'norwegian',
-	'nb' => 'nor',
-	'nb-nb' => 'nor',
-	'nn' => 'non',
-	'nn-nn' => 'non',
-	'pl' => 'plk',
-	'pl-pl' => 'plk',
-	'pt' => 'ptg',
-	'pt-br' => 'ptb',
-	'pt-pt' => 'ptg',
-	'sv' => 'sve',
-	'sv-se' => 'sve',
-	'sv-sv' => 'sve',
-	'zh' => 'chinese',
-	'zh-tw' => 'cht',
-	'zh-cn' => 'chs',
-	'zh-hk' => 'cht',
-	'zh-sg' => 'cht',
-	'zh-zh' => 'chinese',
-	);
+$lang_map_windows = ['cs' => 'csy', 'cs-cs' => 'csy', 'cs-cz' => 'csy', 'cz' => 'csy', 'cz-cz' => 'csy', 'da' => 'dan', 'da-da' => 'dan', 'de' => 'deu', 'de-at' => 'dea', 'de-ch' => 'des', 'de-de' => 'deu', 'el' => 'ell', 'el-el' => 'ell', 'el-gr' => 'ell', 'en' => 'eng', 'en-au' => 'ena', 'en-ca' => 'enc', 'en-en' => 'eng', 'en-ie' => 'eng', 'en-nz' => 'enz', 'en-gb' => 'eng', 'en-us' => 'usa', 'es' => 'esp', 'es-es' => 'esp', 'es-mx' => 'esm', 'fi' => 'fin', 'fi-fi' => 'fin', 'fr' => 'fra', 'fr-be' => 'frb', 'fr-ca' => 'frc', 'fr-ch' => 'frs', 'fr-fr' => 'fra', 'it' => 'ita', 'it-ch' => 'its', 'it-it' => 'its', 'ja' => 'jpn', 'ja-ja' => 'jpn', 'ja-jp' => 'jpn', 'ko' => 'kor', 'ko-ko' => 'kor', 'ko-kr' => 'kor', 'nl' => 'nld', 'nl-be' => 'nlb', 'nl-nl' => 'nld', 'no' => 'norwegian', 'no-no' => 'norwegian', 'nb' => 'nor', 'nb-nb' => 'nor', 'nn' => 'non', 'nn-nn' => 'non', 'pl' => 'plk', 'pl-pl' => 'plk', 'pt' => 'ptg', 'pt-br' => 'ptb', 'pt-pt' => 'ptg', 'sv' => 'sve', 'sv-se' => 'sve', 'sv-sv' => 'sve', 'zh' => 'chinese', 'zh-tw' => 'cht', 'zh-cn' => 'chs', 'zh-hk' => 'cht', 'zh-sg' => 'cht', 'zh-zh' => 'chinese'];
 # This maps a Windows locale to the charset it uses, which are
 # all Windows code pages
-$winlocale_codepage_map = array
-(
-	'chs' => 'CP936',
-	'cht' => 'CP950',
-	'csy' => 'CP1250',
-	'dan' => 'CP1252',
-	'dea' => 'CP1252',
-	'des' => 'CP1252',
-	'deu' => 'CP1252',
-	'ell' => 'CP1253',
-	'ena' => 'CP1252',
-	'enc' => 'CP1252',
-	'eng' => 'CP1252',
-	'enz' => 'CP1252',
-	'esm' => 'CP1252',
-	'esp' => 'CP1252',
-	'fin' => 'CP1252',
-	'fra' => 'CP1252',
-	'frb' => 'CP1252',
-	'frc' => 'CP1252',
-	'frs' => 'CP1252',
-	'ita' => 'CP1252',
-	'its' => 'CP1252',
-	'jpn' => 'CP932',
-	'kor' => 'CP949',
-	'nlb' => 'CP1252',
-	'nld' => 'CP1252',
-	'norwegian' => 'CP1252',
-	'ptb' => 'CP1252',
-	'ptg' => 'CP1252',
-	'plk' => 'CP1250',
-	'sve' => 'CP1252',
-	'usa' => 'CP1252'
-	);
+$winlocale_codepage_map = ['chs' => 'CP936', 'cht' => 'CP950', 'csy' => 'CP1250', 'dan' => 'CP1252', 'dea' => 'CP1252', 'des' => 'CP1252', 'deu' => 'CP1252', 'ell' => 'CP1253', 'ena' => 'CP1252', 'enc' => 'CP1252', 'eng' => 'CP1252', 'enz' => 'CP1252', 'esm' => 'CP1252', 'esp' => 'CP1252', 'fin' => 'CP1252', 'fra' => 'CP1252', 'frb' => 'CP1252', 'frc' => 'CP1252', 'frs' => 'CP1252', 'ita' => 'CP1252', 'its' => 'CP1252', 'jpn' => 'CP932', 'kor' => 'CP949', 'nlb' => 'CP1252', 'nld' => 'CP1252', 'norwegian' => 'CP1252', 'ptb' => 'CP1252', 'ptg' => 'CP1252', 'plk' => 'CP1250', 'sve' => 'CP1252', 'usa' => 'CP1252'];
 // Cas particulier de la langue française
 // Si la langue française est choisie et que setlocale(LC_TIME,'fr') renvoie false
 // On essaye d'autres possibilités
@@ -400,7 +301,7 @@ function get_vocab($tag)
 	} else {
 		if ($unicode_encoding)
 		{
-			return iconv($charset_html,"utf-8",$vocab[$tag]);
+			return iconv((string) $charset_html,"utf-8",(string) $vocab[$tag]);
 		}
 		else
 		{

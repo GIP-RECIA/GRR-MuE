@@ -5,7 +5,7 @@ include "include/config.inc.php";
 include "include/misc.inc.php";
 include "include/$dbsys.inc.php";
 include "include/mrbs_sql.inc.php";
-include "phpmailer/class.phpmailer.php";
+require_once __DIR__ . '/vendor/autoload.php';
 
 $grr_script_name = "week_all.php";
 // Settings
@@ -77,10 +77,9 @@ if($mail_method =='mail'){
 	}		
 
 }else{
-	require 'phpmailer/PHPMailerAutoload.php';
 	define("GRR_FROM",Settings::get("grr_mail_from"));
 	define("GRR_FROMNAME",Settings::get("grr_mail_fromname"));
-	$mail = new PHPMailer();
+	$mail = new \PHPMailer\PHPMailer\PHPMailer();
 	$mail->isSMTP();
 	$mail->SMTPDebug = 0;
 	$mail->Debugoutput = 'html';
@@ -89,15 +88,15 @@ if($mail_method =='mail'){
 	$mail->SMTPAuth = false;
 	$mail->CharSet = 'UTF-8';
 	$mail->setFrom(GRR_FROM, GRR_FROMNAME);
-	$mail->SetLanguage("fr", "./phpmailer/language/");
+	$mail->setLanguage('fr');
 	setlocale(LC_ALL, $locale);
 
 	$sujet ="Réservation d'une ressource";
-	$mail->AddAddress($mail_destinataire);
+	$mail->addAddress($mail_destinataire);
 	$mail->Subject = $sujet;
-	$mail->MsgHTML($mail_corps);
-	$mail->AddReplyTo( $email_reponse );
-	if (!$mail->Send())
+	$mail->msgHTML($mail_corps);
+	$mail->addReplyTo($email_reponse);
+	if (!$mail->send())
 		{
 			$message_erreur .= $mail->ErrorInfo;
 			echo $message_erreur;

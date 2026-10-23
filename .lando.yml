@@ -2,7 +2,7 @@ name: grr-mue
 recipe: lamp
 config:
   webroot: .
-  php: '8.3'
+  php: '8.5'
   database: mariadb:10.11
   via: apache
 

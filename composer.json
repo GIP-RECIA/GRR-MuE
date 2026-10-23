@@ -8,9 +8,6 @@
     "apereo/phpcas": "^1.6.2",
     "phpmailer/phpmailer": "^6.9"
   },
-  "require-dev": {
-    "rector/rector": "^1.2"
-  },
   "config": {
     "sort-packages": true,
     "platform": {

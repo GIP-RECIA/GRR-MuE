@@ -57,14 +57,7 @@ ini_set('session.cookie_httponly', true);
 $session = new Session();
 
 // On précise les méthodes à employer pour les sessions
-session_set_save_handler(
-	$session->open(...),
-	$session->close(...),
-	$session->read(...),
-	$session->write(...),
-	$session->destroy(...),
-	$session->gc(...)
-);
+session_set_save_handler($session, true);
 
 /**
  * Open a new session

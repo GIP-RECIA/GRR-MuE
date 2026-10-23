@@ -50,7 +50,7 @@ $back = getBackUri();
 print_header("", "", "", $type="with_session");
 //include "admin/admin_col_gauche.php";
 echo '<div class="col-md-12 col-md-12 col-xs-12 coldroite_admin blocBlanc colPadding">';
-$out = demandeModeration($user);
+$out = demandeModeration(getUserName());
 if(count($out) == 0){
     echo '<h2>Aucune demande de moderation</h2>';
 }

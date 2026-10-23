@@ -9,6 +9,10 @@ config:
 services:
   appserver:
     xdebug: true
+    build_as_root:
+      - apt-get update && apt-get install -y locales
+      - echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen
+      - locale-gen
     overrides:
       environment:
         PHP_INI_memory_limit: '256M'

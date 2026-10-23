@@ -65,6 +65,19 @@ $correct_diff_time_local_serveur=0;
 */
 #putenv("TZ=posix/Etc/GMT-7");
 
+/*
+ * Paramètres régionaux de cette instance. Utilisez des identifiants IANA pour
+ * le fuseau et BCP 47 pour la locale, par exemple Indian/Reunion et fr-FR.
+ */
+$grr_timezone = 'Europe/Paris';
+$grr_locale = 'fr-FR';
+
+if (!extension_loaded('intl')) {
+	throw new RuntimeException('L\'extension PHP intl est requise par GRR.');
+}
+
+date_default_timezone_set($grr_timezone);
+
 # Changement d'heure été<->hiver
 # $correct_heure_ete_hiver = 1 => GRR prend en compte les changements d'heure
 # $correct_heure_ete_hiver = 0 => GRR ne prend en compte les changements d'heure

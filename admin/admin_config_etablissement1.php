@@ -305,9 +305,9 @@ echo "<hr /><h3>".get_vocab("title_begin_end_bookings")."</h3>\n";
 <table border='0'>
 <tr><td><?php echo get_vocab("begin_bookings"); ?></td><td>
 <?php
-$bday = strftime("%d", Settings::getEtab("begin_bookings"));
-$bmonth = strftime("%m", Settings::getEtab("begin_bookings"));
-$byear = strftime("%Y", Settings::getEtab("begin_bookings"));
+$bday = grr_strftime("%d", Settings::getEtab("begin_bookings"));
+$bmonth = grr_strftime("%m", Settings::getEtab("begin_bookings"));
+$byear = grr_strftime("%Y", Settings::getEtab("begin_bookings"));
 genDateSelector("begin_", $bday, $bmonth, $byear,"more_years") ?>
 </td>
 <td>&nbsp;</td>
@@ -320,9 +320,9 @@ genDateSelector("begin_", $bday, $bmonth, $byear,"more_years") ?>
 <table border='0'>
 <tr><td><?php echo get_vocab("end_bookings"); ?></td><td>
 <?php
-$eday = strftime("%d", Settings::getEtab("end_bookings"));
-$emonth = strftime("%m", Settings::getEtab("end_bookings"));
-$eyear= strftime("%Y", Settings::getEtab("end_bookings"));
+$eday = grr_strftime("%d", Settings::getEtab("end_bookings"));
+$emonth = grr_strftime("%m", Settings::getEtab("end_bookings"));
+$eyear= grr_strftime("%Y", Settings::getEtab("end_bookings"));
 genDateSelector("end_",$eday,$emonth,$eyear,"more_years") ?>
 </td>
 </tr>

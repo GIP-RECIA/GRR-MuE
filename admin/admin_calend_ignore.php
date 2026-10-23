@@ -51,7 +51,7 @@ function calEtab($month, $year)
     $s = "";
     $daysInMonth = getDaysInMonth($month, $year);
     $date = mktime(12, 0, 0, $month, 1, $year);
-    $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
+    $first = (grr_strftime("%w",$date) + 7 - $weekstarts) % 7;
     $monthName = utf8_strftime("%B",$date);
     $s .= "<table class=\"calendar2\" border=\"1\" cellspacing=\"3\">\n";
     $s .= "<tr>\n";
@@ -109,8 +109,8 @@ if (isset($_POST['record']) && ($_POST['record'] == 'yes')){
 	$day_old = array();
 	$end_bookings = Settings::get("end_bookings");
 	$n = Settings::get("begin_bookings");
-	$month = strftime("%m", Settings::get("begin_bookings"));
-	$year = strftime("%Y", Settings::get("begin_bookings"));
+	$month = grr_strftime("%m", Settings::get("begin_bookings"));
+	$year = grr_strftime("%Y", Settings::get("begin_bookings"));
 	$day = 1;
 	
 	// On met de côté toutes les dates
@@ -208,8 +208,8 @@ echo "<table cellspacing=\"20\">\n";
 $n = Settings::get("begin_bookings");
 $end_bookings = Settings::get("end_bookings");
 $debligne = 1;
-$month = utf8_encode(strftime("%m", Settings::get("begin_bookings")));
-$year = strftime("%Y", Settings::get("begin_bookings"));
+$month = grr_strftime("%m", Settings::get("begin_bookings"));
+$year = grr_strftime("%Y", Settings::get("begin_bookings"));
 $inc = 0;
 while ($n <= $end_bookings)
 {

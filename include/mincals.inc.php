@@ -240,7 +240,7 @@ function minicals($year, $month, $day, $area, $room, $dmy){
 			$daysInMonth = $this->getDaysInMonth($this->month, $this->year);
 			// Calcul de la date au 1er du mois de la date courante
 			$date = mktime(12, 0, 0, $this->month, 1, $this->year);
-			$first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
+			$first = (grr_strftime("%w",$date) + 7 - $weekstarts) % 7;
 			$monthName = ucfirst(utf8_strftime("%B", $date));
 			$s .= "\n<table class=\"calendar\">\n";
 			$s .= "<caption>";

@@ -91,8 +91,8 @@ if (isset($_POST['record']) && ($_POST['record'] == 'yes')){
 				{
 					get_planning_area_values($area_id);
 					$n = Settings::get("begin_bookings");
-					$month = strftime("%m", Settings::get("begin_bookings"));
-					$year = strftime("%Y", Settings::get("begin_bookings"));
+					$month = grr_strftime("%m", Settings::get("begin_bookings"));
+					$year = grr_strftime("%Y", Settings::get("begin_bookings"));
 					$day = 1;
 					while ($n <= $end_bookings)
 					{
@@ -288,8 +288,8 @@ if ($etape == 3)
 	$n = Settings::get("begin_bookings");
 	$end_bookings = Settings::get("end_bookings");
 	$debligne = 1;
-	$month = strftime("%m", Settings::get("begin_bookings"));
-	$year = strftime("%Y", Settings::get("begin_bookings"));
+	$month = grr_strftime("%m", Settings::get("begin_bookings"));
+	$year = grr_strftime("%Y", Settings::get("begin_bookings"));
 	$inc = 0;
 	while ($n <= $end_bookings)
 	{

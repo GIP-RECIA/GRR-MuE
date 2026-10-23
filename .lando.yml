@@ -16,8 +16,12 @@ services:
     overrides:
       ports:
         - "3306:3306"
-
+  mailpit:
+    type: mailpit
 tooling:
   mysql-import:
     service: database
     description: Importer un dump SQL dans la base grr
+proxy:
+  mailpit:
+    - mailpit-grr-mue.lndo.site

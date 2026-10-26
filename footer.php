@@ -18,7 +18,7 @@
 
 	// Ajout pour le r-footer
 	echo '<r-footer domain="'.$_SERVER['HTTP_HOST'].'"';
-	echo '    template-api-url="/commun/portal_template_api.tpl.json"';
+	echo '    template-api-url="/commun/portal_template_api.tpl.json" >';
 	echo '</r-footer>';
 ?>
 

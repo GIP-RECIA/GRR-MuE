@@ -16,10 +16,10 @@
 	}
 
 
-	// Ajout pour le extended-uportal-footer
-	echo '<extended-uportal-footer domain="'.$_SERVER['HTTP_HOST'].'"';
-	echo '    template-api-path="/commun/portal_template_api.tpl.json"';
-	echo '</extended-uportal-footer>';
+	// Ajout pour le r-footer
+	echo '<r-footer domain="'.$_SERVER['HTTP_HOST'].'"';
+	echo '    template-api-url="/commun/portal_template_api.tpl.json"';
+	echo '</r-footer>';
 ?>
 
 </div>

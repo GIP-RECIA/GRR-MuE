@@ -851,7 +851,7 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
  */
 function forceEtablissementInSession($codeEtablissement){
 	//Verifier à minima la présence de l'établissement cibler
-	$sql = "select 1 from ".TABLE_PREFIX."_etablissement WHERE code = '$codeEtablissement'";
+	$sql = "select 1 from ".TABLE_PREFIX."_etablissement WHERE code = '".protect_data_sql($codeEtablissement)."'";
 	$res = grr_sql_query($sql);
 
 	if($res && grr_sql_count($res)> 0 ){

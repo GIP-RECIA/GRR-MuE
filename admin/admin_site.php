@@ -410,7 +410,7 @@ function share_site($id_site,$id_etab){
 			} 
 			if ((isset($_POST['save']) and ($_POST['save']!='no')) or ((isset($_GET['save'])) and ($_GET['save']!='no'))){
 				//Vérification de na non existance du partage
-				$sql_verif = "SELECT id_site FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_site = '".$id_site."' AND id_etablissement = '".$id_etab."'";
+				$sql_verif = "SELECT id_site FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_site = '".protect_data_sql($id_site)."' AND id_etablissement = '".protect_data_sql($id_etab)."'";
 				$res_verif = grr_sql_query($sql_verif);
 				$nb_site_verif = grr_sql_count($res_verif);
 				if ($nb_site_verif <> 0){
@@ -446,7 +446,7 @@ function delete_share($id_site,$id_etab){
 		} else {
 			if ($_GET['confirm']=='yes') {
 				//if ($id_site=='' or $id_site=='-1' or $id_etab=='' or $id_etab=='-1')
-				$sql = "DELETE FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_site = '".$id_site."' AND id_etablissement = '".$id_etab."'";
+				$sql = "DELETE FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_site = '".protect_data_sql($id_site)."' AND id_etablissement = '".protect_data_sql($id_etab)."'";
 				if (grr_sql_command($sql) < 0) {fatal_error(0,'<p>'.grr_sql_error().'</p>');}
 			}
 			// On affiche le tableau des sites
@@ -593,7 +593,7 @@ function update_site($id)
 			if ($_GET['confirm'] == 'yes')
 			{
 				grr_sql_command("delete from ".TABLE_PREFIX."_site where id='".$_GET['id']."'");
-				grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_site where id_site='".$_GET['id']."'");
+				grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_site where id_site='".protect_data_sql($_GET['id'])."'");
 				grr_sql_command("delete from ".TABLE_PREFIX."_j_site_area where id_site='".$_GET['id']."'");
 				grr_sql_command("delete from ".TABLE_PREFIX."_j_useradmin_site where id_site='".$_GET['id']."'");
 				grr_sql_command("update ".TABLE_PREFIX."_utilisateurs set default_site = '-1' where default_site='".$_GET['id']."'");

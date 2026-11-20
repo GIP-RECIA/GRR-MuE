@@ -116,9 +116,9 @@ if($area_name == -1){
     die();
     //admin_room.php?id_site=
 }
-$etablisement_name = grr_sql_query1("SELECT name FROM ".TABLE_PREFIX."_etablissement WHERE id='".$idEtablissement."'");
+$etablissement_name = grr_sql_query1("SELECT name FROM ".TABLE_PREFIX."_etablissement WHERE id='".$idEtablissement."'");
 echo "<div>";
-echo "<h2>".get_vocab('admin_type_area.php').get_vocab('deux_points').$etablisement_name."</h2>";
+echo "<h2>".get_vocab('admin_type_area.php').get_vocab('deux_points').$etablissement_name."</h2>";
 echo "<h2>".get_vocab("match_area").get_vocab('deux_points')." ".$area_name."</h2>";
 $res = grr_sql_query($sql);
 $nb_lignes = grr_sql_count($res);

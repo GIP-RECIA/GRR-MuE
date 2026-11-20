@@ -140,7 +140,7 @@ if ($_GET['type']=="site") {
 	
 	if (isset($_GET["id_etab"])) {
 		$id_etab = $_GET["id_etab"];
-		settype($id_site,"integer");
+		settype($id_etab,"integer");
 	} else die();
 	if (isset($_GET["default_site"])) {
 		$default_site= $_GET["default_site"];
@@ -235,7 +235,7 @@ if ($_GET['type']=="domaine") {
 	} else die();
 	if (isset($_GET["id_etab"])) {
 		$id_etab = $_GET["id_etab"];
-		settype($id_site,"integer");
+		settype($id_etab,"integer");
 	} else die();
 	if (isset($_GET["default_area"])) {
 		$default_area = $_GET["default_area"];

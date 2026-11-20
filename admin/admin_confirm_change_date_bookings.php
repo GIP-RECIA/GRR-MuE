@@ -53,13 +53,13 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
 			$sqlSelectEntryModerate = "SELECT id FROM ".TABLE_PREFIX."_entry_moderate AS E ";
 			$sqlJoin = "JOIN ".TABLE_PREFIX."_room AS R on R.id = E.room_id
 				JOIN ".TABLE_PREFIX."_j_site_area AS SA ON R.area_id = SA.id_area
-				JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.id_site 
-				WHERE ES.id_etablissement = " . $_GET['id_etablissement'];
+				JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.id_site
+				WHERE ES.id_etablissement = " . (int)$_GET['id_etablissement'];
 
 			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_entry WHERE (end_time < ".Settings::get('begin_bookings').") AND id IN (".$sqlSelectEntry.$sqlJoin.")");
 			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_repeat WHERE end_date < ".Settings::get("begin_bookings").") AND id IN (".$sqlSelectRepeat.$sqlJoin.")");
 			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_entry_moderate WHERE (end_time < ".Settings::get('begin_bookings').") AND id IN (".$sqlSelectEntryModerate.$sqlJoin.")");
-			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_j_etablissement_calendar WHERE DAY < ".Settings::get("begin_bookings")."AND id_etablissement = " . $_GET['id_etablissement']);
+			$del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_j_etablissement_calendar WHERE DAY < ".Settings::get("begin_bookings")."AND id_etablissement = " . (int)$_GET['id_etablissement']);
 		}
 
         if (!Settings::setEtab("end_bookings", $_GET['end_bookings'])) {
@@ -68,7 +68,7 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
             $del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_entry WHERE (start_time > ".Settings::get('end_bookings').") AND id IN (".$sqlSelectEntry.$sqlJoin.")");
             $del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_repeat WHERE ( start_time > ".Settings::get("end_bookings").") AND id IN (".$sqlSelectRepeat.$sqlJoin.")");
             $del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_entry_moderate WHERE (start_time > ".Settings::get('end_bookings').") AND id IN (".$sqlSelectEntryModerate.$sqlJoin.")");
-            $del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_j_etablissement_calendar WHERE DAY > ".Settings::get("end_bookings") ."AND id_etablissement = " . $_GET['id_etablissement']);
+            $del = grr_sql_query("DELETE FROM ".TABLE_PREFIX."_j_etablissement_calendar WHERE DAY > ".Settings::get("end_bookings") ."AND id_etablissement = " . (int)$_GET['id_etablissement']);
 
         }
 
@@ -115,7 +115,7 @@ else if (isset($_GET['valid']) && ($_GET['valid'] == "no")){
 
 
 if (isset($_GET['id_etablissement'])) {
-	$idEtablissement = $_GET['id_etablissement'];
+	$idEtablissement = (int)$_GET['id_etablissement'];
 } else {
 	$idEtablissement = 0;
 }

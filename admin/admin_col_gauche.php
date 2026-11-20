@@ -54,6 +54,16 @@
 function affichetableau($liste,$titre=''){
 
 	global $chaine, $vocab;
+
+	// Fichiers déplacés dans MuE/admin/ : href différent, mais $key reste le nom nu
+	// pour que get_vocab($key) et la détection de page active ($chaine == $key) continuent de marcher.
+	$cheminsDeplaces = [
+		'admin_etablissement.php' => '../MuE/admin/admin_etablissement.php',
+		'admin_admin_etablissement.php' => '../MuE/admin/admin_admin_etablissement.php',
+		'admin_type_etablissement.php' => '../MuE/admin/admin_type_etablissement.php',
+		'admin_config_etablissement.php' => '../MuE/admin/config/admin_config_etablissement.php',
+	];
+
 	if (count($liste) > 0){
 
 
@@ -63,10 +73,11 @@ function affichetableau($liste,$titre=''){
 
 		foreach ($liste as $key){
 
+			$href = $cheminsDeplaces[$key] ?? $key;
 			if ($chaine == $key)
-				echo '<li class="active"><a href="'.$key.'">'.get_vocab($key).'</a></li>';
+				echo '<li class="active"><a href="'.$href.'">'.get_vocab($key).'</a></li>';
 			else
-				echo '<li><a href="'.$key.'">'.get_vocab($key).'</a></li>';
+				echo '<li><a href="'.$href.'">'.get_vocab($key).'</a></li>';
 			$k++;
 		}
 

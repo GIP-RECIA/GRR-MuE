@@ -85,10 +85,10 @@ if (isset($_GET['ok'])) {
 }
 
 // Affichage de la colonne de gauche
-include_once "admin_col_gauche.php";
+include_once "../../../admin/admin_col_gauche.php";
 
 // Affichage du tableau de choix des sous-configuration
-include_once "../include/admin_config_tableau.inc.php";
+include_once "../../../include/admin_config_tableau.inc.php";
 
 //
 // Configurations du nombre de jours par Cycle et du premier jour du premier Jours/Cycles

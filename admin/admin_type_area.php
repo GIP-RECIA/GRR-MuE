@@ -131,7 +131,7 @@ echo "<form action=\"admin_type_area.php\" id=\"type\" method=\"get\">\n";
 echo "<table>";
 if (authGetUserLevel(getUserName(),-1) >= 7)
     echo "<tr><td><a href=\"admin_type_modify.php?id=0\">".get_vocab("display_add_type_general")."</a></td></tr>";
-echo "<tr><td><a href=\"admin_type_etablissement_modify.php?id=0\">".get_vocab("display_add_type_etablissement")."</a></td></tr>";
+echo "<tr><td><a href=\"../MuE/admin/admin_type_etablissement_modify.php?id=0\">".get_vocab("display_add_type_etablissement")."</a></td></tr>";
 echo "<tr><td>".get_vocab("explications_active_type")."</td></tr>";
 echo "<tr><td>\n";
 // Affichage du tableau

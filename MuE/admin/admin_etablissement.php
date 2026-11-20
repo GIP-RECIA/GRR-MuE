@@ -30,7 +30,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//include_once "../include/misc.inc.php";
+//include_once "../../include/misc.inc.php";
 
 /**
  * Compte le nombre d'�tablissement d�finis
@@ -359,8 +359,8 @@
  }
 
 // Debut de l'affichage de la page
- include_once('../include/admin.inc.php');
- include_once('../include/misc.inc.php');
+ include_once('../../include/admin.inc.php');
+ include_once('../../include/misc.inc.php');
  
  $grr_script_name = 'admin_etablissement.php';
 
@@ -384,7 +384,7 @@
  print_header('', '', '', $type = 'with_session');
  
  // Affichage de la colonne de gauche
- include_once('admin_col_gauche.php');
+ include_once('../../admin/admin_col_gauche.php');
 
  if ((isset($_GET['msg'])) and isset($_SESSION['displ_msg'])  and ($_SESSION['displ_msg']=='yes') )
  {

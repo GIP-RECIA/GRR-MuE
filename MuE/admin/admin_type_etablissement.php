@@ -28,7 +28,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-include_once "../include/admin.inc.php";
+include_once "../../include/admin.inc.php";
 $grr_script_name = "admin_type_etablissement.php";
 
 // Initialisation
@@ -54,7 +54,7 @@ else
 //print_header("","","","",$type="with_session", $page="admin");
 print_header('', '', '', $type = 'with_session');
 // Affichage de la colonne de gauche
-include_once('admin_col_gauche.php');
+include_once('../../admin/admin_col_gauche.php');
 
 
 

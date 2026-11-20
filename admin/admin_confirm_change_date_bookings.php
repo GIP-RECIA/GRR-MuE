@@ -73,7 +73,7 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
         }
 
         //si nous somme dans un réglage d'établissement, on redirige sur la config de celui ci
-        header("Location: ./admin_config_etablissement.php");
+        header("Location: ../MuE/admin/config/admin_config_etablissement.php");
 
 	}else{
 
@@ -102,12 +102,12 @@ if (isset($_GET['valid']) && ($_GET['valid'] == "yes")){
 
     }
 
-	//header("Location: ./admin_config_etablissement.php");
+	//header("Location: ../MuE/admin/config/admin_config_etablissement.php");
 
 }
 else if (isset($_GET['valid']) && ($_GET['valid'] == "no")){
     if ($_GET['id_etablissement']) {
-        header("Location: ./admin_config_etablissement.php");
+        header("Location: ../MuE/admin/config/admin_config_etablissement.php");
     }else{
         header("Location: ./admin_config.php");
     }

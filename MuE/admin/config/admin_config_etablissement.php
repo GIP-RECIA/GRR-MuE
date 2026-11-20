@@ -38,7 +38,7 @@
  *
  */
 
-include_once "../include/admin.inc.php";
+include_once "../../../include/admin.inc.php";
 $grr_script_name = "admin_config_etablissement.php";
 $back = getBackUri();
 
@@ -56,11 +56,10 @@ $page_config = $_GET["page_config"] ?? '1';
 
 $config_global = false;
 
-if ($page_config == 1) include_once "./admin_config_etablissement1.php";
-else if ($page_config == 2) include_once "./admin_config_etablissement2.php";
-else if ($page_config == 3) include_once "./admin_config_etablissement3.php";
-else if ($page_config == 4) include_once "./admin_config_etablissement4.php";
-else if ($page_config == 5) include_once "./admin_config_etablissement5.php"; // pour la configuration des jours/cycles
+if ($page_config == 1) include_once "admin_config_etablissement1.php";
+else if ($page_config == 2) include_once "admin_config_etablissement2.php";
+else if ($page_config == 3) include_once "admin_config_etablissement3.php";
+else if ($page_config == 5) include_once "admin_config_etablissement5.php"; // pour la configuration des jours/cycles
 else die();
 
 ?>

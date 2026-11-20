@@ -50,7 +50,7 @@
  *
  */
 
-include_once "../include/admin.inc.php";
+include_once "../../include/admin.inc.php";
 $grr_script_name = "admin_type_etablissement_modify.php";
 $ok = NULL;
 $back = getBackUri();
@@ -184,7 +184,7 @@ if (isset($_GET['change_type'])) {
 
 # print the page header
     print_header("","","","");
-	include "admin_col_gauche.php";
+	include "../../admin/admin_col_gauche.php";
 	
 	
     affiche_pop_up($msg,"admin");

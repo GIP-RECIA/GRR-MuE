@@ -29,7 +29,7 @@
  */
 
 
-include_once "../include/admin.inc.php";
+include_once "../../include/admin.inc.php";
 $grr_script_name = "admin_admin_etablissement.php";
 $id = $_POST["id"] ?? $_GET["id"] ?? NULL;
 if (empty($id)) $id = get_default_etablissement();
@@ -58,7 +58,7 @@ if ($settings->get("module_multietablissement") != "Oui")
 //print_header("","","","",$type="with_session", $page="admin");
 print_header('', '', '', $type = 'with_session');
 // Affichage de la colonne de gauche
-include_once "admin_col_gauche.php";
+include_once "../../admin/admin_col_gauche.php";
 
 $reg_admin_login = $_POST["reg_admin_login"] ?? NULL;
 $reg_multi_admin_login = $_POST["reg_multi_admin_login"] ?? NULL;

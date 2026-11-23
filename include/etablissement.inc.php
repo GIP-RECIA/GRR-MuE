@@ -14,6 +14,27 @@ function get_default_etablissement()
 	return $res;
 }
 
+/**
+ * Requête des sites de l'établissement courant.
+ *
+ * Partagée par make_site_list_html() et make_site_item_html() - leur branche
+ * "module multiétablissement actif" construisait exactement la même requête.
+ * (make_site_select_html() a une logique différente - elle ajoute un JOIN
+ * établissement à une requête déjà jointe à j_site_area plutôt que de
+ * remplacer toute la requête - pas unifiée ici volontairement.)
+ *
+ * @return string
+ */
+function buildEtablissementSitesSql()
+{
+	$idEtablissement = getIdEtablissementCourant();
+	return "SELECT S.id,S.sitename
+			 FROM ".TABLE_PREFIX."_site AS S
+			 JOIN ".TABLE_PREFIX."_j_etablissement_site AS J ON S.id = J.id_site
+			 WHERE J.id_etablissement = $idEtablissement
+			 ORDER BY sitename";
+}
+
 
 
 /**

@@ -15,6 +15,45 @@ function get_default_etablissement()
 }
 
 /**
+ * Indique si $user a le droit de basculer sur l'établissement $codeEtablissement.
+ *
+ * Reproduit la logique déjà correcte de getCompanyNameForBandeau() (qui
+ * construit le menu de changement d'établissement) : administrateur GRR ou
+ * mode "etablissement_open" -> tous les établissements ; sinon uniquement
+ * ceux où l'utilisateur est inscrit via grr_j_user_etablissement ou
+ * grr_j_useradmin_etablissement. Comblait une faille dans
+ * changeEtablissement.php qui acceptait n'importe quel code sans vérifier
+ * l'accès - voir "GRR-MuE - inventaire couche établissement.md".
+ */
+function userCanAccessEtablissement($user, $codeEtablissement)
+{
+	if ($codeEtablissement === '' || $codeEtablissement === null) {
+		return false;
+	}
+
+	if (Settings::get("etablissement_open") == 1) {
+		return true;
+	}
+
+	$sql = "SELECT statut FROM ".TABLE_PREFIX."_utilisateurs WHERE login='".protect_data_sql($user)."'";
+	$res = grr_sql_query($sql);
+	if ($res && grr_sql_count($res) > 0) {
+		$row = grr_sql_row($res, 0);
+		if ($row[0] == 'administrateur') {
+			return true;
+		}
+	}
+
+	$sql = "SELECT 1 FROM ".TABLE_PREFIX."_etablissement E
+			LEFT JOIN ".TABLE_PREFIX."_j_user_etablissement J ON J.id_etablissement = E.id
+			LEFT JOIN ".TABLE_PREFIX."_j_useradmin_etablissement JA ON JA.id_etablissement = E.id
+			WHERE E.code = '".protect_data_sql($codeEtablissement)."'
+			AND (J.login = '".protect_data_sql($user)."' OR JA.login = '".protect_data_sql($user)."')";
+	$res = grr_sql_query($sql);
+	return $res && grr_sql_count($res) > 0;
+}
+
+/**
  * Requête des sites de l'établissement courant.
  *
  * Partagée par make_site_list_html() et make_site_item_html() - leur branche

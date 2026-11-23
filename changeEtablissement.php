@@ -29,12 +29,16 @@ if (!grr_resumeSession()) {
 
 if (isset($_POST['etablissement']) ) {
 	$tabSplit = explode("=", (string) $_POST['etablissement']);
-	$_SESSION['current_etablisement']= $tabSplit[1];
-
+	$codeEtablissement = $tabSplit[1] ?? '';
+	if (userCanAccessEtablissement(getUserName(), $codeEtablissement)) {
+		forceEtablissementInSession($codeEtablissement);
+	}
 }
 
 if (isset($_GET['code_etablissement']) ) {
-	$_SESSION['current_etablisement']=  $_GET['code_etablissement'];
+	if (userCanAccessEtablissement(getUserName(), (string) $_GET['code_etablissement'])) {
+		forceEtablissementInSession((string) $_GET['code_etablissement']);
+	}
 }
 header("Location: ".htmlspecialchars_decode((string) page_accueil())."");
 

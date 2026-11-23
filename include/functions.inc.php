@@ -3362,7 +3362,7 @@ function authGetUserLevelSite($user,$id){
 	//On regarde si l'utilisateur est administrateur du site dont l'id est $id
 	$res3 = grr_sql_query("SELECT j.login
                      FROM ".TABLE_PREFIX."_j_useradmin_site j
-                           WHERE (j.login='".protect_data_sql($user)."' and j.id_area='".protect_data_sql($id)."')");
+                           WHERE (j.login='".protect_data_sql($user)."' and j.id_site='".protect_data_sql($id)."')");
 
 	if (grr_sql_count($res3) > 0)
 		return 5;

@@ -57,6 +57,15 @@ class Settings {
         return self::get($_name);
     }
 
+    /**
+     * Lit un flag de module stocké en base sous forme de string "Oui"/"Non"
+     * et le retourne en booléen.
+     */
+    static function getBool($_name, $global = false)
+    {
+        return self::get($_name, $global) == "Oui";
+    }
+
 
     static function getGeneral($_name)
     {

@@ -3444,9 +3444,7 @@ function authGetUserLevel($user, $id, $type = 'room')
 
 function authGetUserLevelGlobal($user){
 	if (Settings::get("module_multietablissement") == "Oui") {
-		$res3 = grr_sql_query("SELECT login FROM ".TABLE_PREFIX."_j_useradmin_etablissement j WHERE j.login='".protect_data_sql($user)."'");
-		if (grr_sql_count($res3) > 0) {
-			grr_sql_free($res3);
+		if (isEtablissementAdmin($user)) {
 			return 6;
 		}
 	}
@@ -3484,9 +3482,9 @@ function authGetUserLevelSite($user,$id){
     $id_etablissement = getIdEtablissementCourant();
 
 	if (Settings::get("module_multietablissement") == "Oui") {
-		$res3 = grr_sql_query("SELECT login FROM ".TABLE_PREFIX."_j_useradmin_etablissement j WHERE j.id_etablissement='".protect_data_sql($id_etablissement)."' AND j.login='".protect_data_sql($user)."'");
-		if (grr_sql_count($res3) > 0)
-		return 6;
+		if (isEtablissementAdmin($user, $id_etablissement)) {
+			return 6;
+		}
 	}
 
 	//On regarde si l'utilisateur est administrateur du site dont l'id est $id
@@ -3509,9 +3507,9 @@ function authGetUserLevelArea($user,$id){
     $id_etablissement = getIdEtablissementCourant();
 
 	if (Settings::get("module_multietablissement") == "Oui") {
-		$res3 = grr_sql_query("SELECT login FROM ".TABLE_PREFIX."_j_useradmin_etablissement j WHERE j.id_etablissement='".protect_data_sql($id_etablissement)."' AND j.login='".protect_data_sql($user)."'");
-		if (grr_sql_count($res3) > 0)
+		if (isEtablissementAdmin($user, $id_etablissement)) {
 			return 6;
+		}
 	}
 
 	if (Settings::get("module_multisite") == "Oui") {
@@ -3547,9 +3545,7 @@ function authGetUserLevelRoom($user,$id){
 
 
 	if (Settings::get("module_multietablissement") == "Oui") {
-		$res3 = grr_sql_query("SELECT login FROM ".TABLE_PREFIX."_j_useradmin_etablissement j WHERE j.id_etablissement='".protect_data_sql($id_etablissement)."' AND j.login='".protect_data_sql($user)."'");
-		if (grr_sql_count($res3) > 0) {
-			grr_sql_free($res3);
+		if (isEtablissementAdmin($user, $id_etablissement)) {
 			return 6;
 		}
 	}
@@ -3608,9 +3604,7 @@ function authUserAccesArea($user,$id)
 	if (Settings::get("module_multietablissement") == "Oui") {
 
         $id_etablissement = getIdEtablissementCourant();
-        $sql = "SELECT login FROM ".TABLE_PREFIX."_j_useradmin_etablissement j WHERE j.id_etablissement='".$id_etablissement."' AND j.login='".protect_data_sql($user)."'";
-        $res = grr_sql_query($sql);
-        if (grr_sql_count($res) != "0") return 1;
+        if (isEtablissementAdmin($user, $id_etablissement)) return 1;
     }
 
 	if (Settings::get("module_multisite") == "Oui"){

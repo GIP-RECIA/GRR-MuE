@@ -16,14 +16,24 @@ function get_default_etablissement()
 
 
 
+/**
+ * Indique si $user est administrateur établissement.
+ * Avec $idEtablissement : administrateur de cet établissement précis.
+ * Sans $idEtablissement (null) : administrateur d'au moins un établissement,
+ * tous confondus (utilisé par authGetUserLevelGlobal()).
+ */
+function isEtablissementAdmin($user, $idEtablissement = null)
+{
+	$sql = "SELECT login FROM ".TABLE_PREFIX."_j_useradmin_etablissement j WHERE j.login='".protect_data_sql($user)."'";
+	if ($idEtablissement !== null) {
+		$sql .= " and j.id_etablissement='".protect_data_sql($idEtablissement)."'";
+	}
+	$res = grr_sql_query($sql);
+	return grr_sql_count($res) > 0;
+}
+
 function authGetUserLevelEtablissement($user,$id){
-
-	//On regarde si l'utilisateur est administrateur du domaine dont l'id est $id
-	$res3 = grr_sql_query("SELECT j.login
-                     FROM ".TABLE_PREFIX."_j_useradmin_etablissement j
-                           WHERE (j.login='".protect_data_sql($user)."' and j.id_etablissement='".protect_data_sql($id)."')");
-
-	if (grr_sql_count($res3) > 0)
+	if (isEtablissementAdmin($user, $id))
 		return 6;
 	// Sinon il s'agit d'un simple utilisateur
 	return 2;

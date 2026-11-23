@@ -2021,53 +2021,6 @@ function tdcell_rowspan($colclass, $step)
 		echo '<td rowspan="'.$step.'" td class="'.$colclass.'">'.PHP_EOL;
 }
 
-//Display the entry-type color key. This has up to 2 rows, up to 10 columns.
-/*function show_colour_key2($area_id){
-
-	echo '<table class="legende"><caption class="titre">Légendes des réservations</caption>'.PHP_EOL;
-
-	if (Settings::get("module_multietablissement") == "Oui"){
-    	$idEtablissement = getIdEtablissementCourant();
-	    $sql = "SELECT DISTINCT t.id, t.type_name, t.type_letter FROM ".TABLE_PREFIX."_type_area t
-		    LEFT JOIN ".TABLE_PREFIX."_j_type_area j on j.id_type=t.id
-			LEFT JOIN ".TABLE_PREFIX."_j_etablissement_type_area je on je.id_type_area=t.id
-		    WHERE (j.id_area  IS NULL or j.id_area != '".$area_id."') AND (je.id_etablissement = $idEtablissement OR je.id_etablissement IS NULL)
-		    ORDER BY t.order_display";
-    } else {
-    	$sql = "SELECT DISTINCT t.id, t.type_name, t.type_letter FROM ".TABLE_PREFIX."_type_area t
-    		    LEFT JOIN ".TABLE_PREFIX."_j_type_area j on j.id_type=t.id
-    		    WHERE (j.id_area  IS NULL or j.id_area != '".$area_id."')
-    		    ORDER BY t.order_display";
-    }
-
-	$res = grr_sql_query($sql);
-	if ($res){
-
-		$nct = -1;
-		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
-		{
-			// La requête sql précédente laisse passer les cas où un type est non valide dans le domaine concerné ET au moins dans un autre domaine, d'où le test suivant
-			$test = grr_sql_query1("SELECT id_type FROM ".TABLE_PREFIX."_j_type_area WHERE id_type = '".$row[0]."' and id_area='".$area_id."'");
-			if ($test == -1)
-			{
-				$type_name   = $row[1];
-				$type_letter = $row[2];
-				if ($nct == -1)
-					echo '<tr>'.PHP_EOL;
-				if (++$nct == 2)
-				{
-					$nct = 0;
-					echo '</tr>'.PHP_EOL, '<tr>'.PHP_EOL;
-				}
-				tdcell($type_letter);
-				echo $type_name, '</td>'.PHP_EOL;
-			}
-		}
-		if ($i % 2 == 1)
-			echo '<td></td>',PHP_EOL,'</tr>'.PHP_EOL;
-		echo '</table>'.PHP_EOL;
-	}
-}*/
 // Retourne la couleur correspondant au type de lettre
 function colorType($colclass){
 

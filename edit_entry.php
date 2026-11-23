@@ -692,7 +692,8 @@ $tab_rooms_noaccess = verif_acces_ressource(getUserName(), 'all');
 
 			$sql= "SELECT A.id, A.area_name FROM ".TABLE_PREFIX."_area AS A ";
 			if (Settings::get("module_multietablissement") == "Oui"){
-				$sql .= " JOIN ".TABLE_PREFIX."_j_site_area AS SA ON SA.id_area = A.id 
+				$idEtablissement = getIdEtablissementCourant();
+				$sql .= " JOIN ".TABLE_PREFIX."_j_site_area AS SA ON SA.id_area = A.id
 						 JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.id_site ";
 			}
 

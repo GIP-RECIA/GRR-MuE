@@ -2150,6 +2150,27 @@ function round_t_up($t, $resolution, $am7)
 }
 
 /**
+ * Requête des sites de l'établissement courant.
+ *
+ * Partagée par make_site_list_html() et make_site_item_html() - leur branche
+ * "module multiétablissement actif" construisait exactement la même requête.
+ * (make_site_select_html() a une logique différente - elle ajoute un JOIN
+ * établissement à une requête déjà jointe à j_site_area plutôt que de
+ * remplacer toute la requête - pas unifiée ici volontairement.)
+ *
+ * @return string
+ */
+function buildEtablissementSitesSql()
+{
+	$idEtablissement = getIdEtablissementCourant();
+	return "SELECT S.id,S.sitename
+			 FROM ".TABLE_PREFIX."_site AS S
+			 JOIN ".TABLE_PREFIX."_j_etablissement_site AS J ON S.id = J.id_site
+			 WHERE J.id_etablissement = $idEtablissement
+			 ORDER BY sitename";
+}
+
+/**
  * Menu gauche affichage des sites via select
  *
  * @param string $link
@@ -2252,6 +2273,46 @@ function make_site_select_html($link, $current_site, $year, $month, $day, $user)
 }
 
 /**
+ * Requête de la liste des domaines (area), scopée par établissement courant
+ * si le module multiétablissement est actif, sinon par site si le module
+ * multisite est actif, sinon tous les domaines.
+ *
+ * Partagée par make_area_select_html(), make_area_list_html() et
+ * make_area_item_html() - les 3 construisaient exactement la même requête.
+ *
+ * @param int $current_site -1 pour "tous les sites"
+ * @param string $use_multi_site 'y' ou 'n'
+ * @return string la requête SQL, ou '' si rien à afficher
+ */
+function buildAreaListSql($current_site, $use_multi_site)
+{
+	if (Settings::get("module_multietablissement") == "Oui") {
+		$idEtablissement = getIdEtablissementCourant();
+		$siteFilter = ($current_site != -1) ? " and j.id_site=$current_site" : "";
+		return "SELECT a.id, a.area_name,a.access
+				 FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
+				 JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
+				 WHERE a.id=j.id_area".$siteFilter."
+				 AND ES.id_etablissement = $idEtablissement
+				 ORDER BY a.order_display, a.area_name";
+	}
+
+	if ($use_multi_site == 'y') {
+		if ($current_site != -1) {
+			return "SELECT a.id, a.area_name,a.access
+					 FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
+					 WHERE a.id=j.id_area and j.id_site=$current_site
+					 ORDER BY a.order_display, a.area_name";
+		}
+		return "";
+	}
+
+	return "SELECT id, area_name,access
+			FROM ".TABLE_PREFIX."_area
+			ORDER BY order_display, area_name";
+}
+
+/**
  * Menu gauche affichage des area via select
  *
  * @param string $link
@@ -2271,43 +2332,7 @@ function make_area_select_html( $link, $current_site, $current_area, $year, $mon
 	else
 		$use_multi_site = 'n';
 
-	if (Settings::get("module_multietablissement") == "Oui"){
-		$idEtablissement = getIdEtablissementCourant();
-		if ($current_site!=-1) {
-			$sql = "SELECT a.id, a.area_name,a.access
-					 FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-					 JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-					 WHERE a.id=j.id_area and j.id_site=$current_site
-					 AND ES.id_etablissement = $idEtablissement
-					 ORDER BY a.order_display, a.area_name";
-		}else {
-			$sql = "SELECT a.id, a.area_name,a.access
-					 FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-					 JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-					 WHERE a.id=j.id_area
-					 AND ES.id_etablissement = $idEtablissement
-					 ORDER BY a.order_display, a.area_name";
-		}
-   }else{
-
-		if ($use_multi_site == 'y'){
-
-			// on a activé les sites
-			if ($current_site != -1){
-				$sql = "SELECT a.id, a.area_name,a.access
-						FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-						WHERE a.id=j.id_area and j.id_site=$current_site
-						ORDER BY a.order_display, a.area_name";
-			}else{
-				$sql = "";
-			}
-		}
-		else{
-			$sql = "SELECT id, area_name,access
-					FROM ".TABLE_PREFIX."_area
-					ORDER BY order_display, area_name";
-		}
-   }
+	$sql = buildAreaListSql($current_site, $use_multi_site);
 
 	$out_html = '<b><i>'.get_vocab("areas").'</i></b>'.PHP_EOL;
 	$out_html .= '<form id="area_001" action="'.$_SERVER['PHP_SELF'].'">'.PHP_EOL;
@@ -2425,12 +2450,7 @@ function make_site_list_html($link, $current_site, $year, $month, $day,$user)
 
 
 		if (Settings::get("module_multietablissement") == "Oui"){
-			$idEtablissement = getIdEtablissementCourant();
-			$sql = "SELECT S.id,S.sitename
-     	     	     FROM ".TABLE_PREFIX."_site AS S
-     	     	     JOIN ".TABLE_PREFIX."_j_etablissement_site AS J ON S.id = J.id_site
-     	     	     WHERE J.id_etablissement = $idEtablissement
-     	     	     ORDER BY sitename";
+			$sql = buildEtablissementSitesSql();
 		} else {
 			$sql = "SELECT id,sitename
 					FROM ".TABLE_PREFIX."_site
@@ -2512,42 +2532,7 @@ function make_area_list_html($link, $current_site, $current_area, $year, $month,
 		$use_multi_site = 'n';
 
 	echo "<b><i><span class=\"bground\">".get_vocab("areas")."</span></i></b><br />";
-	$sql ='';
-
-	if (Settings::get("module_multietablissement") == "Oui"){
-
-		$idEtablissement = getIdEtablissementCourant();
-   		if ($current_site == -1){
-   			$sql = "SELECT a.id, a.area_name,a.access
-   			   		             FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-   			   		             JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-   			   		             WHERE a.id=j.id_area
-   			   		             AND ES.id_etablissement = $idEtablissement
-   			   		             ORDER BY a.order_display, a.area_name";
-   		} else {
-   			$sql = "SELECT a.id, a.area_name,a.access
-   		             FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-   		             JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-   		             WHERE a.id=j.id_area and j.id_site=$current_site
-   		             AND ES.id_etablissement = $idEtablissement
-   		             ORDER BY a.order_display, a.area_name";
-   		}
-
-	} else {
-		if ($use_multi_site == 'y'){ // on a activé les sites
-
-			if ($current_site != -1){
-				$sql = "SELECT a.id, a.area_name,a.access
-						FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-						WHERE a.id=j.id_area and j.id_site=$current_site
-						ORDER BY a.order_display, a.area_name";
-			}
-		} else {
-			$sql = "SELECT id, area_name,access
-					FROM ".TABLE_PREFIX."_area
-					ORDER BY order_display, area_name";
-		}
-	}
+	$sql = buildAreaListSql($current_site, $use_multi_site);
 
 	$res = 0;
 	if($sql != ''){
@@ -2632,12 +2617,7 @@ function make_site_item_html($link, $current_site, $year, $month, $day, $user){
 		";*/
 
 		if (Settings::get("module_multietablissement") == "Oui"){
-			$idEtablissement = getIdEtablissementCourant();
-			$sql = "SELECT S.id,S.sitename
-					 FROM ".TABLE_PREFIX."_site AS S
-					 JOIN ".TABLE_PREFIX."_j_etablissement_site AS J ON S.id = J.id_site
-					 WHERE J.id_etablissement = $idEtablissement
-					 ORDER BY sitename";
+			$sql = buildEtablissementSitesSql();
 		} else {
 			$sql = "SELECT id,sitename
 					FROM ".TABLE_PREFIX."_site
@@ -2723,7 +2703,6 @@ function make_site_item_html($link, $current_site, $year, $month, $day, $user){
 function make_area_item_html( $link, $current_site, $current_area, $year, $month, $day, $user)
 {
 	global $vocab;
-	$sql = "";
 	$res = false;
 
 	if (Settings::get("module_multisite") == "Oui")
@@ -2731,46 +2710,7 @@ function make_area_item_html( $link, $current_site, $current_area, $year, $month
 	else
 		$use_multi_site = 'n';
 
-	$sql ='';
-
-	if (Settings::get("module_multietablissement") == "Oui"){
-
-		$idEtablissement = getIdEtablissementCourant();
-   		if ($current_site == -1){
-   			$sql = "SELECT a.id, a.area_name,a.access
-   			   		             FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-   			   		             JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-   			   		             WHERE a.id=j.id_area
-   			   		             AND ES.id_etablissement = $idEtablissement
-   			   		             ORDER BY a.order_display, a.area_name";
-   		} else {
-   			$sql = "SELECT a.id, a.area_name,a.access
-   		             FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-   		             JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-   		             WHERE a.id=j.id_area and j.id_site=$current_site
-   		             AND ES.id_etablissement = $idEtablissement
-   		             ORDER BY a.order_display, a.area_name";
-   		}
-
-	}else{
-
-		if ($use_multi_site == 'y'){
-
-			// on a activé les sites
-			if ($current_site != -1){
-				$sql = "SELECT a.id, a.area_name,a.access
-						FROM ".TABLE_PREFIX."_area a, ".TABLE_PREFIX."_j_site_area j
-						WHERE a.id=j.id_area and j.id_site=$current_site
-						ORDER BY a.order_display, a.area_name";
-			}
-		}
-		else{
-
-			$sql = "SELECT id, area_name,access
-					FROM ".TABLE_PREFIX."_area
-					ORDER BY order_display, area_name";
-		}
-	}
+	$sql = buildAreaListSql($current_site, $use_multi_site);
 
 	$out_html = '<br />'.PHP_EOL.'<div class="panel panel-default">'.PHP_EOL.'<div class="panel-heading">'.get_vocab("areas").'</div>'.PHP_EOL.'<div class="panel-body">'.PHP_EOL;
 	$out_html .= '<form class="ressource" id="area_001" action="'.$_SERVER['PHP_SELF'].'">'.PHP_EOL;

@@ -3022,7 +3022,9 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = [])
         }
 
         Email::Envois($destinataire, $sujet, $message, $repondre, '', '');
-	}
+	}else {
+        error_log("GRR mail: aucun gestionnaire actif trouvé dans grr_j_mailuser_room pour room_id=$room_id, mail de confirmation non envoyé.");
+    }
 
 	if ($action == 7){
 		$mail_admin = find_user_room ($room_id);

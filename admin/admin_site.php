@@ -592,11 +592,11 @@ function update_site($id)
 		{
 			if ($_GET['confirm'] == 'yes')
 			{
-				grr_sql_command("delete from ".TABLE_PREFIX."_site where id='".$_GET['id']."'");
+				grr_sql_command("delete from ".TABLE_PREFIX."_site where id='".protect_data_sql($_GET['id'])."'");
 				grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_site where id_site='".protect_data_sql($_GET['id'])."'");
-				grr_sql_command("delete from ".TABLE_PREFIX."_j_site_area where id_site='".$_GET['id']."'");
-				grr_sql_command("delete from ".TABLE_PREFIX."_j_useradmin_site where id_site='".$_GET['id']."'");
-				grr_sql_command("update ".TABLE_PREFIX."_utilisateurs set default_site = '-1' where default_site='".$_GET['id']."'");
+				grr_sql_command("delete from ".TABLE_PREFIX."_j_site_area where id_site='".protect_data_sql($_GET['id'])."'");
+				grr_sql_command("delete from ".TABLE_PREFIX."_j_useradmin_site where id_site='".protect_data_sql($_GET['id'])."'");
+				grr_sql_command("update ".TABLE_PREFIX."_utilisateurs set default_site = '-1' where default_site='".protect_data_sql($_GET['id'])."'");
 				$test = grr_sql_query1("select VALUE from ".TABLE_PREFIX."_setting where NAME='default_site'");
 				if ($test == $_GET['id'])
 					grr_sql_command("delete from ".TABLE_PREFIX."_setting where NAME='default_site'");

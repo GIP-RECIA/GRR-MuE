@@ -53,3 +53,4 @@ images/logo.jpg
 .idea
 vendor/
 *.sql.gz
+logs/

@@ -5516,21 +5516,25 @@ function canAccesAdmin(){
 		return true;
 	}
 
-	if (Settings::get("module_multietablissement")=="Oui"){
+	if (Settings::getBool("module_multietablissement")){
+		$idEtablissement = getIdEtablissementCourant();
+
 		//On valide en premie rlieu le cas le plus simple (admin central ou établissement).
-		if (authGetUserLevel(getUserName(),getIdEtablissementCourant(),'etab') >= 6){
+		if (authGetUserLevel(getUserName(),$idEtablissement,'etab') >= 6){
 			return true;
 		}
 
 		//On recherche tous les domaines de l'établissement pour voir si l'utilisateur a bien un droit d'administration au sein de l'établissement
 		$sql = "SELECT id_area FROM ".TABLE_PREFIX."_j_site_area AS SA
-				JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.is_site
+				JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES ON ES.id_site = SA.id_site
 				WHERE ES.id_etablissement = $idEtablissement ";
 
 		$res = grr_sql_query($sql);
 		if ($res) {
 			for ($i = 0; ($row = grr_sql_row($res, $i)); $i++) {
-				authGetUserLevel(getUserName(), $row[0], 'area') >= 4;
+				if (authGetUserLevel(getUserName(), $row[0], 'area') >= 4) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -5558,12 +5562,12 @@ function buildDemandeModerationSql()
     $sql = "select ".TABLE_PREFIX."_room.id, ".TABLE_PREFIX."_room.room_name, ".TABLE_PREFIX."_room.description, j.id_area , entry.id, entry.repeat_id from grr_room
 
          inner join ".TABLE_PREFIX."_j_site_area j on area_id = j.id_area
-         INNER JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
 
         inner JOIN ".TABLE_PREFIX."_entry entry ON entry.room_id =".TABLE_PREFIX."_room.id  and entry.moderate = 1";
 
-    if (Settings::get("module_multietablissement") == "Oui") {
+    if (Settings::getBool("module_multietablissement")) {
         $idEtablissement = getIdEtablissementCourant();
+        $sql .= " INNER JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site = j.id_site";
         $sql .= " WHERE ES.id_etablissement = $idEtablissement";
     }
 

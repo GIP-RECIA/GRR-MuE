@@ -789,7 +789,7 @@ function page_accueil($param = 'no'){
 	else
 		$defaultsite = get_default_site();
 
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		$idEtablissement = getIdEtablissementCourant();
 		if (! isSiteInEtablissement($defaultsite, $idEtablissement)){
 			$defaultsite = findFirstIdSiteInEtablissement($idEtablissement);
@@ -804,7 +804,7 @@ function page_accueil($param = 'no'){
 	else
 		$defaultarea = get_default_area($defaultsite);
 
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		if (! isAreaInSite($defaultarea, $defaultsite)){
 			$defaultarea = findFirstIdAreaInSite($defaultsite);
 		}
@@ -818,7 +818,7 @@ function page_accueil($param = 'no'){
 	}
 
 	if($defaultroom > 0 ){
-		if (Settings::get("module_multietablissement") == "Oui") {
+		if (Settings::getBool("module_multietablissement")) {
 			if (! isRoomInArea($defaultroom, $defaultarea)){
 			    $defaultroom = findFirstIdRoomInArea($defaultroom);
 			}
@@ -840,7 +840,7 @@ function page_accueil($param = 'no'){
 	else
 		$page_accueil = 'week.php?area='.$defaultarea.'&amp;room='.$defaultroom;
 
-	if (((Settings::get("module_multisite") == "Oui") || (Settings::get("module_multietablissement") == "Oui")) && ($defaultsite > 0))
+	if (((Settings::get("module_multisite") == "Oui") || (Settings::getBool("module_multietablissement"))) && ($defaultsite > 0))
 		$page_accueil .= '&amp;id_site='.$defaultsite;
 
 	if ($param == 'yes')
@@ -1783,7 +1783,7 @@ function compare_ip_adr($ip1, $ip2)
 //Retourne le domaine par défaut; Utilisé si aucun domaine n'a été défini.
 function get_default_area($id_site = -1)
 {
-	if (Settings::get("module_multisite") == "Oui" || Settings::get("module_multietablissement") == "Oui")
+	if (Settings::get("module_multisite") == "Oui" || Settings::getBool("module_multietablissement"))
 		$use_multisite = true;
 	else
 		$use_multisite = false;
@@ -1857,7 +1857,7 @@ function get_default_area($id_site = -1)
  */
 function get_default_site($id_etablissement=-1){
 
-	if ((Settings::get("module_multietablissement") == "Oui") && ($id_etablissement != -1 ) ){
+	if ((Settings::getBool("module_multietablissement")) && ($id_etablissement != -1 ) ){
 		$res = grr_sql_query1("SELECT min(id_site) FROM ".TABLE_PREFIX."_j_etablissement_site WHERE id_etablissement = $id_etablissement");
 	} else {
         $res = grr_sql_query1("SELECT min(id) FROM ".TABLE_PREFIX."_site");
@@ -2092,7 +2092,7 @@ function show_colour_key($area_id){
 
 	echo '<ul style="list-style: none;margin-left: -37px;">'.PHP_EOL;
 
-	if (Settings::get("module_multietablissement") == "Oui"){
+	if (Settings::getBool("module_multietablissement")){
     	$idEtablissement = getIdEtablissementCourant();
 	   $sql = "SELECT DISTINCT t.id, t.type_name, t.type_letter FROM ".TABLE_PREFIX."_type_area t
 		    LEFT JOIN ".TABLE_PREFIX."_j_type_area j on j.id_type=t.id
@@ -2184,7 +2184,7 @@ function make_site_select_html($link, $current_site, $year, $month, $day, $user)
 			   ORDER BY S.id ASC";
 
 
-		if (Settings::get("module_multietablissement") == "Oui"){
+		if (Settings::getBool("module_multietablissement")){
 			$idEtablissement = getIdEtablissementCourant();
 			$sqlFrom .= " JOIN ".TABLE_PREFIX."_j_etablissement_site AS ES on S.id = ES.id_site ";
 			$sqlWhere .= " and ES.id_etablissement = $idEtablissement ";
@@ -2265,7 +2265,7 @@ function make_site_select_html($link, $current_site, $year, $month, $day, $user)
  */
 function buildAreaListSql($current_site, $use_multi_site)
 {
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		$idEtablissement = getIdEtablissementCourant();
 		$siteFilter = ($current_site != -1) ? " and j.id_site=$current_site" : "";
 		return "SELECT a.id, a.area_name,a.access
@@ -2428,7 +2428,7 @@ function make_site_list_html($link, $current_site, $year, $month, $day,$user)
 
 
 
-		if (Settings::get("module_multietablissement") == "Oui"){
+		if (Settings::getBool("module_multietablissement")){
 			$sql = buildEtablissementSitesSql();
 		} else {
 			$sql = "SELECT id,sitename
@@ -2595,7 +2595,7 @@ function make_site_item_html($link, $current_site, $year, $month, $day, $user){
 		ORDER BY id ASC
 		";*/
 
-		if (Settings::get("module_multietablissement") == "Oui"){
+		if (Settings::getBool("module_multietablissement")){
 			$sql = buildEtablissementSitesSql();
 		} else {
 			$sql = "SELECT id,sitename
@@ -3346,13 +3346,13 @@ function authGetUserLevel($user, $id, $type = 'room')
 		}
 
 		// On regarde si l'utilisateur est administrateur d'un site
-		if (($type == 'site') and ((Settings::get("module_multisite") == "Oui") or (Settings::get("module_multietablissement") == "Oui")))
+		if (($type == 'site') and ((Settings::get("module_multisite") == "Oui") or (Settings::getBool("module_multietablissement"))))
 		{
     		return authGetUserLevelSite($user,$id);
     	}
 
 		// On regarde si l'utilisateur est administrateur d'un établissement
-		if (($type == 'etab') and (Settings::get("module_multietablissement") == "Oui"))
+		if (($type == 'etab') and (Settings::getBool("module_multietablissement")))
     	{
     		return authGetUserLevelEtablissement($user,$id);
     	}
@@ -3362,7 +3362,7 @@ function authGetUserLevel($user, $id, $type = 'room')
 }
 
 function authGetUserLevelGlobal($user){
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		if (isEtablissementAdmin($user)) {
 			return 6;
 		}
@@ -3400,7 +3400,7 @@ function authGetUserLevelSite($user,$id){
 	//Calcul de l'id de l'établissment
     $id_etablissement = getIdEtablissementCourant();
 
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		if (isEtablissementAdmin($user, $id_etablissement)) {
 			return 6;
 		}
@@ -3425,7 +3425,7 @@ function authGetUserLevelArea($user,$id){
 	//Calcul de l'id de l'établissment
     $id_etablissement = getIdEtablissementCourant();
 
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		if (isEtablissementAdmin($user, $id_etablissement)) {
 			return 6;
 		}
@@ -3463,7 +3463,7 @@ function authGetUserLevelRoom($user,$id){
     $id_etablissement = getIdEtablissementCourant();
 
 
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 		if (isEtablissementAdmin($user, $id_etablissement)) {
 			return 6;
 		}
@@ -3520,7 +3520,7 @@ function authUserAccesArea($user,$id)
 	if (grr_sql_count($res) != "0")
 		return 1;
 
-	if (Settings::get("module_multietablissement") == "Oui") {
+	if (Settings::getBool("module_multietablissement")) {
 
         $id_etablissement = getIdEtablissementCourant();
         if (isEtablissementAdmin($user, $id_etablissement)) return 1;
@@ -4320,7 +4320,7 @@ function verify_retard_reservation()
 function est_hors_reservation($time,$area="-1"){
 
 	// Premier test : s'agit-il d'un jour du calendrier "hors réservation" ?
-	if (Settings::get("module_multietablissement")== "Oui"){
+	if (Settings::getBool("module_multietablissement")){
 		$id_etablissement = getIdEtablissementCourant();
 		$test = grr_sql_query1("select DAY from ".TABLE_PREFIX."_j_etablissement_calendar where DAY = '".$time."' AND id_etablissement = $id_etablissement");
 	} else {
@@ -4346,7 +4346,7 @@ function resa_est_hors_reservation($start_time,$end_time){
 
 	// On teste si la réservation est dans le calendrier "hors réservations"
 
-	if (Settings::get("module_multietablissement")== "Oui"){
+	if (Settings::getBool("module_multietablissement")){
 		$id_etablissement = getIdEtablissementCourant();
 		$sql = "select DAY from ".TABLE_PREFIX."_j_etablissement_calendar where (DAY = '".$start_time."' or DAY = '".$end_time."' ) AND id_etablissement = $id_etablissement";
 	} else {
@@ -5366,7 +5366,7 @@ if (!function_exists('htmlspecialchars_decode'))
 * MULTI-ETAB  : Fonction remplacant la variable company dans grr_settings en mode multi etab
 */
 function getCompanyName(){
-	if (Settings::get("module_multietablissement") == "Oui"){
+	if (Settings::getBool("module_multietablissement")){
 		$idEtablissementCourant = getIdEtablissementCourant();
 		$req = "SELECT shortname FROM ".TABLE_PREFIX."_etablissement
 		       WHERE id = $idEtablissementCourant ";
@@ -5397,7 +5397,7 @@ function getCompanyNameForBandeau(){
 
 	global $desactive_changement_etablissement_preselectionne;
 
-	$showListDeroulante = (Settings::get("module_multietablissement") == "Oui") &&
+	$showListDeroulante = (Settings::getBool("module_multietablissement")) &&
 		(!isset($desactive_changement_etablissement_preselectionne) || $desactive_changement_etablissement_preselectionne == 0 );
 
 	if ($showListDeroulante){

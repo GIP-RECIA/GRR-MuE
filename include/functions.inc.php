@@ -5611,27 +5611,37 @@ function canAccesAdmin(){
  * Recuperation de toutes les ressources pour faire un test si validation à faire
  * Return une liste des éléments a moderer
 */
+/**
+ * Requête des salles à modérer pour demandeModeration().
+ *
+ * NB (bug pré-existant, non corrigé ici) : le JOIN vers
+ * grr_j_etablissement_site est présent dans les deux branches, y compris
+ * quand module_multietablissement == "Non" - si cette table de liaison est
+ * vide (installation mono-établissement qui n'a jamais eu besoin de la
+ * peupler), cette requête ne renvoie alors structurellement aucune ligne.
+ * Voir "GRR-MuE - inventaire couche établissement.md".
+ */
+function buildDemandeModerationSql()
+{
+    $sql = "select ".TABLE_PREFIX."_room.id, ".TABLE_PREFIX."_room.room_name, ".TABLE_PREFIX."_room.description, j.id_area , entry.id, entry.repeat_id from grr_room
+
+         inner join ".TABLE_PREFIX."_j_site_area j on area_id = j.id_area
+         INNER JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
+
+        inner JOIN ".TABLE_PREFIX."_entry entry ON entry.room_id =".TABLE_PREFIX."_room.id  and entry.moderate = 1";
+
+    if (Settings::get("module_multietablissement") == "Oui") {
+        $idEtablissement = getIdEtablissementCourant();
+        $sql .= " WHERE ES.id_etablissement = $idEtablissement";
+    }
+
+    $sql .= " order by order_display,room_name";
+    return $sql;
+}
+
 function demandeModeration($user){
     $outList =  [];
-    if (Settings::get("module_multietablissement") == "Oui"){
-        $idEtablissement = getIdEtablissementCourant();
-        $sql = "select ".TABLE_PREFIX."_room.id, ".TABLE_PREFIX."_room.room_name, ".TABLE_PREFIX."_room.description, j.id_area , entry.id, entry.repeat_id from grr_room
-            
-             inner join ".TABLE_PREFIX."_j_site_area j on area_id = j.id_area
-             INNER JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-            
-            inner JOIN ".TABLE_PREFIX."_entry entry ON entry.room_id =".TABLE_PREFIX."_room.id  and entry.moderate = 1
-            WHERE ES.id_etablissement = $idEtablissement
-            order by order_display,room_name";
-    } else {
-        $sql = "select ".TABLE_PREFIX."_room.id, ".TABLE_PREFIX."_room.room_name, ".TABLE_PREFIX."_room.description, j.id_area , entry.id, entry.repeat_id from grr_room
-            
-             inner join ".TABLE_PREFIX."_j_site_area j on area_id = j.id_area
-             INNER JOIN ".TABLE_PREFIX."_j_etablissement_site ES ON ES.id_site =j.id_site
-            
-            inner JOIN ".TABLE_PREFIX."_entry entry ON entry.room_id =".TABLE_PREFIX."_room.id  and entry.moderate = 1
-             order by order_display,room_name";
-    }
+    $sql = buildDemandeModerationSql();
 
     $res = grr_sql_query($sql);
     if ($res){

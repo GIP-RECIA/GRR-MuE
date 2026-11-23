@@ -279,7 +279,7 @@ function modifier_liste_etabs(action){
 			dataType: "html",
 			data: {
 					type:'etab',
-					default_etab:'<?php echo $default_etablissement ?>',
+					default_etab:'<?php echo (int) $default_etablissement ?>',
 					session_login:'<?php echo getUserName(); ?>',
 					use_site:'<?php echo $use_site; ?>',
 					action:action
@@ -513,7 +513,7 @@ echo ('
 	if ($desactive_gestion_compte_etablissement == 0) { 
 	 	 echo '<tr><td colspan="2">';
 		 echo '<div id="div_liste_etabs">';
-		 echo '<input type="hidden" id="id_etab" name="id_etab" value="'.$default_etablissement.'" />';
+		 echo '<input type="hidden" id="id_etab" name="id_etab" value="'.htmlspecialchars((string) $default_etablissement).'" />';
 		 // Ici, on insère la liste des établissement avec de l'ajax !
 		 echo '</div></td></tr>';
 	} else {
@@ -525,7 +525,7 @@ echo ('
 		} else {
 			echo '<td> '.getNomCourtEtablissementFromId($default_etablissement).'</td>';			
 		}
-		echo '<input type="hidden" id="id_etab" name="id_etab" value="'.$default_etablissement.'" />';
+		echo '<input type="hidden" id="id_etab" name="id_etab" value="'.htmlspecialchars((string) $default_etablissement).'" />';
 		echo '</div></td></tr>';
 	}
  } else {

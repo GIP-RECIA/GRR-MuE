@@ -62,25 +62,26 @@ include_once('../../admin/admin_col_gauche.php');
 // Suppression d'un type de réservation
 //
 if ((isset($_GET['action_del'])) and ($_GET['js_confirmed'] ==1) and ($_GET['action_del']='yes')) {
+    $typeDel = protect_data_sql($_GET['type_del']);
     // faire le test si il existe une réservation en cours avec ce type de réservation
-    $type_id = grr_sql_query1("select type_letter from ".TABLE_PREFIX."_type_area where id = '".$_GET['type_del']."'");
+    $type_id = grr_sql_query1("select type_letter from ".TABLE_PREFIX."_type_area where id = '".$typeDel."'");
     $test1 = grr_sql_query1("select count(id) from ".TABLE_PREFIX."_entry where type= '".$type_id."'");
     $test2 = grr_sql_query1("select count(id) from ".TABLE_PREFIX."_repeat where type= '".$type_id."'");
     if (($test1 != 0) or ($test2 != 0)) {
         $msg =  "Suppression impossible : des réservations ont été enregistrées avec ce type.";
     } else {
-    	
-		$sql = "DELETE FROM ".TABLE_PREFIX."_j_etablissement_type_area WHERE id_type_area='".$_GET['type_del']."'";
+
+		$sql = "DELETE FROM ".TABLE_PREFIX."_j_etablissement_type_area WHERE id_type_area='".$typeDel."'";
     	if (grr_sql_command($sql) < 0) {
     		fatal_error(1, "<p>" . grr_sql_error());
 		}
-    	
-		$sql = "DELETE FROM ".TABLE_PREFIX."_type_area WHERE id='".$_GET['type_del']."'";
+
+		$sql = "DELETE FROM ".TABLE_PREFIX."_type_area WHERE id='".$typeDel."'";
 		if (grr_sql_command($sql) < 0) {
         	fatal_error(1, "<p>" . grr_sql_error());
 		}
-		
-        $sql = "DELETE FROM ".TABLE_PREFIX."_j_type_area WHERE id_type='".$_GET['type_del']."'";
+
+        $sql = "DELETE FROM ".TABLE_PREFIX."_j_type_area WHERE id_type='".$typeDel."'";
         if (grr_sql_command($sql) < 0) {
         	fatal_error(1, "<p>" . grr_sql_error());
 		}
@@ -103,7 +104,7 @@ ORDER BY order_display, type_letter";
 
 
 
-if(authGetUserLevel(getUserName(),-1) >= 6)
+if(authGetUserLevel(getUserName(),$id_etablissement,'etab') >= 6)
 	echo "<div><a href=\"admin_type_etablissement_modify.php?id=0\">".get_vocab("display_add_type")."</a></div>";
 
 $res = grr_sql_query($sql);

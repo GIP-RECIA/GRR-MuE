@@ -54,7 +54,7 @@ include_once "../../include/admin.inc.php";
 $grr_script_name = "admin_type_etablissement_modify.php";
 $ok = NULL;
 $back = getBackUri();
-if(authGetUserLevel(getUserName(),-1) < 6)
+if(authGetUserLevel(getUserName(),getIdEtablissementCourant(),'etab') < 6)
 {
     $day   = date("d");
     $month = date("m");
@@ -95,7 +95,7 @@ if (isset($_GET['change_type'])) {
     // Nouveau code :
     if ($type_letter == '') {
         if($id_type != 0) { // si mise à jour
-            $type_letter = grr_sql_query1("select type_letter from ".TABLE_PREFIX."_type_area where id = '".$id_type."'");
+            $type_letter = grr_sql_query1("select type_letter from ".TABLE_PREFIX."_type_area where id = '".intval($id_type)."'");
         } else { // si création
             $type_letter = grr_sql_query1("select max(type_letter * 1) + 1 from ".TABLE_PREFIX."_type_area");
         }
@@ -105,11 +105,11 @@ if (isset($_GET['change_type'])) {
 
     if ($couleur == '') $couleur = "1";
     if ($disponible == '') $disponible = "2";
-    
+
 	if ($id_type>0){
-		
+
         // Test sur $type_letter
-        $test = grr_sql_query1("select count(id) from ".TABLE_PREFIX."_type_area where type_letter='".$type_letter."' and id!='".$id_type."'");
+        $test = grr_sql_query1("select count(id) from ".TABLE_PREFIX."_type_area where type_letter='".protect_data_sql($type_letter)."' and id!='".intval($id_type)."'");
         if ($test > 0) {
             $msg = "Enregistrement impossible : Un type portant la même lettre existe déjà.";
         } else {
@@ -120,10 +120,10 @@ if (isset($_GET['change_type'])) {
               $sql= $sql .intval($order_display).",";
             else
               $sql= $sql ."0,";
-            $sql = $sql . 'type_letter="'.$type_letter.'",';
-            $sql = $sql . 'couleur="'.$couleur.'",';
-            $sql = $sql . 'disponible="'.$disponible.'"';
-            $sql = $sql . " WHERE id=$id_type";
+            $sql = $sql . 'type_letter="'.protect_data_sql($type_letter).'",';
+            $sql = $sql . 'couleur="'.protect_data_sql($couleur).'",';
+            $sql = $sql . 'disponible="'.protect_data_sql($disponible).'"';
+            $sql = $sql . " WHERE id=".intval($id_type);
             if (grr_sql_command($sql) < 0)
                 {
                 fatal_error(0, get_vocab('update_type_failed') . grr_sql_error());
@@ -135,7 +135,7 @@ if (isset($_GET['change_type'])) {
     else
     {
         // Test sur $type_letter
-        $test = grr_sql_query1("select count(id) from ".TABLE_PREFIX."_type_area where type_letter='".$type_letter."'");
+        $test = grr_sql_query1("select count(id) from ".TABLE_PREFIX."_type_area where type_letter='".protect_data_sql($type_letter)."'");
 
         if ($test > 0) {
             $msg = "Enregistrement impossible : Un type portant la même lettre existe déjà.";
@@ -147,8 +147,8 @@ if (isset($_GET['change_type'])) {
               $sql= $sql .intval($order_display).",";
             else
               $sql= $sql ."0,";
-            $sql = $sql . 'type_letter="'.$type_letter.'",';
-            $sql = $sql . 'couleur="'.$couleur.'"';
+            $sql = $sql . 'type_letter="'.protect_data_sql($type_letter).'",';
+            $sql = $sql . 'couleur="'.protect_data_sql($couleur).'"';
             if (grr_sql_command($sql) < 0)
                 {
                 fatal_error(1, "<p>" . grr_sql_error());
@@ -189,7 +189,7 @@ if (isset($_GET['change_type'])) {
 	
     affiche_pop_up($msg,"admin");
     if ((isset($id_type)) and ($id_type>0)) {
-        $res = grr_sql_query("SELECT * FROM ".TABLE_PREFIX."_type_area WHERE id=$id_type");
+        $res = grr_sql_query("SELECT * FROM ".TABLE_PREFIX."_type_area WHERE id=".intval($id_type));
         if (! $res) fatal_error(0, get_vocab('message_records_error'));
         $row = grr_sql_row_keyed($res, 0);
         grr_sql_free($res);

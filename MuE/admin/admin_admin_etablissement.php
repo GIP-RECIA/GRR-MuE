@@ -33,11 +33,11 @@ include_once "../../include/admin.inc.php";
 $grr_script_name = "admin_admin_etablissement.php";
 $id = $_POST["id"] ?? $_GET["id"] ?? NULL;
 if (empty($id)) $id = get_default_etablissement();
-if (!isset($id)) settype($id,"integer");
+settype($id,"int");
 
 
 $back = getBackUri();
-if(authGetUserLevel(getUserName(),-1) < 6)
+if(authGetUserLevel(getUserName(),-1,'etab') < 6)
 {
     $day   = date("d");
     $month = date("m");
@@ -69,18 +69,18 @@ $msg='';
 
 
 if ($test_user == "simple") {
-    $res = grr_sql_query1("select login from ".TABLE_PREFIX."_j_useradmin_etablissement where (login = '$reg_admin_login' and id = '$id')");
+    $res = grr_sql_query1("select login from ".TABLE_PREFIX."_j_useradmin_etablissement where (login = '".protect_data_sql($reg_admin_login)."' and id_etablissement = '$id')");
     if ($res == -1) {
-        $sql = "insert into ".TABLE_PREFIX."_j_useradmin_etablissement (login, id_etablissement) values ('$reg_admin_login',$id)";
+        $sql = "insert into ".TABLE_PREFIX."_j_useradmin_etablissement (login, id_etablissement) values ('".protect_data_sql($reg_admin_login)."',$id)";
         if (grr_sql_command($sql) < 0) {fatal_error(1, "<p>" . grr_sql_error());}  else {$msg=get_vocab("add_user_succeed");}
     }
 }
 
 if ($test_user == "multi") {
   foreach ($reg_multi_admin_login as $valeur){
-    $res = grr_sql_query1("select login from ".TABLE_PREFIX."_j_useradmin_etablissement where (login = '$valeur' and id_etablissement = '$id')");
+    $res = grr_sql_query1("select login from ".TABLE_PREFIX."_j_useradmin_etablissement where (login = '".protect_data_sql($valeur)."' and id_etablissement = '$id')");
     if ($res == -1) {
-        $sql = "insert into ".TABLE_PREFIX."_j_useradmin_etablissement (login, id_etablissement) values ('$valeur',$id)";
+        $sql = "insert into ".TABLE_PREFIX."_j_useradmin_etablissement (login, id_etablissement) values ('".protect_data_sql($valeur)."',$id)";
         if (grr_sql_command($sql) < 0) {fatal_error(1, "<p>" . grr_sql_error());}  else {$msg=get_vocab("add_multi_user_succeed");}
     }
   }
@@ -89,7 +89,7 @@ if ($test_user == "multi") {
 if ($action) {
     if ($action == "del_admin") {
         unset($login_admin); $login_admin = $_GET["login_admin"];
-        $sql = "DELETE FROM ".TABLE_PREFIX."_j_useradmin_etablissement WHERE (login='$login_admin' and id_etablissement = '$id')";
+        $sql = "DELETE FROM ".TABLE_PREFIX."_j_useradmin_etablissement WHERE (login='".protect_data_sql($login_admin)."' and id_etablissement = '$id')";
         if (grr_sql_command($sql) < 0) {fatal_error(1, "<p>" . grr_sql_error());} else {$msg=get_vocab("del_user_succeed");}
     }
 }

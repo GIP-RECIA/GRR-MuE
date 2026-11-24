@@ -164,7 +164,7 @@
    
    if (count_etablissements()>0) {
 
-   if (authGetUserLevel(getUserName(), 'etab') >= 7){
+   if (authGetUserLevel(getUserName(), -1, 'etab') >= 7){
 	   	$sql = "SELECT E.id,E.code,E.name, E.shortname, E.ville, E.codepostal, E.adresse
 			FROM ".TABLE_PREFIX."_etablissement  AS E
 	 		ORDER BY E.name,E.id";
@@ -338,14 +338,19 @@
   	echo '<h2 style="text-align:center;"><a href="admin_etablissement.php?action=delete&amp;id='.$id.'&amp;confirm=yes">' . get_vocab('YES') . '!</a> &nbsp;&nbsp;&nbsp; <a href="admin_etablissement.php?action=delete&amp;id='.$id.'&amp;confirm=no">' . get_vocab('NO') . '!</a></h2>';
   } else {
   	if ($_GET['confirm']=='yes') {
-  		grr_sql_command("delete from ".TABLE_PREFIX."_etablissement where id='".$_GET['id']."'");
-  		grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_site where id_etablissement='".$_GET['id']."'");
-  		grr_sql_command("delete from ".TABLE_PREFIX."_j_user_etablissement where id_etablissement='".$_GET['id']."'");
-  		grr_sql_command("delete from ".TABLE_PREFIX."_j_useradmin_etablissement where id_etablissement='".$_GET['id']."'");
-  		grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_calendar where id_etablissement='".$_GET['id']."'");
-  		grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_type_area where id_etablissement='".$_GET['id']."'");
-  		grr_sql_command("delete from ".TABLE_PREFIX."_setting_etablissement where code_etab='".$_GET['id']."'");
-  		grr_sql_command("update ".TABLE_PREFIX."_utilisateurs set default_etablissement = '-1' where default_etablissement='".$_GET['id']."'");
+  		$idEtab = protect_data_sql($id);
+  		// Récupéré avant la suppression de la ligne grr_etablissement, sinon la résolution code<->id échoue.
+  		$codeEtab = getCodeEtablissementFromId($id);
+  		grr_sql_command("delete from ".TABLE_PREFIX."_etablissement where id='".$idEtab."'");
+  		grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_site where id_etablissement='".$idEtab."'");
+  		grr_sql_command("delete from ".TABLE_PREFIX."_j_user_etablissement where id_etablissement='".$idEtab."'");
+  		grr_sql_command("delete from ".TABLE_PREFIX."_j_useradmin_etablissement where id_etablissement='".$idEtab."'");
+  		grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_calendar where id_etablissement='".$idEtab."'");
+  		grr_sql_command("delete from ".TABLE_PREFIX."_j_etablissement_type_area where id_etablissement='".$idEtab."'");
+  		if ($codeEtab !== null) {
+  			grr_sql_command("delete from ".TABLE_PREFIX."_setting_etablissement where code_etab='".protect_data_sql($codeEtab)."'");
+  		}
+  		grr_sql_command("update ".TABLE_PREFIX."_utilisateurs set default_etablissement = '-1' where default_etablissement='".$idEtab."'");
   	}
   	// On affiche le tableau des sites
   	read_etablissement();
@@ -370,7 +375,7 @@
  $canEditUserEtab = (isset($desactive_changement_etablissement_user))  && ($desactive_changement_etablissement_user == 0) && (authGetUserLevel(getUserName(), -1,'etab') >= 7 );
  $back = getBackUri();
 
- if(authGetUserLevel(getUserName(),-1,'etablissement') < 6)
+ if(authGetUserLevel(getUserName(),-1,'etab') < 6)
  {
    $day   = date('d');
    $month = date('m');
